@@ -86,7 +86,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource#addOrganisation(String, int) 
+     * @see TradingPlatformDataSource#addOrganisation(String, int)
      */
     @Override
     public void addOrganisation(String organisation, int credits) {
@@ -161,7 +161,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#addOrder(String, String, int, int, boolean)
      */
     @Override
-    public void addOrder(String organisation, String Asset, int amount, int credits, boolean isBuyOrder) {
+    public void addOrder(String organisation, String asset, int amount, int credits, boolean isBuyOrder) {
 
     }
 
@@ -174,10 +174,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource#addTransaction(String, String, String, int)
+     * @see TradingPlatformDataSource#addTransaction(String, String, String, int, int)
      */
     @Override
-    public void addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount) {
+    public void addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
+                               int credits) {
 
     }
 

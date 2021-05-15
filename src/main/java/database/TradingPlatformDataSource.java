@@ -76,9 +76,10 @@ public interface TradingPlatformDataSource {
     String getUserOrganisation(String username);
 
     /**
+     * Adds a new organisation to the database as well as its starting credits.
      *
-     * @param organisation
-     * @param credits
+     * @param organisation The name of the new organisation.
+     * @param credits The amount of credits the new organisation starts with.
      */
     void addOrganisation(String organisation, int credits);
 
@@ -141,56 +142,65 @@ public interface TradingPlatformDataSource {
 
     /**
      * Creates a set of order objects that have values equal to the inputted organisation and
-     * assets.
-     * If either of these
+     * assets. The order information is retrieved from the database.
+     * If either of organisation or asset is blank then it retrieves orders for all organisations,
+     * assets or both.
      *
      * @param organisation The name of the organisational unit. Can be null.
      * @param asset The name of the asset. Can be null.
      * @param isBuyOrder True if the orders are buy orders. False if they're sell orders.
-     * @return
+     * @return a set of Order objects with all the order information.
      */
     Set<Order> getOrders(String organisation, String asset,
                          boolean isBuyOrder);
 
     /**
+     * Adds a new order to the database trading platform. Can be a buy order or sell order.
      *
      * @param organisation The name of the organisational unit.
-     * @param Asset
-     * @param amount
-     * @param credits
-     * @param isBuyOrder
+     * @param asset The name of the asset.
+     * @param amount The amount of the asset.
+     * @param credits The number of credits the asset is listed for.
+     * @param isBuyOrder True if the order is a buy order. False if its a sell order.
      */
-    void addOrder(String organisation, String Asset, int amount,
+    void addOrder(String organisation, String asset, int amount,
                   int credits, boolean isBuyOrder);
 
     /**
+     * Removes a buy or sell order from the database that corresponds to the inputted id.
      *
-     * @param idx
+     * @param idx the integer id of a buy or sell order
      */
     void deleteOrder(int idx);
 
     /**
+     * Adds a new transaction to the database trade_history after a trade is completed.
      *
-     * @param buyingOrganisation
-     * @param sellingOrganisation
-     * @param asset
-     * @param amount
+     * @param buyingOrganisation The name of the organisational unit that bought assets.
+     * @param sellingOrganisation The name of the organisational unit that sold assets.
+     * @param asset The name of the asset that was sold.
+     * @param amount The amount of the asset that was sold.
+     * @param credits The number of credits the asset was sold for.
      */
     void addTransaction(String buyingOrganisation, String sellingOrganisation,
-                         String asset, int amount);
+                         String asset, int amount, int credits);
 
     /**
+     * Creates a set of Transaction objects that have values equal to the inputted organisations and
+     * assets. The order information is retrieved from the database.
+     * If any of buyingOrganisation, sellingOrganisation or asset is blank then it retrieves orders
+     * for all organisations, assets or both.
      *
-     * @param buyingOrganisation
-     * @param sellingOrganisation
-     * @param asset
-     * @return
+     * @param buyingOrganisation  The name of an organisational unit that bought assets. Can be null.
+     * @param sellingOrganisation  The name of an organisational unit that sold assets. Can be null.
+     * @param asset The name of an asset that was sold.
+     * @return a set of Transaction objects with all the transaction information.
      */
     Set<Transaction> getOrderHistory(String buyingOrganisation,
                                      String sellingOrganisation, String asset);
 
     /**
-     *
+     * Deletes all rows from every table in the database.
      */
     void deleteAll();
 
