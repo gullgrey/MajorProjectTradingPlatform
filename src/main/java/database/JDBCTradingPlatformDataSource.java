@@ -46,7 +46,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String DELETE_ORDER = "DELETE FROM current_trades WHERE ID=?";
 
     // Transaction and History queries
-    private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buyingOrganisation, sellingOrganisation, asset, credit, amount, datetime) VALUE (?,?,?,?,?,?)";
+    private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buy_organisation_name, sell_organisation_name, asset, credit, amount, datetime) VALUE (?,?,?,?,?,?)";
     private static final String GET_ORDER_HISTORY  = "SELECT * FROM trade_history WHERE buying_organisation_name=? AND selling_organisation_name=? AND asset=?";
 
 
