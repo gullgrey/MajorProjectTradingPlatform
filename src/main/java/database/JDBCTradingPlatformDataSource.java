@@ -2,13 +2,43 @@ package main.java.database;
 
 import main.java.tradingPlatform.Order;
 import main.java.tradingPlatform.Transaction;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.Set;
+
+
 
 /**
  * TODO
  */
 public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
+
+    private static final String GET_CREDITS = "SELECT credits FROM organisation_units WHERE organisation_name=?";
+    private static final String UPDATE_CREDITS = "UPDATE organisation_units SET credits=? WHERE organisation_name=?";
+    private static final String GET_ASSET = "SELECT asset_name FROM asset WHERE organisation_name=?";
+    private static final String ADD_ASSET  = "INSERT INTO asset VALUE (?,?,?);";
+    private static final String DELETE_ASSET = "DELETE FROM asset WHERE asset_name=? AND organisation=?";
+    private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount=? WHERE asset_name=? AND organisation=?";
+    private static final String GET_ORGANISATION = "SELECT organisation_name FROM organisation;";
+    private static final String GET_USER_ORGANISATION = "SELECT organisation_name FROM user_information WHERE username=?";
+    private static final String ADD_ORGANISATION  = "INSERT INTO organisation VALUE (?,?);";
+    private static final String DELETE_ORGANISATION = "DELETE FROM organisation WHERE organisation_name=?";
+
+    private static final String GET_USER = "SELECT  username FROM user_information WHERE organisation_name=?";
+    private static final String GET_USER_PASSWORD = "SELECT password FROM user_information WHERE username=?";
+    private static final String DELETE_USER = "DELETE FROM user_information WHERE username=?";
+//    private static final String ADD_ASSET  = "INSERT INTO asset VALUE (?,?,?);";
+//    private static final String DELETE_ASSET = "DELETE FROM asset WHERE asset_name=? AND organisation=?";
+//    private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount=? WHERE asset_name=? AND organisation=?";
+//    private static final String GET_ORGANISATION = "SELECT organisation_name FROM organisation;";
+//    private static final String GET_USER_ORGANISATION = "SELECT organisation_name FROM user_information WHERE username=?";
+//    private static final String ADD_ORGANISATION  = "INSERT INTO organisation VALUE (?,?);";
+//    private static final String DELETE_ORGANISATION = "DELETE FROM organisation WHERE organisation_name=?";
 
     public JDBCTradingPlatformDataSource(String propsFile) {
 
