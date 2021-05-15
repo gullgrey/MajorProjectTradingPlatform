@@ -6,7 +6,7 @@ import main.java.tradingPlatform.Transaction;
 import java.util.Set;
 
 /**
- *
+ * TODO
  */
 public interface TradingPlatformDataSource {
 
