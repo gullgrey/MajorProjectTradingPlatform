@@ -11,29 +11,33 @@ import java.util.Set;
 public interface TradingPlatformDataSource {
 
     /**
+     * Gets the number of credits an organisation has.
      *
-     * @param organisation
-     * @return
+     * @param organisation The name of the organisational unit.
+     * @return the number of credits an organisation has.
      */
     int getCredits(String organisation);
 
     /**
+     * Updates the number of credits an organisation has by the inputted amount.
      *
-     * @param organisation
-     * @param credits
+     * @param organisation The name of the organisational unit.
+     * @param credits The amount the organisation's credits change by. Can be positive or negative.
      */
     void updateCredits(String organisation, int credits);
 
     /**
+     * Retrieves a set of asset names for a specific organisation.
      *
-     * @param organisation
-     * @return
+     * @param organisation The name of the organisational unit.
+     * @return A set of all of the asset names that belong to an organisational unit
      */
     Set<String> getAssets(String organisation);
 
     /**
      *
-     * @param organisation
+     *
+     * @param organisation The name of the organisational unit.
      * @param amount
      */
     void addAsset(String organisation, int amount);
