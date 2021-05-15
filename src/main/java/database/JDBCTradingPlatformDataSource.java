@@ -18,27 +18,38 @@ import java.util.Set;
  */
 public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
+    // Asset queries
+    private static final String GET_ASSETS = "SELECT asset_name FROM asset WHERE organisation_name=?";
+    private static final String ADD_ASSET  = "INSERT INTO asset VALUE (?,?,?)";
+    private static final String DELETE_ASSET = "DELETE FROM asset WHERE asset_name=? AND organisation=?";
+    private static final String GET_ASSET_AMOUNT = "SELECT amount  FROM asset WHERE organisation = ? AND  asset_name = ?";
+    private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount=? WHERE asset_name=? AND organisation=?";
+
+    // Organisation queries
     private static final String GET_CREDITS = "SELECT credits FROM organisation_units WHERE organisation_name=?";
     private static final String UPDATE_CREDITS = "UPDATE organisation_units SET credits=? WHERE organisation_name=?";
-    private static final String GET_ASSET = "SELECT asset_name FROM asset WHERE organisation_name=?";
-    private static final String ADD_ASSET  = "INSERT INTO asset VALUE (?,?,?);";
-    private static final String DELETE_ASSET = "DELETE FROM asset WHERE asset_name=? AND organisation=?";
-    private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount=? WHERE asset_name=? AND organisation=?";
-    private static final String GET_ORGANISATION = "SELECT organisation_name FROM organisation;";
+    private static final String GET_ORGANISATION = "SELECT organisation_name FROM organisation";
     private static final String GET_USER_ORGANISATION = "SELECT organisation_name FROM user_information WHERE username=?";
-    private static final String ADD_ORGANISATION  = "INSERT INTO organisation VALUE (?,?);";
+    private static final String ADD_ORGANISATION  = "INSERT INTO organisation VALUE (?,?)";
     private static final String DELETE_ORGANISATION = "DELETE FROM organisation WHERE organisation_name=?";
 
+    // User queries
     private static final String GET_USER = "SELECT  username FROM user_information WHERE organisation_name=?";
     private static final String GET_USER_PASSWORD = "SELECT password FROM user_information WHERE username=?";
     private static final String DELETE_USER = "DELETE FROM user_information WHERE username=?";
-//    private static final String ADD_ASSET  = "INSERT INTO asset VALUE (?,?,?);";
-//    private static final String DELETE_ASSET = "DELETE FROM asset WHERE asset_name=? AND organisation=?";
-//    private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount=? WHERE asset_name=? AND organisation=?";
-//    private static final String GET_ORGANISATION = "SELECT organisation_name FROM organisation;";
-//    private static final String GET_USER_ORGANISATION = "SELECT organisation_name FROM user_information WHERE username=?";
-//    private static final String ADD_ORGANISATION  = "INSERT INTO organisation VALUE (?,?);";
-//    private static final String DELETE_ORGANISATION = "DELETE FROM organisation WHERE organisation_name=?";
+    private static final String UPDATE_PASSWORD  = "UPDATE user_information SET password = ? WHERE username = ?";
+
+    // Order queries
+    private static final String GET_ORDER = "SELECT * FROM current_trades WHERE ID=?";
+    private static final String GET_ORDERS = "SELECT * FROM current_trades WHERE organisation_name=? AND  asset_name=? AND type=?";
+    private static final String ADD_ORDER = "INSERT INTO current_trades (organisation, asset, credit, amount, datetime, isByOrder) VALUE (?,?,?,?,?,?)";
+    private static final String DELETE_ORDER = "DELETE FROM current_trades WHERE ID=?";
+
+    // Transaction and History queries
+    private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buyingOrganisation, sellingOrganisation, asset, credit, amount, datetime) VALUE (?,?,?,?,?,?)";
+    private static final String GET_ORDER_HISTORY  = "SELECT * FROM trade_history WHERE buying_organisation_name=? AND selling_organisation_name=? AND asset=?";
+
+
 
     public JDBCTradingPlatformDataSource(String propsFile) {
 
