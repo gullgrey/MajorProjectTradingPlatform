@@ -84,6 +84,14 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
+     * @see TradingPlatformDataSource#getAssetAmount(String, String)
+     */
+    @Override
+    public int getAssetAmount(String organisation, String Asset) {
+        return 0;
+    }
+
+    /**
      * @see TradingPlatformDataSource#deleteAsset(String, String)
      */
     @Override
@@ -180,7 +188,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see #getOrders(String, String, boolean)
+     * @see TradingPlatformDataSource#getOrders(String, String, boolean)
      */
     @Override
     public Set<Order> getOrders(String organisation, String asset, boolean isBuyOrder) {

@@ -44,6 +44,15 @@ public interface TradingPlatformDataSource {
     void addAsset(String organisation, String asset, int amount);
 
     /**
+     * Retrieves the amount of an asset belonging to an organisation.
+     *
+     * @param organisation The name of the organisational unit.
+     * @param Asset  The name of the asset.
+     * @return
+     */
+    int getAssetAmount(String organisation, String Asset);
+
+    /**
      * Removes an asset from an organisation.
      *
      * @param organisation The name of the organisational unit.
