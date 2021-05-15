@@ -78,7 +78,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#getUserOrganisation(String)
      */
     @Override
     public String getUserOrganisation(String username) {
@@ -86,7 +86,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#deleteOrganisation(String)
      */
     @Override
     public void deleteOrganisation(String organisation) {
@@ -94,7 +94,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#getUsers(String)
      */
     @Override
     public Set<String> getUsers(String organisation) {
@@ -102,7 +102,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#getUserPassword(String)
      */
     @Override
     public String getUserPassword(String username) {
@@ -110,7 +110,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#addUser(String, String, String, String)
      */
     @Override
     public void addUser(String username, String password, String type, String organisation) {
@@ -118,7 +118,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#deleteUser(String)
      */
     @Override
     public void deleteUser(String username) {
@@ -126,7 +126,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#updatePassword(String, String)
      */
     @Override
     public void updatePassword(String username, String password) {
@@ -134,7 +134,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#getOrder(int)
      */
     @Override
     public Order getOrder(int idx) {
@@ -142,7 +142,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#getOrders(String, String, int, int, boolean)
      */
     @Override
     public Set<Order> getOrders(String organisation, String Asset, int amount, int credits, boolean isBuyOrder) {
@@ -150,7 +150,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#getAllOrders(boolean)
      */
     @Override
     public Set<Order> getAllOrders(boolean isBuyOrder) {
@@ -158,7 +158,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#addOrder(String, String, int, int, boolean)
      */
     @Override
     public void addOrder(String organisation, String Asset, int amount, int credits, boolean isBuyOrder) {
@@ -166,7 +166,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#deleteOrder(int)
      */
     @Override
     public void deleteOrder(int idx) {
@@ -174,7 +174,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#addTransaction(String, String, String, int)
      */
     @Override
     public void addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount) {
@@ -182,7 +182,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#getOrderHistory(String, String, String)
      */
     @Override
     public Set<Transaction> getOrderHistory(String buyingOrganisation, String sellingOrganisation, String asset) {
@@ -190,7 +190,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource
+     * @see TradingPlatformDataSource#deleteAll()
      */
     @Override
     public void deleteAll() {
