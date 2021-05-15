@@ -24,19 +24,29 @@ public class JDBCDataSourceTest {
     private static final String ADMIN = "ADMIN";
     private static final String STANDARD = "STANDARD";
     private static final String organisationApple = "Apple";
+    private static int organisationAppleCredits = 100;
     private static final String asset1 = "AppleWatch5.0";
+    private static int asset1Amount = 2;
+    private static int asset1AmountChange = 5;
+    private static final String asset2 = "AppleMacComputer";
+    private static int asset2Amount = 10;
+
+    private static int addOrderAssetAmount = 5;
+    private static int addOrderCreditAmount = 40;
+    //private static int addOrderAssetAmount = 5;
+    //private static int addOrderAssetAmount = 5;
+
 
     //Create an organisation --
     //Create a user --
     //Update their password --
-    //Delete a user
-    //Create an admin
-    //Delete an admin
-    //Add asset to organisation
-    //Update an asset amount
-    //Remove an asset from an organisation
-    //Add an order
-    //delete an order
+    //Delete a user --
+    //Add asset to organisation --
+    //Update an asset amount --
+    //Decrement an asset amount --
+    //Remove an asset from an organisation --
+    //Add an order --
+    //delete an order --
 
     /**
      Prepare the database
@@ -80,7 +90,8 @@ public class JDBCDataSourceTest {
      */
     @Test
     public void testDeleteUser() {
-
+        dataSource.deleteUser(aNewUser);
+        assertTrue(dataSource.getUsers(organisationApple).contains(aNewUser));
     }
 
     /**
@@ -88,13 +99,64 @@ public class JDBCDataSourceTest {
      */
     @Test
     public void testAddAssetData() {
-        int assetAmount = 5;
-        dataSource.addAsset(organisationApple, asset1, assetAmount);
+        dataSource.addAsset(organisationApple,asset1, asset1Amount);
         assertTrue(dataSource.getAssets(organisationApple).contains(asset1));
-        assertEquals(assetAmount, dataSource.getAssetAmount(organisationApple, asset1));
+        assertEquals(dataSource.getAssetAmount(organisationApple, asset1), amount);
     }
 
+    /**
+     Increase an assets amount
+     */
+    @Test
+    public void testIncrementUpdateAssetAmount() {
+        dataSource.updateAssetAmount(organisationApple, asset1, asset1AmountChange);
+        assertEquals((asset1Amount + asset1AmountChange), dataSource.getAssetAmount(organisationApple, asset1));
+    }
 
+    /**
+     Decrese an assets amount
+     */
+    @Test
+    public void testDecrementUpdateAssetAmount() {
+        dataSource.updateAssetAmount(organisationApple, asset1, asset1AmountChange);
+        assertEquals((asset1Amount - asset1AmountChange), dataSource.getAssetAmount(organisationApple, asset1));
+    }
+
+    /**
+     Remove an asset
+     */
+    @Test
+    public void testRemoveAsset() {
+        dataSource.deleteAsset(organisationApple, asset1);
+        assertFalse(dataSource.getAssets(organisationApple).contains(asset1));
+    }
+
+    /**
+     Place a buy order
+     */
+    @Test
+    public void testBuyAddOrder() {
+        dataSource.addOrder(organisationApple,asset1, addOrderAssetAmount,addOrderCreditAmount,true);
+        assertTrue(addOrderCreditAmount <= organisationAppleCredits);
+
+    }
+
+    /**
+     Place a sale order
+     */
+    @Test
+    public void testSellAddOrder() {
+        dataSource.addOrder(organisationApple,asset1, addOrderAssetAmount,addOrderCreditAmount,false);
+
+        assertTrue(addOrderCreditAmount <= organisationAppleCredits);
+    }
+
+    /**
+     Add an asset to the organisation
+     */
+    @Test
+    public void testDeleteOrder() {
+    }
 
     @AfterAll
     static void resetDatabase() {
