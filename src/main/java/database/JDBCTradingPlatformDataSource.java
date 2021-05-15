@@ -46,10 +46,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource#addAsset(String, int) 
+     * @see TradingPlatformDataSource#addAsset(String, String, int)
      */
     @Override
-    public void addAsset(String organisation, int amount) {
+    public void addAsset(String organisation, String asset, int amount) {
 
     }
 
@@ -83,6 +83,14 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     @Override
     public String getUserOrganisation(String username) {
         return null;
+    }
+
+    /**
+     * @see TradingPlatformDataSource#addOrganisation(String, int) 
+     */
+    @Override
+    public void addOrganisation(String organisation, int credits) {
+        
     }
 
     /**
@@ -142,18 +150,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource#getOrders(String, String, int, int, boolean)
+     * @see #getOrders(String, String, boolean)
      */
     @Override
-    public Set<Order> getOrders(String organisation, String Asset, int amount, int credits, boolean isBuyOrder) {
-        return null;
-    }
-
-    /**
-     * @see TradingPlatformDataSource#getAllOrders(boolean)
-     */
-    @Override
-    public Set<Order> getAllOrders(boolean isBuyOrder) {
+    public Set<Order> getOrders(String organisation, String asset, boolean isBuyOrder) {
         return null;
     }
 
