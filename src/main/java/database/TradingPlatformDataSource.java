@@ -48,7 +48,7 @@ public interface TradingPlatformDataSource {
      *
      * @param organisation The name of the organisational unit.
      * @param Asset  The name of the asset.
-     * @return
+     * @return the integer value of the amount of the asset from the organisation.
      */
     int getAssetAmount(String organisation, String Asset);
 
