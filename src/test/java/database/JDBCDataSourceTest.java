@@ -1,11 +1,13 @@
 package test.java.database;
 
 import main.java.database.JDBCTradingPlatformDataSource;
+import main.java.tradingPlatform.TPOrder;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.xml.namespace.QName;
+import java.sql.SQLException;
 import java.util.Set;
 
 import org.junit.jupiter.api.AfterAll;
@@ -16,40 +18,24 @@ public class JDBCDataSourceTest {
 
     private static final String propsFile = "src/test/resources/JDBCDataSourceTest.props";
     private static final JDBCTradingPlatformDataSource dataSource = new JDBCTradingPlatformDataSource(propsFile);
-    private static String organisationName;
-    private static int amount;
-    private static String aNewUser = "User666";
-    private static String aNewUserInitialPassword = "Password";
-    private static String aNewUserSecondPassword = "Password123";
+    private static final String aNewUser = "User666";
+    private static final String aNewUserInitialPassword = "Password";
+    private static final String aNewUserSecondPassword = "Password123";
     private static final String ADMIN = "ADMIN";
     private static final String STANDARD = "STANDARD";
     private static final String organisationApple = "Apple";
-    private static int organisationAppleCredits = 100;
+    private static final int organisationAppleCredits = 100;
     private static final String asset1 = "AppleWatch5.0";
-    private static int asset1Amount = 2;
-    private static int asset1AmountChange = 5;
+    private static final int asset1Amount = 2;
+    private static final int asset1AmountChange = 5;
     private static final String asset2 = "AppleMacComputer";
-    private static int asset2Amount = 10;
+    private static final int asset2Amount = 10;
+    private static final int  addOrderAssetAmount = 5;
+    private static final int addOrderCreditAmount = 40;
 
-    private static int addOrderAssetAmount = 5;
-    private static int addOrderCreditAmount = 40;
-    //private static int addOrderAssetAmount = 5;
-    //private static int addOrderAssetAmount = 5;
-
-
-    //Create an organisation --
-    //Create a user --
-    //Update their password --
-    //Delete a user --
-    //Add asset to organisation --
-    //Update an asset amount --
-    //Decrement an asset amount --
-    //Remove an asset from an organisation --
-    //Add an order --
-    //delete an order --
 
     /**
-     Prepare the database
+     * Prepare the database
      */
     @BeforeAll
     static void setupDatabase() {
@@ -57,7 +43,7 @@ public class JDBCDataSourceTest {
     }
 
     /**
-     Add an initial organisation
+     * Add an initial organisation
      */
     @Test
     public void testAddOrganisationData() {
@@ -68,7 +54,7 @@ public class JDBCDataSourceTest {
     }
 
     /**
-     Create a standard user
+     *Create a standard user
      */
     @Test
     public void testAddNewUser() {
@@ -77,7 +63,7 @@ public class JDBCDataSourceTest {
     }
 
     /**
-     Update the aNewUsers password
+     * Update the aNewUsers password
      */
     @Test
     public void testUpdatePassword() {
@@ -86,26 +72,26 @@ public class JDBCDataSourceTest {
     }
 
     /**
-     Delete aNewUser
+     * Delete aNewUser
      */
     @Test
     public void testDeleteUser() {
         dataSource.deleteUser(aNewUser);
-        assertTrue(dataSource.getUsers(organisationApple).contains(aNewUser));
+        assertFalse(dataSource.getUsers(organisationApple).contains(aNewUser));
     }
 
     /**
-     Add an asset to the organisation
+     * Add an asset to the organisation
      */
     @Test
     public void testAddAssetData() {
         dataSource.addAsset(organisationApple,asset1, asset1Amount);
         assertTrue(dataSource.getAssets(organisationApple).contains(asset1));
-        assertEquals(dataSource.getAssetAmount(organisationApple, asset1), amount);
+        assertEquals(dataSource.getAssetAmount(organisationApple, asset1), asset1Amount);
     }
 
     /**
-     Increase an assets amount
+     * Increase an assets amount
      */
     @Test
     public void testIncrementUpdateAssetAmount() {
@@ -114,7 +100,7 @@ public class JDBCDataSourceTest {
     }
 
     /**
-     Decrese an assets amount
+     * Decrease an assets amount
      */
     @Test
     public void testDecrementUpdateAssetAmount() {
@@ -123,7 +109,7 @@ public class JDBCDataSourceTest {
     }
 
     /**
-     Remove an asset
+     * Remove an asset
      */
     @Test
     public void testRemoveAsset() {
@@ -132,30 +118,42 @@ public class JDBCDataSourceTest {
     }
 
     /**
-     Place a buy order
+     * Place a buy order
      */
     @Test
     public void testBuyAddOrder() {
-        dataSource.addOrder(organisationApple,asset1, addOrderAssetAmount,addOrderCreditAmount,true);
-        assertTrue(addOrderCreditAmount <= organisationAppleCredits);
-
+        dataSource.addOrder(organisationApple, asset1, addOrderAssetAmount,addOrderCreditAmount,true);
+        Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, true);
+        TPOrder tempOrder = tempOrders.iterator().next();
+        int idx = tempOrder.getId();
+        assertTrue(tempOrder.getOrganisation().equals(organisationApple) && tempOrder.getAsset().equals(asset1)
+                && tempOrder.getAmount() == addOrderAssetAmount && tempOrder.getCredits() == addOrderCreditAmount);
     }
 
     /**
-     Place a sale order
+     * Place a sale order
      */
     @Test
     public void testSellAddOrder() {
         dataSource.addOrder(organisationApple,asset1, addOrderAssetAmount,addOrderCreditAmount,false);
-
-        assertTrue(addOrderCreditAmount <= organisationAppleCredits);
+        Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, false);
+        TPOrder tempOrder = tempOrders.iterator().next();
+        int idx = tempOrder.getId();
+        assertTrue(tempOrder.getOrganisation().equals(organisationApple) && tempOrder.getAsset().equals(asset1)
+                && tempOrder.getAmount() == addOrderAssetAmount && tempOrder.getCredits() == addOrderCreditAmount);
     }
 
     /**
-     Add an asset to the organisation
+     * Delete an order
      */
     @Test
     public void testDeleteOrder() {
+
+        Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, true);
+        TPOrder tempOrder = tempOrders.iterator().next();
+        int idx = tempOrder.getId();
+        dataSource.deleteOrder(idx);
+        assertThrows(SQLException.class, () -> dataSource.getOrders(organisationApple,asset1, true));
     }
 
     @AfterAll

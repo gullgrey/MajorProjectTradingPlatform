@@ -28,7 +28,6 @@ public class DBConnectionTest {
         Assertions.assertThrows(IOException.class, () -> {
             dbConnection = new DBConnection(wrongPath);
             connection = dbConnection.getConnection();
-            System.out.println(connection);
         });
     }
 
