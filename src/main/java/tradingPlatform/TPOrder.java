@@ -3,7 +3,7 @@ package main.java.tradingPlatform;
 /**
  * TODO
  */
-public class Order {
+public class TPOrder {
 
     private int id;
     private String organisation;
@@ -13,10 +13,10 @@ public class Order {
     private String dateTime;
     private String type;
 
-    public Order(){}
+    public TPOrder(){}
 
-    public Order(int id, String organisation,String asset, int amount,
-                 int credits, String dateTime, String type) {
+    public TPOrder(int id, String organisation, String asset, int amount,
+                   int credits, String dateTime, String type) {
 
     }
 

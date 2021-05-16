@@ -1,16 +1,9 @@
 package main.java.database;
 
-import main.java.tradingPlatform.Order;
+import main.java.tradingPlatform.TPOrder;
 import main.java.tradingPlatform.Transaction;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Set;
 
+import java.util.Set;
 
 
 /**
@@ -39,7 +32,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String DELETE_USER = "DELETE FROM user_information WHERE username=?";
     private static final String UPDATE_PASSWORD  = "UPDATE user_information SET password = ? WHERE username = ?";
 
-    // Order queries
+    // TPOrder queries
     private static final String GET_ORDER = "SELECT * FROM current_trades WHERE ID=?";
     private static final String GET_ORDERS = "SELECT * FROM current_trades WHERE organisation_name=? AND  asset_name=? AND type=?";
     private static final String ADD_ORDER = "INSERT INTO current_trades (organisation, asset, credit, amount, datetime, isByOrder) VALUE (?,?,?,?,?,?)";
@@ -194,7 +187,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getOrder(int)
      */
     @Override
-    public Order getOrder(int idx) {
+    public TPOrder getOrder(int idx) {
         return null;
     }
 
@@ -202,7 +195,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getOrders(String, String, boolean)
      */
     @Override
-    public Set<Order> getOrders(String organisation, String asset, boolean isBuyOrder) {
+    public Set<TPOrder> getOrders(String organisation, String asset, boolean isBuyOrder) {
         return null;
     }
 

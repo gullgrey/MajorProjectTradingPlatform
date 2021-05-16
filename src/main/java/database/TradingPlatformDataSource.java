@@ -1,6 +1,6 @@
 package main.java.database;
 
-import main.java.tradingPlatform.Order;
+import main.java.tradingPlatform.TPOrder;
 import main.java.tradingPlatform.Transaction;
 
 import java.util.Set;
@@ -147,7 +147,7 @@ public interface TradingPlatformDataSource {
      * @param idx the integer id of a buy or sell order
      * @return an order object that contains all of the order information
      */
-    Order getOrder(int idx);
+    TPOrder getOrder(int idx);
 
     /**
      * Creates a set of order objects that have values equal to the inputted organisation and
@@ -158,10 +158,10 @@ public interface TradingPlatformDataSource {
      * @param organisation The name of the organisational unit. Can be null.
      * @param asset The name of the asset. Can be null.
      * @param isBuyOrder True if the orders are buy orders. False if they're sell orders.
-     * @return a set of Order objects with all the order information.
+     * @return a set of TPOrder objects with all the order information.
      */
-    Set<Order> getOrders(String organisation, String asset,
-                         boolean isBuyOrder);
+    Set<TPOrder> getOrders(String organisation, String asset,
+                           boolean isBuyOrder);
 
     /**
      * Adds a new order to the database trading platform. Can be a buy order or sell order.
