@@ -1,5 +1,6 @@
 package main.java.database;
 
+import main.java.tradingPlatform.Asset;
 import main.java.tradingPlatform.TPOrder;
 import main.java.tradingPlatform.Transaction;
 
@@ -76,7 +77,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getAssets(String) 
      */
     @Override
-    public Set<String> getAssets(String organisation) throws SQLException {
+    public Set<Asset> getAssets(String organisation) throws SQLException {
         return null;
     }
 
