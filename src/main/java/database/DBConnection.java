@@ -37,6 +37,13 @@ public class DBConnection {
 
     }
 
+    /**
+     * TODO
+     * @param propsFile
+     * @return
+     * @throws SQLException
+     * @throws IOException
+     */
     public static Connection getInstance(String propsFile) throws SQLException, IOException{
         if (connection == null) {
             new DBConnection(propsFile);

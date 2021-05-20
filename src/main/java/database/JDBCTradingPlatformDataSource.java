@@ -3,6 +3,7 @@ package main.java.database;
 import main.java.tradingPlatform.TPOrder;
 import main.java.tradingPlatform.Transaction;
 
+import java.sql.SQLException;
 import java.util.Set;
 
 
@@ -59,7 +60,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getCredits(String)
      */
     @Override
-    public int getCredits(String organisation) {
+    public int getCredits(String organisation) throws SQLException {
         return 0;
     }
 
@@ -67,7 +68,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#updateCredits(String, int)
      */
     @Override
-    public void updateCredits(String organisation, int credits) {
+    public void updateCredits(String organisation, int credits) throws SQLException {
 
     }
 
@@ -75,7 +76,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getAssets(String) 
      */
     @Override
-    public Set<String> getAssets(String organisation) {
+    public Set<String> getAssets(String organisation) throws SQLException {
         return null;
     }
 
@@ -83,7 +84,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#addAsset(String, String, int)
      */
     @Override
-    public void addAsset(String organisation, String asset, int amount) {
+    public void addAsset(String organisation, String asset, int amount) throws SQLException {
 
     }
 
@@ -91,7 +92,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getAssetAmount(String, String)
      */
     @Override
-    public int getAssetAmount(String organisation, String Asset) {
+    public int getAssetAmount(String organisation, String Asset) throws SQLException {
         return 0;
     }
 
@@ -99,7 +100,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#deleteAsset(String, String)
      */
     @Override
-    public void deleteAsset(String organisation, String asset) {
+    public void deleteAsset(String organisation, String asset) throws SQLException {
 
     }
 
@@ -107,7 +108,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#updateAssetAmount(String, String, int)
      */
     @Override
-    public void updateAssetAmount(String organisation, String asset, int amount) {
+    public void updateAssetAmount(String organisation, String asset, int amount) throws SQLException {
 
     }
 
@@ -115,7 +116,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getOrganisations()
      */
     @Override
-    public Set<String> getOrganisations() {
+    public Set<String> getOrganisations() throws SQLException {
         return null;
     }
 
@@ -123,7 +124,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getUserOrganisation(String)
      */
     @Override
-    public String getUserOrganisation(String username) {
+    public String getUserOrganisation(String username) throws SQLException {
         return null;
     }
 
@@ -131,7 +132,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#addOrganisation(String, int)
      */
     @Override
-    public void addOrganisation(String organisation, int credits) {
+    public void addOrganisation(String organisation, int credits) throws SQLException {
         
     }
 
@@ -139,7 +140,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#deleteOrganisation(String)
      */
     @Override
-    public void deleteOrganisation(String organisation) {
+    public void deleteOrganisation(String organisation) throws SQLException {
 
     }
 
@@ -147,7 +148,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getUsers(String)
      */
     @Override
-    public Set<String> getUsers(String organisation) {
+    public Set<String> getUsers(String organisation) throws SQLException {
         return null;
     }
 
@@ -155,7 +156,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getUserPassword(String)
      */
     @Override
-    public String getUserPassword(String username) {
+    public String getUserPassword(String username) throws SQLException {
         return null;
     }
 
@@ -163,7 +164,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#addUser(String, String, String, String)
      */
     @Override
-    public void addUser(String username, String password, String type, String organisation) {
+    public void addUser(String username, String password, String type, String organisation) throws SQLException  {
 
     }
 
@@ -171,7 +172,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#deleteUser(String)
      */
     @Override
-    public void deleteUser(String username) {
+    public void deleteUser(String username) throws SQLException  {
 
     }
 
@@ -179,7 +180,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#updatePassword(String, String)
      */
     @Override
-    public void updatePassword(String username, String password) {
+    public void updatePassword(String username, String password) throws SQLException  {
 
     }
 
@@ -187,7 +188,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getOrder(int)
      */
     @Override
-    public TPOrder getOrder(int idx) {
+    public TPOrder getOrder(int idx) throws SQLException  {
         return null;
     }
 
@@ -195,7 +196,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getOrders(String, String, boolean)
      */
     @Override
-    public Set<TPOrder> getOrders(String organisation, String asset, boolean isBuyOrder) {
+    public Set<TPOrder> getOrders(String organisation, String asset, boolean isBuyOrder) throws SQLException  {
         return null;
     }
 
@@ -203,7 +204,8 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#addOrder(String, String, int, int, boolean)
      */
     @Override
-    public void addOrder(String organisation, String asset, int amount, int credits, boolean isBuyOrder) {
+    public void addOrder(String organisation, String asset, int amount,
+                         int credits, boolean isBuyOrder) throws SQLException  {
 
     }
 
@@ -211,7 +213,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#deleteOrder(int)
      */
     @Override
-    public void deleteOrder(int idx) {
+    public void deleteOrder(int idx) throws SQLException {
 
     }
 
@@ -220,7 +222,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      */
     @Override
     public void addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
-                               int credits) {
+                               int credits) throws SQLException {
 
     }
 
@@ -228,7 +230,8 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getOrderHistory(String, String, String)
      */
     @Override
-    public Set<Transaction> getOrderHistory(String buyingOrganisation, String sellingOrganisation, String asset) {
+    public Set<Transaction> getOrderHistory(String buyingOrganisation,
+                                            String sellingOrganisation, String asset) throws SQLException  {
         return null;
     }
 
@@ -236,7 +239,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#deleteAll()
      */
     @Override
-    public void deleteAll() {
+    public void deleteAll() throws SQLException {
 
     }
 
