@@ -13,7 +13,8 @@ public class TPOrder {
     private String dateTime;
     private String type;
 
-    public TPOrder(){}
+    public TPOrder() {
+    }
 
     public TPOrder(int id, String organisation, String asset, int amount,
                    int credits, String dateTime, String type) {
@@ -21,46 +22,43 @@ public class TPOrder {
     }
 
     /**
+     * Get the ID value of a transaction.
      *
-     * @return
+     * @return int ID
      */
     public int getId() {
         return id;
     }
 
     /**
+     * Method is used to get the organisation making the order.
      *
-     * @param id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     *
-     * @return
+     * @return String Organisation
      */
     public String getOrganisation() {
         return organisation;
     }
 
     /**
+     * Methods used to set the organisation making an order.
      *
-     * @param organisation
+     * @param organisation The current organisation making the order
      */
     public void setOrganisation(String organisation) {
         this.organisation = organisation;
     }
 
     /**
+     * Method used to get the Asset of an order
      *
-     * @return
+     * @return name of Asset
      */
     public String getAsset() {
         return asset;
     }
 
     /**
+     * Method used to set the Asset of an order
      *
      * @param asset
      */
@@ -69,6 +67,7 @@ public class TPOrder {
     }
 
     /**
+     * Get the amount of a specific order
      *
      * @return
      */
@@ -77,7 +76,6 @@ public class TPOrder {
     }
 
     /**
-     *
      * @param amount
      */
     public void setAmount(int amount) {
@@ -85,7 +83,6 @@ public class TPOrder {
     }
 
     /**
-     *
      * @return
      */
     public int getCredits() {
@@ -93,7 +90,6 @@ public class TPOrder {
     }
 
     /**
-     *
      * @param credits
      */
     public void setCredits(int credits) {
@@ -101,7 +97,6 @@ public class TPOrder {
     }
 
     /**
-     *
      * @return
      */
     public String getDateTime() {
@@ -109,7 +104,6 @@ public class TPOrder {
     }
 
     /**
-     *
      * @param dateTime
      */
     public void setDateTime(String dateTime) {
@@ -117,18 +111,10 @@ public class TPOrder {
     }
 
     /**
-     *
      * @return
      */
     public String getType() {
         return type;
     }
-
-    /**
-     *
-     * @param type
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
 }
+
