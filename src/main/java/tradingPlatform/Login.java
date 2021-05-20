@@ -47,20 +47,11 @@ public class Login {
     }
 
     /**
-     *
+     *  Provided that checkSuppliedCreds is True this will grab all the information
+     *  specific to the logging in user.
      */
     private void getUserFromDB(){
 
     }
-
-
-    // TODO Need to see where this is going
-    private void openMainGUI(){
-
-    }
-
-    //Wrong username/password message  --- catch this with an SQL error
-
-
 
 }
