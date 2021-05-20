@@ -21,19 +21,12 @@ public class JDBCDataSourceExceptionTest {
     private static final JDBCTradingPlatformDataSource dataSource = new JDBCTradingPlatformDataSource(propsFile);
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
-    private static final String aNewUserSecondPassword = "Password123";
-    private static final String ADMIN = "ADMIN";
     private static final String STANDARD = "STANDARD";
     private static final String organisationApple = "Apple";
-    private static final int organisationAppleCredits = 100;
     private static final String asset1 = "AppleWatch5.0";
     private static final int asset1Amount = 2;
-    private static final int asset1AmountChange = 5;
-    private static final int asset1AmountChange2 = -5;
-    private static final String asset2 = "AppleMacComputer";
-    private static final int asset2Amount = 10;
-    private static final int  addOrderAssetAmount = 5;
     private static final int addOrderCreditAmount = 40;
+    private static final String falseVariable = "DoesNotExist";
 
     /**
      * Prepare the database
@@ -56,7 +49,7 @@ public class JDBCDataSourceExceptionTest {
     }
 
     /**
-     * Testing if the program throws an exception if the same organisation is added
+     * Testing if the program throws an exception if the same user is added
      */
     @Test
     public void testAddNewUserThrows() {
@@ -73,7 +66,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testUpdatePasswordThrows() {
         assertThrows(SQLException.class, () -> {
-            dataSource.updatePassword("NotAUser", aNewUserInitialPassword);
+            dataSource.updatePassword(falseVariable, aNewUserInitialPassword);
         });
     }
 
@@ -83,7 +76,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testDeleteUserThrows() {
         assertThrows(SQLException.class, () -> {
-            dataSource.deleteUser("ThisUserDoesNotExist");
+            dataSource.deleteUser(falseVariable);
         });
     }
 
@@ -94,7 +87,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testAddAssetThrowsOrganisation() {
         assertThrows(SQLException.class, () -> {
-            dataSource.addAsset("ThisUserDoesNotExist", asset1 , asset1Amount);
+            dataSource.addAsset(falseVariable, asset1 , asset1Amount);
         });
     }
 
@@ -115,7 +108,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testUpdateAssetAmountThrowsOrganisation() {
         assertThrows(SQLException.class, () -> {
-            dataSource.updateAssetAmount("DoesNotExist", asset1 , asset1Amount);
+            dataSource.updateAssetAmount(falseVariable, asset1 , asset1Amount);
         });
     }
 
@@ -125,7 +118,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testUpdateAssetAmountThrowsAsset() {
         assertThrows(SQLException.class, () -> {
-            dataSource.updateAssetAmount(organisationApple, "ThisDoesNotExist" , asset1Amount);
+            dataSource.updateAssetAmount(organisationApple, falseVariable , asset1Amount);
         });
     }
 
@@ -135,7 +128,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testRemoveAssetThrowsOrganisation() {
         assertThrows(SQLException.class, () -> {
-            dataSource.deleteAsset("DoesNotExist", asset1 );
+            dataSource.deleteAsset(falseVariable, asset1 );
         });
     }
 
@@ -145,7 +138,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testRemoveAssetThrowsAsset() {
         assertThrows(SQLException.class, () -> {
-            dataSource.deleteAsset(organisationApple, "DoesNotExist" );
+            dataSource.deleteAsset(organisationApple, falseVariable );
         });
     }
 
@@ -166,7 +159,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testBuyOrderThrowsOrganisation() {
         assertThrows(SQLException.class, () -> {
-            dataSource.addOrder("DoesNotExist", asset1, asset1Amount, addOrderCreditAmount,true);
+            dataSource.addOrder(falseVariable, asset1, asset1Amount, addOrderCreditAmount,true);
         });
     }
 
@@ -176,10 +169,9 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testBuyOrderThrowsAsset() {
         assertThrows(SQLException.class, () -> {
-            dataSource.addOrder(organisationApple, "DoesNotExist", asset1Amount, addOrderCreditAmount,true);
+            dataSource.addOrder(organisationApple, falseVariable, asset1Amount, addOrderCreditAmount,true);
         });
     }
-
 
     /**
      * Testing if the program throws an exception if the organisation doesn't exist
@@ -187,7 +179,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testSellOrderThrowsOrganisation() {
         assertThrows(SQLException.class, () -> {
-            dataSource.addOrder("DoesNotExist", asset1, asset1Amount, addOrderCreditAmount,false);
+            dataSource.addOrder(falseVariable, asset1, asset1Amount, addOrderCreditAmount,false);
         });
     }
 
@@ -197,7 +189,7 @@ public class JDBCDataSourceExceptionTest {
     @Test
     public void testSellOrderThrowsAsset() {
         assertThrows(SQLException.class, () -> {
-            dataSource.addOrder(organisationApple, "DoesNotExist", asset1Amount, addOrderCreditAmount,false);
+            dataSource.addOrder(organisationApple, falseVariable, asset1Amount, addOrderCreditAmount,false);
         });
     }
 

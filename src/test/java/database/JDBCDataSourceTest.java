@@ -56,11 +56,6 @@ public class JDBCDataSourceTest {
         assertEquals(creditAmount, dataSource.getCredits(organisationApple));
     }
 
-    // duplicates
-    // null references
-    // get something that doesnt exist or update something that doesnt exist
-    //
-
     /**
      *Create a standard user
      */
