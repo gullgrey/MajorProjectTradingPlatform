@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.xml.namespace.QName;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.DuplicateFormatFlagsException;
 import java.util.Set;
 
 import org.junit.jupiter.api.AfterAll;
@@ -28,6 +30,7 @@ public class JDBCDataSourceTest {
     private static final String asset1 = "AppleWatch5.0";
     private static final int asset1Amount = 2;
     private static final int asset1AmountChange = 5;
+    private static final int asset1AmountChange2 = -5;
     private static final String asset2 = "AppleMacComputer";
     private static final int asset2Amount = 10;
     private static final int  addOrderAssetAmount = 5;
@@ -46,18 +49,23 @@ public class JDBCDataSourceTest {
      * Add an initial organisation
      */
     @Test
-    public void testAddOrganisationData() {
+    public void testAddOrganisationData() throws SQLException {
         int creditAmount = 200;
         dataSource.addOrganisation(organisationApple, creditAmount);
         assertTrue(dataSource.getOrganisations().contains(organisationApple));
         assertEquals(creditAmount, dataSource.getCredits(organisationApple));
     }
 
+    // duplicates
+    // null references
+    // get something that doesnt exist or update something that doesnt exist
+    //
+
     /**
      *Create a standard user
      */
     @Test
-    public void testAddNewUser() {
+    public void testAddNewUser() throws SQLException {
         dataSource.addUser(aNewUser, aNewUserInitialPassword, STANDARD, organisationApple);
         assertTrue(dataSource.getUsers(organisationApple).contains(aNewUser));
     }
@@ -66,7 +74,7 @@ public class JDBCDataSourceTest {
      * Update the aNewUsers password
      */
     @Test
-    public void testUpdatePassword() {
+    public void testUpdatePassword() throws SQLException {
         dataSource.updatePassword(aNewUser, aNewUserSecondPassword);
         assertEquals(aNewUserSecondPassword, dataSource.getUserPassword(aNewUser));
     }
@@ -75,7 +83,7 @@ public class JDBCDataSourceTest {
      * Delete aNewUser
      */
     @Test
-    public void testDeleteUser() {
+    public void testDeleteUser() throws SQLException {
         dataSource.deleteUser(aNewUser);
         assertFalse(dataSource.getUsers(organisationApple).contains(aNewUser));
     }
@@ -84,7 +92,7 @@ public class JDBCDataSourceTest {
      * Add an asset to the organisation
      */
     @Test
-    public void testAddAssetData() {
+    public void testAddAssetData() throws SQLException {
         dataSource.addAsset(organisationApple,asset1, asset1Amount);
         assertTrue(dataSource.getAssets(organisationApple).contains(asset1));
         assertEquals(dataSource.getAssetAmount(organisationApple, asset1), asset1Amount);
@@ -94,7 +102,7 @@ public class JDBCDataSourceTest {
      * Increase an assets amount
      */
     @Test
-    public void testIncrementUpdateAssetAmount() {
+    public void testIncrementUpdateAssetAmount() throws SQLException {
         dataSource.updateAssetAmount(organisationApple, asset1, asset1AmountChange);
         assertEquals((asset1Amount + asset1AmountChange), dataSource.getAssetAmount(organisationApple, asset1));
     }
@@ -103,16 +111,16 @@ public class JDBCDataSourceTest {
      * Decrease an assets amount
      */
     @Test
-    public void testDecrementUpdateAssetAmount() {
-        dataSource.updateAssetAmount(organisationApple, asset1, asset1AmountChange);
-        assertEquals((asset1Amount - asset1AmountChange), dataSource.getAssetAmount(organisationApple, asset1));
+    public void testDecrementUpdateAssetAmount() throws SQLException {
+        dataSource.updateAssetAmount(organisationApple, asset1, asset1AmountChange2);
+        assertEquals((asset1Amount + asset1AmountChange2), dataSource.getAssetAmount(organisationApple, asset1));
     }
 
     /**
      * Remove an asset
      */
     @Test
-    public void testRemoveAsset() {
+    public void testRemoveAsset() throws SQLException {
         dataSource.deleteAsset(organisationApple, asset1);
         assertFalse(dataSource.getAssets(organisationApple).contains(asset1));
     }
@@ -121,7 +129,7 @@ public class JDBCDataSourceTest {
      * Place a buy order
      */
     @Test
-    public void testBuyAddOrder() {
+    public void testBuyAddOrder() throws SQLException {
         dataSource.addOrder(organisationApple, asset1, addOrderAssetAmount,addOrderCreditAmount,true);
         Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, true);
         TPOrder tempOrder = tempOrders.iterator().next();
@@ -134,7 +142,7 @@ public class JDBCDataSourceTest {
      * Place a sale order
      */
     @Test
-    public void testSellAddOrder() {
+    public void testSellAddOrder() throws SQLException {
         dataSource.addOrder(organisationApple,asset1, addOrderAssetAmount,addOrderCreditAmount,false);
         Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, false);
         TPOrder tempOrder = tempOrders.iterator().next();
@@ -143,11 +151,13 @@ public class JDBCDataSourceTest {
                 && tempOrder.getAmount() == addOrderAssetAmount && tempOrder.getCredits() == addOrderCreditAmount);
     }
 
+
+
     /**
      * Delete an order
      */
     @Test
-    public void testDeleteOrder() {
+    public void testDeleteOrder() throws SQLException {
 
         Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, true);
         TPOrder tempOrder = tempOrders.iterator().next();
@@ -156,8 +166,16 @@ public class JDBCDataSourceTest {
         assertThrows(SQLException.class, () -> dataSource.getOrders(organisationApple,asset1, true));
     }
 
+    /**
+     * Assertions throws are this point onwards.
+     */
+    @Test
+    public void newDatabaseInstance() throws SQLException, IOException {
+
+    }
+
     @AfterAll
-    static void resetDatabase() {
+    static void resetDatabase() throws SQLException {
         dataSource.deleteAll();
     }
 }
