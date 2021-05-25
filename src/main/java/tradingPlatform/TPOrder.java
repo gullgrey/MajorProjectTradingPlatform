@@ -18,7 +18,13 @@ public class TPOrder {
 
     public TPOrder(int id, String organisation, String asset, int amount,
                    int credits, String dateTime, String type) {
-
+        this.id = id;
+        this.organisation = organisation;
+        this.asset = asset;
+        this.amount = amount;
+        this.credits = credits;
+        this.dateTime = dateTime;
+        this.type = type;
     }
 
     /**
