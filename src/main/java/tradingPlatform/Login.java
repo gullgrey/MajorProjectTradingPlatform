@@ -17,7 +17,7 @@ public class Login {
     public Login(String  userName, String password){
         this.username = userName;
         this.password = password;
-        checkSuppliedCreds(); // Check the DB for the username and password
+        checkSuppliedCredentials(); // Check the DB for the username and password
         // if the user is found then get the user from the DB
             getUserFromDB();
             // Set the organisationalUnit
@@ -39,7 +39,7 @@ public class Login {
      * Functions is used to check if the user exists in the DB
      * @return boolean of whether or not the user existed.
      */
-    private boolean checkSuppliedCreds(){
+    private boolean checkSuppliedCredentials(){
         // Hash the password here.
         // Checked the DB.
         // TODO Change this boolean to be the actual value;
