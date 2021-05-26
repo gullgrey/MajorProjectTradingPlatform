@@ -1,6 +1,7 @@
 package test.java.database;
 
 import main.java.database.JDBCTradingPlatformDataSource;
+import main.java.tradingPlatform.Asset;
 import main.java.tradingPlatform.TPOrder;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.Test;
 public class JDBCDataSourceTest {
 
     private static final String propsFile = "src/test/resources/JDBCDataSourceTest.props";
-    private static final JDBCTradingPlatformDataSource dataSource = new JDBCTradingPlatformDataSource(propsFile);
+    private static JDBCTradingPlatformDataSource dataSource;
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
     private static final String aNewUserSecondPassword = "Password123";
@@ -41,8 +42,8 @@ public class JDBCDataSourceTest {
      * Prepare the database
      */
     @BeforeAll
-    static void setupDatabase() {
-        dataSource.prepareDatabase();
+    static void setupDatabase() throws IOException, SQLException {
+        dataSource = new JDBCTradingPlatformDataSource(propsFile);
     }
 
     /**
@@ -62,7 +63,7 @@ public class JDBCDataSourceTest {
     @Test
     public void testAddNewUser() throws SQLException {
         dataSource.addUser(aNewUser, aNewUserInitialPassword, STANDARD, organisationApple);
-        assertTrue(dataSource.getUsers(organisationApple).contains(aNewUser));
+        assertTrue(dataSource.getUsers().contains(aNewUser));
     }
 
     /**
@@ -80,7 +81,7 @@ public class JDBCDataSourceTest {
     @Test
     public void testDeleteUser() throws SQLException {
         dataSource.deleteUser(aNewUser);
-        assertFalse(dataSource.getUsers(organisationApple).contains(aNewUser));
+        assertFalse(dataSource.getUsers().contains(aNewUser));
     }
 
     /**
@@ -89,7 +90,8 @@ public class JDBCDataSourceTest {
     @Test
     public void testAddAssetData() throws SQLException {
         dataSource.addAsset(organisationApple,asset1, asset1Amount);
-        assertTrue(dataSource.getAssets(organisationApple).contains(asset1));
+        Asset compareAsset = new Asset(organisationApple, asset1, asset1Amount);
+        assertTrue(dataSource.getAssets(organisationApple).contains(compareAsset));
         assertEquals(dataSource.getAssetAmount(organisationApple, asset1), asset1Amount);
     }
 
@@ -159,14 +161,6 @@ public class JDBCDataSourceTest {
         int idx = tempOrder.getId();
         dataSource.deleteOrder(idx);
         assertThrows(SQLException.class, () -> dataSource.getOrders(organisationApple,asset1, true));
-    }
-
-    /**
-     * Assertions throws are this point onwards.
-     */
-    @Test
-    public void newDatabaseInstance() throws SQLException, IOException {
-
     }
 
     @AfterAll

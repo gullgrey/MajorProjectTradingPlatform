@@ -3,7 +3,7 @@ package main.java.tradingPlatform;
 /**
  * TODO
  */
-public class TPOrder {
+public class TPOrder implements Comparable<TPOrder>{
 
     private int id;
     private String organisation;
@@ -32,7 +32,7 @@ public class TPOrder {
      *
      * @return int ID
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -121,6 +121,11 @@ public class TPOrder {
      */
     public String getType() {
         return type;
+    }
+
+    @Override
+    public int compareTo(TPOrder order) {
+        return this.getId().compareTo(order.getId());
     }
 }
 

@@ -53,11 +53,11 @@ public interface TradingPlatformDataSource {
      * Retrieves the amount of an asset belonging to an organisation.
      *
      * @param organisation The name of the organisational unit.
-     * @param Asset  The name of the asset.
+     * @param asset  The name of the asset.
      * @return the integer value of the amount of the asset from the organisation.
      * @throws SQLException
      */
-    int getAssetAmount(String organisation, String Asset) throws SQLException;
+    int getAssetAmount(String organisation, String asset) throws SQLException;
 
     /**
      * Removes an asset from an organisation.
@@ -112,13 +112,12 @@ public interface TradingPlatformDataSource {
     void deleteOrganisation(String organisation) throws SQLException;
 
     /**
-     * Retrieves the set of usernames that belong to the inputted organisation.
+     * Retrieves the set of usernames with access to the trading platform.
      *
-     * @param organisation The name of the organisational unit.
      * @return a set of usernames.
      * @throws SQLException
      */
-    Set<String> getUsers(String organisation) throws SQLException;
+    Set<String> getUsers() throws SQLException;
 
     /**
      * Returns the hashed password of the user with the inputted username.

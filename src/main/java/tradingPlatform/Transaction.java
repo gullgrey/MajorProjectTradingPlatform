@@ -3,7 +3,7 @@ package main.java.tradingPlatform;
 /**
  * TODO
  */
-public class Transaction {
+public class Transaction implements Comparable<Transaction>{
 
     private int id;
     private String buyingOrganisation;
@@ -24,7 +24,7 @@ public class Transaction {
     /**
      * @return integer ID for a translation
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -117,5 +117,10 @@ public class Transaction {
      */
     public String getDateTime() {
         return dateTime;
+    }
+
+    @Override
+    public int compareTo(Transaction transaction) {
+        return this.getId().compareTo(transaction.getId());
     }
 }

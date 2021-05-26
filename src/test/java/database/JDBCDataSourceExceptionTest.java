@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 public class JDBCDataSourceExceptionTest {
 
     private static final String propsFile = "src/test/resources/JDBCDataSourceTest.props";
-    private static final JDBCTradingPlatformDataSource dataSource = new JDBCTradingPlatformDataSource(propsFile);
+    private static JDBCTradingPlatformDataSource dataSource;
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
     private static final String STANDARD = "STANDARD";
@@ -32,8 +32,8 @@ public class JDBCDataSourceExceptionTest {
      * Prepare the database
      */
     @BeforeAll
-    static void setupDatabase() {
-        dataSource.prepareDatabase();
+    static void setupDatabase() throws IOException, SQLException {
+         dataSource = new JDBCTradingPlatformDataSource(propsFile);
     }
 
     /**
