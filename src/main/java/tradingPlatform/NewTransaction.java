@@ -13,7 +13,7 @@ public class NewTransaction {
     }
 
     private TPOrder automaticTransaction(TPOrder order) {
-        //Could do message at GUI level that states
+        //Could do message at GUI level that states what transaction took place.
         return null;
     }
 }

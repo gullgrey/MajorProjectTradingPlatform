@@ -65,6 +65,7 @@ public class Transaction {
      * @return returns the asset of an organisation
      */
     public String getAsset() {
+
         return asset;
     }
 
@@ -73,6 +74,7 @@ public class Transaction {
      * @param asset
      */
     public void setAsset(String asset) {
+
         this.asset = asset;
     }
 
@@ -81,6 +83,7 @@ public class Transaction {
      * @return Returns the current amount
      */
     public int getAmount() {
+
         return amount;
     }
 

@@ -23,16 +23,16 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     // Organisation queries
     private static final String GET_CREDITS = "SELECT credits FROM organisation_units WHERE organisation_name=?";
     private static final String UPDATE_CREDITS = "UPDATE organisation_units SET credits=? WHERE organisation_name=?";
-    private static final String GET_ORGANISATION = "SELECT organisation_name FROM organisation";
-    private static final String GET_USER_ORGANISATION = "SELECT organisation_name FROM user_information WHERE username=?";
+    private static final String GET_ORGANISATIONS = "SELECT organisation_name FROM organisation";
     private static final String ADD_ORGANISATION  = "INSERT INTO organisation VALUE (?,?)";
     private static final String DELETE_ORGANISATION = "DELETE FROM organisation WHERE organisation_name=?";
 
     // User queries
-    private static final String GET_USER = "SELECT  username FROM user_information WHERE organisation_name=?";
+    private static final String GET_USER = "SELECT username FROM user_information WHERE organisation_name=?";
     private static final String GET_USER_PASSWORD = "SELECT password FROM user_information WHERE username=?";
     private static final String DELETE_USER = "DELETE FROM user_information WHERE username=?";
     private static final String UPDATE_PASSWORD  = "UPDATE user_information SET password = ? WHERE username = ?";
+    private static final String GET_USER_ORGANISATION = "SELECT organisation_name FROM user_information WHERE username=?";
 
     // TPOrder queries
     private static final String GET_ORDER = "SELECT * FROM current_trades WHERE ID=?";
