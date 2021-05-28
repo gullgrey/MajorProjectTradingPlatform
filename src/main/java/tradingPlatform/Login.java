@@ -36,10 +36,10 @@ public class Login {
     }
 
     /**
-     * Functions is used to check if the user exists in the DB.
+     * Function is used to check if the user exists in the DB.
      * @return boolean of whether or not the user existed.
      */
-    private boolean checkSuppliedCredentials(){
+    public boolean checkSuppliedCredentials(){
         // Hash the password here.
         // Checked the DB.
         // TODO Change this boolean to be the actual value;
