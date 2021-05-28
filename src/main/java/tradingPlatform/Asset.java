@@ -26,23 +26,25 @@ public class Asset implements Comparable<Asset>{
     /**
      * Retrieves the organisation name.
      *
-     * @return the organisation
+     * @return the organisational unit name.
      */
     public String getOrganisation() {
         return organisation;
     }
 
     /**
-     * Sets the organisation to the specified organisation.
+     * Sets the organisation name to the specified organisation.
      *
-     * @param organisation The organisation to set.
+     * @param organisation the organisation to set.
      */
     public void setOrganisation(String organisation) {
         this.organisation = organisation;
     }
 
     /**
-     * @return the asset
+     * Retrieves an asset.
+     *
+     * @return the asset.
      */
     public String getAsset() {
         return asset;
@@ -51,21 +53,25 @@ public class Asset implements Comparable<Asset>{
     /**
      * Sets the asset name to the specified asset.
      *
-     * @param asset the asset to set
+     * @param asset the asset to set.
      */
     public void setAsset(String asset) {
         this.asset = asset;
     }
 
     /**
-     * @return the amount
+     * Retrieves the asset amount.
+     *
+     * @return the amount.
      */
     public int getAmount() {
         return amount;
     }
 
     /**
-     * @param amount the amount to set
+     * Updates the amount to a specified value.
+     *
+     * @param amount the amount to set.
      */
     public void setAmount(int amount) {
         this.amount = amount;
