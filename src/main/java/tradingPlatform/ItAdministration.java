@@ -14,10 +14,11 @@ public class ItAdministration extends TPUser {
     }
 
     /**
+     * Creates a new standard user.
      *
-     * @param userName
-     * @param password
-     * @param organisation
+     * @param userName the name of the username of the user
+     * @param password the password the of the user
+     * @param organisation the organisation the user belongs too
      * @throws SQLException
      */
     public void addStandardUser(String userName, String password, String organisation) throws SQLException {
@@ -25,9 +26,10 @@ public class ItAdministration extends TPUser {
     }
 
     /**
+     * Creates a new staff admin account.
      *
-     * @param userName
-     * @param password
+     * @param userName the username of the admin
+     * @param password the password of the admin
      * @throws SQLException
      */
     public void addItUser(String userName, String password) throws SQLException {
@@ -35,8 +37,9 @@ public class ItAdministration extends TPUser {
     }
 
     /**
+     * Removes the user from the system.
      *
-     * @param userName
+     * @param userName the name of the user being removed
      * @throws SQLException
      */
     public void removeUser(String userName) throws SQLException {
@@ -44,8 +47,9 @@ public class ItAdministration extends TPUser {
     }
 
     /**
+     * Creates a new organisation.
      *
-     * @param organisation
+     * @param organisation the name of the organisation being created
      * @throws SQLException
      */
     public void addOrganisation(String organisation) throws SQLException {
@@ -53,8 +57,9 @@ public class ItAdministration extends TPUser {
     }
 
     /**
+     * Remove an organisation from the system.
      *
-     * @param organisation
+     * @param organisation the organisation to be removed
      * @throws SQLException
      */
     public void removeOrganisation(String organisation) throws SQLException {
@@ -62,8 +67,9 @@ public class ItAdministration extends TPUser {
     }
 
     /**
+     * Adds credits to an organisation.
      *
-     * @param organisation
+     * @param organisation the name of the organisation.
      * @param credits
      * @throws SQLException
      */

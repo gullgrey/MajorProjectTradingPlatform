@@ -17,7 +17,7 @@ public class Login {
     public Login(String  userName, String password){
         this.username = userName;
         this.password = password;
-        checkSuppliedCredentials(); // Check the DB for the username and password
+        checkSuppliedCredentials(); // Check the DB for the username and passwor
         // if the user is found then get the user from the DB
             getUserFromDB();
             // Set the organisationalUnit
