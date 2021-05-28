@@ -10,7 +10,7 @@ public class Login {
 
     /**
      * The constructor sets the Username and Password that the current user has provided.
-     * Runs methods checkSuppliedCreds and getUserFromDB
+     * Runs methods checkSuppliedCredentials and getUserFromDB.
      * @param userName
      * @param password
      */
@@ -26,7 +26,7 @@ public class Login {
 
     /**
      * Based off the current values of usename, Password. This look get the remaining data about
-     * the user from the database
+     * the user from the database.
      *
      * @return All the information about the user in the database (e.g. Username, Password, Organisation and
      * if they are an admin.
@@ -36,7 +36,7 @@ public class Login {
     }
 
     /**
-     * Functions is used to check if the user exists in the DB
+     * Functions is used to check if the user exists in the DB.
      * @return boolean of whether or not the user existed.
      */
     private boolean checkSuppliedCredentials(){
@@ -47,11 +47,12 @@ public class Login {
     }
 
     /**
-     *  Provided that checkSuppliedCreds is True this will grab all the information
+     * Grabs all the information for a specific user from the database.
      *  specific to the logging in user.
      */
     private void getUserFromDB(){
-
+        //TODO Speak with Tom and owen about this class and see if it needs take any variables as
+        // i am unsure how this knows what user information to get.
     }
 
 }

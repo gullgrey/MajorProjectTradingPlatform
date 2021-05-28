@@ -11,13 +11,13 @@ public class TPOrder implements Comparable<TPOrder>{
     private int amount;
     private int credits;
     private String dateTime;
-    private String type;
+    private Boolean type; //TODO Check that this is okay to be set as a boolean     ########
 
     public TPOrder() {
     }
 
     public TPOrder(int id, String organisation, String asset, int amount,
-                   int credits, String dateTime, String type) {
+                   int credits, String dateTime, boolean type) {
         this.id = id;
         this.organisation = organisation;
         this.asset = asset;
@@ -28,9 +28,8 @@ public class TPOrder implements Comparable<TPOrder>{
     }
 
     /**
-     * Get the ID value of a transaction.
-     *
-     * @return int ID
+     * Gets the ID value of a transaction.
+     * @return int ID.
      */
     public Integer getId() {
         return id;
@@ -38,8 +37,7 @@ public class TPOrder implements Comparable<TPOrder>{
 
     /**
      * Method is used to get the organisation making the order.
-     *
-     * @return String Organisation
+     * @return String Organisation.
      */
     public String getOrganisation() {
         return organisation;
@@ -47,82 +45,91 @@ public class TPOrder implements Comparable<TPOrder>{
 
     /**
      * Methods used to set the organisation making an order.
-     *
-     * @param organisation The current organisation making the order
+     * @param organisation The current organisation making the order.
      */
     public void setOrganisation(String organisation) {
         this.organisation = organisation;
     }
 
     /**
-     * Method used to get the Asset of an order
-     *
-     * @return name of Asset
+     * Method used to get the Asset of an order.
+     * @return name of Asset.
      */
     public String getAsset() {
         return asset;
     }
 
     /**
-     * Method used to set the Asset of an order
-     *
-     * @param asset
+     * Method used to set the Asset of an order.
+     * @param asset is the name of the asset being added.
      */
     public void setAsset(String asset) {
         this.asset = asset;
     }
 
     /**
-     * Get the amount of a specific order
-     *
-     * @return
+     * Gets the amount of a specific order.
+     * @return the integer value of the amount.
      */
     public int getAmount() {
         return amount;
     }
 
     /**
-     * @param amount
+     * Sets the amounts of an order.
+     * @param amount Integer amount to be set.
      */
     public void setAmount(int amount) {
         this.amount = amount;
     }
 
     /**
-     * @return
+     * Gets the credentials of the organisation making the order
+     * @return Integer value of credits available.
      */
     public int getCredits() {
         return credits;
     }
 
     /**
-     * @param credits
+     * Sets the amount of credits for an organisation.
+     * @param credits amount of credits to be increased or decreased.
      */
     public void setCredits(int credits) {
         this.credits = credits;
     }
 
     /**
-     * @return
+     * Gets the date and time of the server hosting that database.
+     * @return current date and time as a string.
      */
     public String getDateTime() {
         return dateTime;
     }
 
     /**
-     * @param dateTime
+     * Sets the data and time that an order was made.
+     * @param dateTime date and time as a string representation.
      */
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
 
+    //TODO Check that this is okay to be set as a boolean     ########
     /**
-     * @return
+     * Is used to advise whether or not this the order is a buy or sell.
+     * @return boolean indicating True = Sell | False = Buy.
      */
-    public String getType() {
+    public boolean getType() {
         return type;
     }
 
+    /**
+     * Compares the ID supplied with the ID of another order in the database to see if they match
+     * @param order 0 if they do, -1 the ID is before it and 1 the ID supplied is after it.
+     * @return
+     */
+    //TODO Does this need a java docs
     @Override
     public int compareTo(TPOrder order) {
         return this.getId().compareTo(order.getId());

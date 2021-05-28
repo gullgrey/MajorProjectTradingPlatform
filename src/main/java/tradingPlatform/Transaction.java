@@ -22,6 +22,7 @@ public class Transaction implements Comparable<Transaction>{
     }
 
     /**
+     * Gets the ID of the order that is being bought/sold
      * @return integer ID for a translation
      */
     public Integer getId() {
@@ -119,6 +120,7 @@ public class Transaction implements Comparable<Transaction>{
         return dateTime;
     }
 
+    //TODO Check if this needs a java docs done for it.
     @Override
     public int compareTo(Transaction transaction) {
         return this.getId().compareTo(transaction.getId());
