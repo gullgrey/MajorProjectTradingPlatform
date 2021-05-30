@@ -68,7 +68,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String ADD_ASSET  = "INSERT INTO asset VALUES (?,?,?)";
     private static final String DELETE_ASSET = "DELETE FROM asset WHERE asset_name = ? AND organisation_name = ?";
     private static final String GET_ASSET_AMOUNT = "SELECT amount  FROM asset WHERE organisation_name = ? AND  asset_name = ?";
-    private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount = ? WHERE asset_name = ? AND organisation_name = ?";
+    private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount = amount + ? WHERE asset_name = ? AND organisation_name = ?";
 
     // Organisation queries
     private static final String GET_CREDITS = "SELECT credits FROM organisation_units WHERE organisation_name=?";
@@ -88,11 +88,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     // TPOrder queries
     private static final String GET_ORDER = "SELECT * FROM current_trades WHERE order_id=?";
     private static final String GET_ORDERS = "SELECT * FROM current_trades WHERE organisation_name=? AND  asset_name=? AND type=?";
-    private static final String ADD_ORDER = "INSERT INTO current_trades (organisation_name, asset_name, credits, amount, date, type) VALUES (?,?,?,?,date('now'),?)";
+    private static final String ADD_ORDER = "INSERT INTO current_trades (organisation_name, asset_name, credits, amount, date, type) VALUES (?,?,?,?,?,?)";
     private static final String DELETE_ORDER = "DELETE FROM current_trades WHERE order_id=?";
 
     // Transaction and History queries
-    private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buy_organisation_name, sell_organisation_name, asset_name, credits, amount, datetime) VALUES (?,?,?,?,?,date('now'))";
+    private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buy_organisation_name, sell_organisation_name, asset_name, credits, amount, datetime) VALUES (?,?,?,?,?,?)";
     private static final String GET_ORDER_HISTORY  = "SELECT * FROM trade_history WHERE buy_organisation_name=? AND sell_organisation_name=? AND asset_name=?";
 
     private static final String CLEAR_ASSET = "delete from asset;";
@@ -173,7 +173,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         updatePassword = connection.prepareStatement(UPDATE_PASSWORD);
         getOrder = connection.prepareStatement(GET_ORDER);
         getOrders = connection.prepareStatement(GET_ORDERS);
-        addOrder  = connection.prepareStatement(ADD_ORDER);
+        addOrder = connection.prepareStatement(ADD_ORDER);
         deleteOrder  = connection.prepareStatement(DELETE_ORDER);
         addTransaction  = connection.prepareStatement(ADD_TRANSACTION);
         getOrderHistory  = connection.prepareStatement(GET_ORDER_HISTORY);
@@ -251,7 +251,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      */
     @Override
     public void updateAssetAmount(String organisation, String asset, int amount) throws SQLException {
-
+        updateAssetAmount.setInt(1, amount);
+        updateAssetAmount.setString(2, asset);
+        updateAssetAmount.setString(3, organisation);
+        updateAssetAmount.executeUpdate();
     }
 
     /**
@@ -370,7 +373,16 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     @Override
     public void addOrder(String organisation, String asset, int amount,
                          int credits, boolean isBuyOrder) throws SQLException  {
+        //use NOW() as datetime for mariaDB.
+    }
 
+    /**
+     * @see TradingPlatformDataSource#addOrder(String, String, int, int, boolean, boolean)
+     */
+    @Override
+    public void addOrder(String organisation, String asset, int amount,
+                         int credits, boolean isBuyOrder, boolean isSQLite) throws SQLException {
+        //use date('now') as datatime for SQLite.
     }
 
     /**
@@ -387,7 +399,16 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     @Override
     public void addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
                                int credits) throws SQLException {
+        //use NOW() as datetime for mariaDB.
+    }
 
+    /**
+     * @see TradingPlatformDataSource#addTransaction(String, String, String, int, int, boolean)
+     */
+    @Override
+    public void addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
+                               int credits, boolean isSQLite) throws SQLException {
+        //use date('now') as datatime for SQLite.
     }
 
     /**

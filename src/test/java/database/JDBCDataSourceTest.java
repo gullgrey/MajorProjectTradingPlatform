@@ -36,6 +36,7 @@ public class JDBCDataSourceTest {
     private static final int asset2Amount = 10;
     private static final int  addOrderAssetAmount = 5;
     private static final int addOrderCreditAmount = 40;
+    private static final Asset compareAsset = new Asset(organisationApple, asset1, asset1Amount);
 
 
     /**
@@ -90,7 +91,7 @@ public class JDBCDataSourceTest {
     @Test
     public void testAddAssetData() throws SQLException {
         dataSource.addAsset(organisationApple,asset1, asset1Amount);
-        Asset compareAsset = new Asset(organisationApple, asset1, asset1Amount);
+
         assertTrue(dataSource.getAssets(organisationApple).contains(compareAsset));
         assertEquals(dataSource.getAssetAmount(organisationApple, asset1), asset1Amount);
     }
@@ -127,7 +128,8 @@ public class JDBCDataSourceTest {
      */
     @Test
     public void testBuyAddOrder() throws SQLException {
-        dataSource.addOrder(organisationApple, asset1, addOrderAssetAmount,addOrderCreditAmount,true);
+        dataSource.addOrder(organisationApple, asset1, addOrderAssetAmount,
+                addOrderCreditAmount,true, true);
         Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, true);
         TPOrder tempOrder = tempOrders.iterator().next();
         int idx = tempOrder.getId();
@@ -140,15 +142,14 @@ public class JDBCDataSourceTest {
      */
     @Test
     public void testSellAddOrder() throws SQLException {
-        dataSource.addOrder(organisationApple,asset1, addOrderAssetAmount,addOrderCreditAmount,false);
+        dataSource.addOrder(organisationApple,asset1, addOrderAssetAmount,
+                addOrderCreditAmount,false, true);
         Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, false);
         TPOrder tempOrder = tempOrders.iterator().next();
         int idx = tempOrder.getId();
         assertTrue(tempOrder.getOrganisation().equals(organisationApple) && tempOrder.getAsset().equals(asset1)
                 && tempOrder.getAmount() == addOrderAssetAmount && tempOrder.getCredits() == addOrderCreditAmount);
     }
-
-
 
     /**
      * Delete an order
@@ -162,6 +163,8 @@ public class JDBCDataSourceTest {
         dataSource.deleteOrder(idx);
         assertThrows(SQLException.class, () -> dataSource.getOrders(organisationApple,asset1, true));
     }
+
+    //TODO test addTransaction and getOrderHistory.
 
     @AfterAll
     static void resetDatabase() throws SQLException {
