@@ -15,18 +15,15 @@ public class StandardUser extends TPUser {
         this.username = username;
         this.organisation = organisation;
     }
-    //TODO ########################
-    // # Discuss with owen and time about the credits for buyAsset and SellAsset.
-    // Do we want to make them set a credit price per asset or set a block price and this will
-    // influence how we do out calculations.
+
     /**
      * Method is used to take a buy request from a used.
      * @param asset asset they would like to buy
      * @param amount amount they would like to get of the asset.
-     * @param credits number of credits they would like to pay.
+     * @param credits number of credits per asset they would like to pay.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public void buyAsset(String asset, int amount, int credits) throws SQLException {
+    public void buyAsset(String asset, int amount, int credits) throws NullValueException, InvalidValueException {
         //handle credits not enough here.
         //handle negative credits
     }
@@ -35,10 +32,10 @@ public class StandardUser extends TPUser {
      * Method is used to take a sell request from a used.
      * @param asset asset they would like to sell.
      * @param amount amount of the asset they are selling.
-     * @param credits amount they are selling it for
+     * @param credits amount per assert.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public void sellAsset(String asset, int amount, int credits) throws SQLException {
+    public void sellAsset(String asset, int amount, int credits) throws NullValueException, InvalidValueException, DuplicationException {
         //handle assets not enough/available here.
         //handle negative credits
     }
@@ -48,7 +45,7 @@ public class StandardUser extends TPUser {
      * @param orderId id of the order that is being removed
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public void removeOrder(int orderId) throws SQLException {
+    public void removeOrder(int orderId) throws InvalidValueException, NullValueException {
 
     }
 
@@ -57,7 +54,7 @@ public class StandardUser extends TPUser {
      * @return a set containing all the assets that relate to the organisation.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public Set<Asset> getAssets() throws SQLException {
+    public Set<Asset> getAssets() throws NullValueException {
         return null;
     }
 
@@ -68,7 +65,7 @@ public class StandardUser extends TPUser {
      * @return the amount of the asset for that organisation.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public int getAssetAmount(String asset) throws SQLException{
+    public int getAssetAmount(String asset) throws InvalidValueException, NullValueException{
         return 0;
     }
 
@@ -77,7 +74,7 @@ public class StandardUser extends TPUser {
      * @return value of the organisations credits.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public int getCredits() throws SQLException {
+    public int getCredits() throws InvalidValueException, NullValueException {
         return 0;
     }
 }

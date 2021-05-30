@@ -11,13 +11,13 @@ public class TPOrder implements Comparable<TPOrder>{
     private int amount;
     private int credits;
     private String dateTime;
-    private Boolean type; //TODO Check that this is okay to be set as a boolean     ########
+    private String type;
 
     public TPOrder() {
     }
 
     public TPOrder(int id, String organisation, String asset, int amount,
-                   int credits, String dateTime, boolean type) {
+                   int credits, String dateTime, String type) {
         this.id = id;
         this.organisation = organisation;
         this.asset = asset;
@@ -120,14 +120,14 @@ public class TPOrder implements Comparable<TPOrder>{
      * Is used to advise whether or not this the order is a buy or sell.
      * @return boolean indicating True = Sell | False = Buy.
      */
-    public boolean getType() {
+    public String getType() {
         return type;
     }
 
     /**
      * Compares the ID supplied with the ID of another order in the database to see if they match
      * @param order 0 if they do, -1 the ID is before it and 1 the ID supplied is after it.
-     * @return
+     * @return int value indicating if ID was found.
      */
     //TODO Does this need a java docs
     @Override

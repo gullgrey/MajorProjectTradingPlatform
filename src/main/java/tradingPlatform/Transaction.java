@@ -120,7 +120,11 @@ public class Transaction implements Comparable<Transaction>{
         return dateTime;
     }
 
-    //TODO Check if this needs a java docs done for it.
+    /**
+     *Compares the ID supplied with the ID of another order in the database to see if they match.
+     * @param transaction 0 if they do, -1 the ID is before it and 1 the ID supplied is after it.
+     * @return int value indicating if ID was found.
+     */
     @Override
     public int compareTo(Transaction transaction) {
         return this.getId().compareTo(transaction.getId());
