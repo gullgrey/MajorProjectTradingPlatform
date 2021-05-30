@@ -111,7 +111,7 @@ public class JDBCDataSourceTest {
     @Test
     public void testDecrementUpdateAssetAmount() throws SQLException {
         dataSource.updateAssetAmount(organisationApple, asset1, asset1AmountChange2);
-        assertEquals((asset1Amount + asset1AmountChange2), dataSource.getAssetAmount(organisationApple, asset1));
+        assertEquals((asset1Amount), dataSource.getAssetAmount(organisationApple, asset1));
     }
 
     /**

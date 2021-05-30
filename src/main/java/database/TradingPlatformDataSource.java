@@ -26,9 +26,10 @@ public interface TradingPlatformDataSource {
      *
      * @param organisation The name of the organisational unit.
      * @param credits The amount the organisation's credits change by. Can be positive or negative.
+     * @return
      * @throws SQLException
      */
-    void updateCredits(String organisation, int credits) throws SQLException;
+    int updateCredits(String organisation, int credits) throws SQLException;
 
     /**
      * Retrieves a set of assets and their amounts for a specific organisation.
@@ -64,9 +65,10 @@ public interface TradingPlatformDataSource {
      *
      * @param organisation The name of the organisational unit.
      * @param asset The name of the asset to be removed.
+     * @return
      * @throws SQLException
      */
-    void deleteAsset(String organisation, String asset) throws SQLException;
+    int deleteAsset(String organisation, String asset) throws SQLException;
 
     /**
      * Updates the amount of an asset an organisation has by the inputted amount.
@@ -74,9 +76,10 @@ public interface TradingPlatformDataSource {
      * @param organisation The name of the organisational unit.
      * @param asset The name of the asset to be updated.
      * @param amount The amount the asset is changed by. Can be positive or negative.
+     * @return
      * @throws SQLException
      */
-    void updateAssetAmount(String organisation, String asset, int amount) throws SQLException;
+    int updateAssetAmount(String organisation, String asset, int amount) throws SQLException;
 
     /**
      *  Retrieves the names of all of the organisations in the database
@@ -107,9 +110,10 @@ public interface TradingPlatformDataSource {
     /**
      * Deletes an organisation from the database.
      * @param organisation The name of the organisational unit.
+     * @return
      * @throws SQLException
      */
-    void deleteOrganisation(String organisation) throws SQLException;
+    int deleteOrganisation(String organisation) throws SQLException;
 
     /**
      * Retrieves the set of usernames with access to the trading platform.
@@ -144,18 +148,20 @@ public interface TradingPlatformDataSource {
      * Deletes a user from the database.
      *
      * @param username The username of a user.
+     * @return
      * @throws SQLException
      */
-    void deleteUser(String username) throws SQLException;
+    int deleteUser(String username) throws SQLException;
 
     /**
      * Updates a users hashed password in the database to the inputted hashed password.
      *
      * @param username The username of a user.
      * @param password A hashed password.
+     * @return
      * @throws SQLException
      */
-    void updatePassword(String username, String password) throws SQLException;
+    int updatePassword(String username, String password) throws SQLException;
 
     /**
      * Creates an order object from an order in the database with the inputted idx. The order
@@ -216,9 +222,10 @@ public interface TradingPlatformDataSource {
      * Removes a buy or sell order from the database that corresponds to the inputted id.
      *
      * @param idx the integer id of a buy or sell order.
+     * @return
      * @throws SQLException
      */
-    void deleteOrder(int idx) throws SQLException;
+    int deleteOrder(int idx) throws SQLException;
 
     /**
      * Adds a new transaction to the database trade_history after a trade is completed.

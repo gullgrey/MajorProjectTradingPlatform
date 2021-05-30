@@ -72,7 +72,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     // Organisation queries
     private static final String GET_CREDITS = "SELECT credits FROM organisation_units WHERE organisation_name=?";
-    private static final String UPDATE_CREDITS = "UPDATE organisation_units SET credits=? WHERE organisation_name=?";
+    private static final String UPDATE_CREDITS = "UPDATE organisation_units SET credits = credits + ? WHERE organisation_name=?";
     private static final String GET_ORGANISATIONS = "SELECT organisation_name FROM organisation_units";
     private static final String ADD_ORGANISATION  = "INSERT INTO organisation_units VALUES (?,?)";
     private static final String DELETE_ORGANISATION = "DELETE FROM organisation_units WHERE organisation_name=?";
@@ -191,10 +191,13 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     /**
      * @see TradingPlatformDataSource#updateCredits(String, int)
+     * @return
      */
     @Override
-    public void updateCredits(String organisation, int credits) throws SQLException {
-
+    public int updateCredits(String organisation, int credits) throws SQLException {
+        updateCredits.setInt(1, credits);
+        updateCredits.setString(2, organisation);
+        return addAsset.executeUpdate();
     }
 
     /**
@@ -240,21 +243,25 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     /**
      * @see TradingPlatformDataSource#deleteAsset(String, String)
+     * @return
      */
     @Override
-    public void deleteAsset(String organisation, String asset) throws SQLException {
-
+    public int deleteAsset(String organisation, String asset) throws SQLException {
+        deleteAsset.setString(1, asset);
+        deleteAsset.setString(2, organisation);
+        return deleteAsset.executeUpdate();
     }
 
     /**
      * @see TradingPlatformDataSource#updateAssetAmount(String, String, int)
+     * @return
      */
     @Override
-    public void updateAssetAmount(String organisation, String asset, int amount) throws SQLException {
+    public int updateAssetAmount(String organisation, String asset, int amount) throws SQLException {
         updateAssetAmount.setInt(1, amount);
         updateAssetAmount.setString(2, asset);
         updateAssetAmount.setString(3, organisation);
-        updateAssetAmount.executeUpdate();
+        return updateAssetAmount.executeUpdate();
     }
 
     /**
@@ -275,7 +282,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      */
     @Override
     public String getUserOrganisation(String username) throws SQLException {
-        return null;
+        getUserOrganisation.setString(1, username);
+        ResultSet organisation_data = getUserOrganisation.executeQuery();
+        organisation_data.next();
+        return organisation_data.getString("organisation_name");
     }
 
     /**
@@ -290,10 +300,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     /**
      * @see TradingPlatformDataSource#deleteOrganisation(String)
+     * @return
      */
     @Override
-    public void deleteOrganisation(String organisation) throws SQLException {
-
+    public int deleteOrganisation(String organisation) throws SQLException {
+        deleteOrganisation.setString(1, organisation);
+        return deleteOrganisation.executeUpdate();
     }
 
     /**
@@ -334,21 +346,23 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     /**
      * @see TradingPlatformDataSource#deleteUser(String)
+     * @return
      */
     @Override
-    public void deleteUser(String username) throws SQLException  {
+    public int deleteUser(String username) throws SQLException  {
         deleteUser.setString(1, username);
-        deleteUser.executeUpdate();
+        return deleteUser.executeUpdate();
     }
 
     /**
      * @see TradingPlatformDataSource#updatePassword(String, String)
+     * @return
      */
     @Override
-    public void updatePassword(String username, String password) throws SQLException  {
+    public int updatePassword(String username, String password) throws SQLException  {
         updatePassword.setString(2, username);
         updatePassword.setString(1, password);
-        updatePassword.executeUpdate();
+        return updatePassword.executeUpdate();
     }
 
     /**
@@ -356,7 +370,16 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      */
     @Override
     public TPOrder getOrder(int idx) throws SQLException  {
-        return null;
+        TPOrder order = new TPOrder();
+        getOrder.setInt(1, idx);
+        ResultSet order_data = getOrder.executeQuery();
+        order.setId(order_data.getInt("order_id"));
+        order.setOrganisation(order_data.getString("organisation_name"));
+        order.setAsset(order_data.getString("asset_name"));
+        order.setAmount(order_data.getInt("amount"));
+        order.setDateTime(order_data.getString("date"));
+        order.setType(order_data.getString("type"));
+        return order;
     }
 
     /**
@@ -387,10 +410,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     /**
      * @see TradingPlatformDataSource#deleteOrder(int)
+     * @return
      */
     @Override
-    public void deleteOrder(int idx) throws SQLException {
+    public int deleteOrder(int idx) throws SQLException {
 
+        return 0;
     }
 
     /**

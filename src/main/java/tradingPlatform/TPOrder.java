@@ -36,6 +36,14 @@ public class TPOrder implements Comparable<TPOrder>{
     }
 
     /**
+     * Sets the ID value of a transaction.
+     * @param id The id number of the buy or sell order.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * Method is used to get the organisation making the order.
      * @return String Organisation.
      */
@@ -122,6 +130,14 @@ public class TPOrder implements Comparable<TPOrder>{
      */
     public String getType() {
         return type;
+    }
+
+    /**
+     * Sets whether or not this the order is a buy or sell.
+     * @param type String of either "BUY" or "SELL"
+     */
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
