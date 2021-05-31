@@ -88,11 +88,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     // TPOrder queries
     private static final String GET_ORDER = "SELECT * FROM current_trades WHERE order_id=?";
     private static final String GET_ORDERS = "SELECT * FROM current_trades WHERE organisation_name=? AND  asset_name=? AND type=?";
-    private static final String ADD_ORDER = "INSERT INTO current_trades (organisation_name, asset_name, credits, amount, date, type) VALUES (?,?,?,?,?,?)";
+    private static final String ADD_ORDER = "INSERT INTO current_trades (organisation_name, asset_name, credits, amount, date, type) VALUES (?,?,?,?,datetime('now'),?)"; //use NOW() as datetime for mariaDB.
     private static final String DELETE_ORDER = "DELETE FROM current_trades WHERE order_id=?";
 
     // Transaction and History queries
-    private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buy_organisation_name, sell_organisation_name, asset_name, credits, amount, datetime) VALUES (?,?,?,?,?,?)";
+    private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buy_organisation_name, sell_organisation_name, asset_name, credits, amount, datetime) VALUES (?,?,?,?,?,datetime('now'))";
     private static final String GET_ORDER_HISTORY  = "SELECT * FROM trade_history WHERE buy_organisation_name=? AND sell_organisation_name=? AND asset_name=?";
 
     private static final String CLEAR_ASSET = "delete from asset;";
@@ -387,7 +387,29 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      */
     @Override
     public Set<TPOrder> getOrders(String organisation, String asset, boolean isBuyOrder) throws SQLException  {
-        return null;
+        Set<TPOrder> orders = new TreeSet<>();
+        getOrders.setString(1, organisation);
+        getOrders.setString(2, asset);
+        String type;
+        if (isBuyOrder) {
+            type = "BUY";
+        } else {
+            type = "SELL";
+        }
+        getOrders.setString(3, type);
+        ResultSet orderData = getOrders.executeQuery();
+        while (orderData.next()) {
+            TPOrder order = new TPOrder();
+            order.setId(orderData.getInt("order_id"));
+            order.setOrganisation(orderData.getString("organisation_name"));
+            order.setAsset(orderData.getString("asset_name"));
+            order.setCredits(orderData.getInt("credits"));
+            order.setAmount(orderData.getInt("amount"));
+            order.setDateTime(orderData.getString("date"));
+            order.setType(orderData.getString("type"));
+            orders.add(order);
+        }
+        return orders;
     }
 
     /**
@@ -396,16 +418,18 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     @Override
     public void addOrder(String organisation, String asset, int amount,
                          int credits, boolean isBuyOrder) throws SQLException  {
-        //use NOW() as datetime for mariaDB.
-    }
-
-    /**
-     * @see TradingPlatformDataSource#addOrder(String, String, int, int, boolean, boolean)
-     */
-    @Override
-    public void addOrder(String organisation, String asset, int amount,
-                         int credits, boolean isBuyOrder, boolean isSQLite) throws SQLException {
-        //use date('now') as datatime for SQLite.
+        addOrder.setString(1, organisation);
+        addOrder.setString(2, asset);
+        addOrder.setInt(3, credits);
+        addOrder.setInt(4, amount);
+        String type;
+        if (isBuyOrder) {
+            type = "BUY";
+        } else {
+            type = "SELL";
+        }
+        addOrder.setString(5, type);
+        addOrder.executeUpdate();
     }
 
     /**
@@ -414,8 +438,8 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      */
     @Override
     public int deleteOrder(int idx) throws SQLException {
-
-        return 0;
+        deleteOrder.setInt(1, idx);
+        return deleteOrder.executeUpdate();
     }
 
     /**
@@ -424,16 +448,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     @Override
     public void addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
                                int credits) throws SQLException {
-        //use NOW() as datetime for mariaDB.
-    }
-
-    /**
-     * @see TradingPlatformDataSource#addTransaction(String, String, String, int, int, boolean)
-     */
-    @Override
-    public void addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
-                               int credits, boolean isSQLite) throws SQLException {
-        //use date('now') as datatime for SQLite.
+        addTransaction.setString(1, buyingOrganisation);
+        addTransaction.setString(2, sellingOrganisation);
+        addTransaction.setString(3, asset);
+        addTransaction.setInt(4,credits);
+        addTransaction.setInt(5, amount);
+        addTransaction.executeUpdate();
     }
 
     /**
@@ -442,7 +462,23 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     @Override
     public Set<Transaction> getOrderHistory(String buyingOrganisation,
                                             String sellingOrganisation, String asset) throws SQLException  {
-        return null;
+        Set<Transaction> transactions = new TreeSet<>();
+        getOrderHistory.setString(1, buyingOrganisation);
+        getOrderHistory.setString(2, sellingOrganisation);
+        getOrderHistory.setString(3, asset);
+        ResultSet transaction_data = getOrderHistory.executeQuery();
+        while (transaction_data.next()) {
+            Transaction transaction = new Transaction();
+            transaction.setId(transaction_data.getInt("transaction_id"));
+            transaction.setBuyingOrganisation(transaction_data.getString("buy_organisation_name"));
+            transaction.setSellingOrganisation(transaction_data.getString("sell_organisation_name"));
+            transaction.setAsset(transaction_data.getString("asset_name"));
+            transaction.setCredits(transaction_data.getInt("credits"));
+            transaction.setAmount(transaction_data.getInt("amount"));
+            transaction.setDateTime(transaction_data.getString("datetime"));
+            transactions.add(transaction);
+        }
+        return transactions;
     }
 
     /**

@@ -203,22 +203,6 @@ public interface TradingPlatformDataSource {
                   int credits, boolean isBuyOrder) throws SQLException;
 
     /**
-     * Adds a new order to the database trading platform. Can be a buy order or sell order.
-     * This overloads addOrder if SQLite is being used instead of MariaDB. Primarily for testing
-     * database functionality.
-     *
-     * @param organisation The name of the organisational unit.
-     * @param asset The name of the asset.
-     * @param amount The amount of the asset.
-     * @param credits The number of credits the asset is listed for.
-     * @param isBuyOrder True if the order is a buy order. False if its a sell order.
-     * @param isSQLite True if using SQLite instead of MariaDB.
-     * @throws SQLException
-     */
-    void addOrder(String organisation, String asset, int amount,
-                  int credits, boolean isBuyOrder, boolean isSQLite) throws SQLException;
-
-    /**
      * Removes a buy or sell order from the database that corresponds to the inputted id.
      *
      * @param idx the integer id of a buy or sell order.
@@ -239,22 +223,6 @@ public interface TradingPlatformDataSource {
      */
     void addTransaction(String buyingOrganisation, String sellingOrganisation,
                          String asset, int amount, int credits) throws SQLException;
-
-    /**
-     * Adds a new transaction to the database trade_history after a trade is completed.
-     * This overloads addTransaction if SQLite is being used instead of MariaDB. Primarily for testing
-     * database functionality.
-     *
-     * @param buyingOrganisation The name of the organisational unit that bought assets.
-     * @param sellingOrganisation The name of the organisational unit that sold assets.
-     * @param asset The name of the asset that was sold.
-     * @param amount The amount of the asset that was sold.
-     * @param credits The number of credits the asset was sold for.
-     * @param isSQLite True if using SQLite instead of MariaDB.
-     * @throws SQLException
-     */
-    void addTransaction(String buyingOrganisation, String sellingOrganisation,
-                        String asset, int amount, int credits, boolean isSQLite) throws SQLException;
 
     /**
      * Creates a set of Transaction objects that have values equal to the inputted organisations and

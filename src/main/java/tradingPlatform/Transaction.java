@@ -30,6 +30,14 @@ public class Transaction implements Comparable<Transaction>{
     }
 
     /**
+     * Method is used to set the id of a transaction.
+     * @param id The id number of the selected order.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * Method is used to get the buying organisation of a transaction.
      * @return Returns the organisation that is purchasing and order.
      */
@@ -118,6 +126,14 @@ public class Transaction implements Comparable<Transaction>{
      */
     public String getDateTime() {
         return dateTime;
+    }
+
+    /**
+     * Sets the current date and time that the the transaction was made.
+     * @param dateTime the date and time.
+     */
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
     /**

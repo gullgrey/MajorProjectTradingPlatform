@@ -120,7 +120,8 @@ public class JDBCDataSourceTest {
     @Test
     public void testRemoveAsset() throws SQLException {
         dataSource.deleteAsset(organisationApple, asset1);
-        assertFalse(dataSource.getAssets(organisationApple).contains(asset1));
+        Asset assetObject = new Asset(organisationApple, asset1, asset1Amount);
+        assertFalse(dataSource.getAssets(organisationApple).contains(assetObject));
     }
 
     /**
@@ -129,7 +130,7 @@ public class JDBCDataSourceTest {
     @Test
     public void testBuyAddOrder() throws SQLException {
         dataSource.addOrder(organisationApple, asset1, addOrderAssetAmount,
-                addOrderCreditAmount,true, true);
+                addOrderCreditAmount,true);
         Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, true);
         TPOrder tempOrder = tempOrders.iterator().next();
         int idx = tempOrder.getId();
@@ -143,7 +144,7 @@ public class JDBCDataSourceTest {
     @Test
     public void testSellAddOrder() throws SQLException {
         dataSource.addOrder(organisationApple,asset1, addOrderAssetAmount,
-                addOrderCreditAmount,false, true);
+                addOrderCreditAmount,false);
         Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, false);
         TPOrder tempOrder = tempOrders.iterator().next();
         int idx = tempOrder.getId();
@@ -156,12 +157,13 @@ public class JDBCDataSourceTest {
      */
     @Test
     public void testDeleteOrder() throws SQLException {
-
-        Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, true);
-        TPOrder tempOrder = tempOrders.iterator().next();
-        int idx = tempOrder.getId();
+        dataSource.addOrder(organisationApple, asset1, addOrderAssetAmount,
+                addOrderCreditAmount,true);
+//        Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, true);
+//        TPOrder tempOrder = tempOrders.iterator().next();
+        int idx = 1;
         dataSource.deleteOrder(idx);
-        assertThrows(SQLException.class, () -> dataSource.getOrders(organisationApple,asset1, true));
+        assertTrue(dataSource.getOrders(organisationApple,asset1, true).isEmpty());
     }
 
     //TODO test addTransaction and getOrderHistory.
