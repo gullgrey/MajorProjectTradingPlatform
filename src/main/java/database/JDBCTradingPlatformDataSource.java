@@ -88,11 +88,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     // TPOrder queries
     private static final String GET_ORDER = "SELECT * FROM current_trades WHERE order_id=?";
     private static final String GET_ORDERS = "SELECT * FROM current_trades WHERE organisation_name=? AND  asset_name=? AND type=?";
-    private static final String ADD_ORDER = "INSERT INTO current_trades (organisation_name, asset_name, credits, amount, date, type) VALUES (?,?,?,?,datetime('now'),?)"; //use NOW() as datetime for mariaDB.
+    private static final String ADD_ORDER = "INSERT INTO current_trades (organisation_name, asset_name, credits, amount, date, type) VALUES (?,?,?,?,NOW(),?)"; //use NOW() as datetime for mariaDB.
     private static final String DELETE_ORDER = "DELETE FROM current_trades WHERE order_id=?";
 
     // Transaction and History queries
-    private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buy_organisation_name, sell_organisation_name, asset_name, credits, amount, datetime) VALUES (?,?,?,?,?,datetime('now'))";
+    private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buy_organisation_name, sell_organisation_name, asset_name, credits, amount, datetime) VALUES (?,?,?,?,?,NOW())";
     private static final String GET_ORDER_HISTORY  = "SELECT * FROM trade_history WHERE buy_organisation_name=? AND sell_organisation_name=? AND asset_name=?";
 
     private static final String CLEAR_ASSET = "delete from asset;";

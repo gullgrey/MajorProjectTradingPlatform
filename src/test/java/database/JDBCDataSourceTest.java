@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 public class JDBCDataSourceTest {
 
-    private static final String propsFile = "src/test/resources/JDBCDataSourceTest.props";
+    private static final String propsFile = "src/test/resources/maria.props";
     private static JDBCTradingPlatformDataSource dataSource;
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
@@ -62,7 +62,15 @@ public class JDBCDataSourceTest {
      */
     @Test
     public void testAddNewUser() throws SQLException {
-        dataSource.addUser(aNewUser, aNewUserInitialPassword, STANDARD, organisationApple);
+        try {
+            dataSource.addUser(aNewUser, aNewUserInitialPassword, STANDARD, organisationApple);
+//            dataSource.addUser(aNewUser, aNewUserInitialPassword, STANDARD, organisationApple);
+        } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+            e.printStackTrace();
+        }
+        System.out.println(dataSource.getUsers());
+        System.out.println(dataSource.getOrganisations());
         assertTrue(dataSource.getUsers().contains(aNewUser));
     }
 
