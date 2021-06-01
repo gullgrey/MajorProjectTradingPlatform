@@ -2,7 +2,7 @@ package main.java.tradingPlatform;
 
 public class NewTransaction {
 
-    //TODO Might need helper class for similar code in buy order and sell order.
+    //TODO Might need helper method for similar code in buy order and sell order.
 
     public TPOrder addBuyOrder(TPOrder buyOrder) {
         return null;

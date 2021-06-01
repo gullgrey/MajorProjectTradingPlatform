@@ -19,9 +19,11 @@ public class ItAdministration extends TPUser {
      * @param userName the name of the username of the user.
      * @param password the password the of the user.
      * @param organisation the organisation the user belongs too.
-     * @throws SQLException
+     * @throws DuplicationException the specified field already exists.
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws InvalidValueException value entered is incorrect type.
      */
-    public void addStandardUser(String userName, String password, String organisation) throws SQLException {
+    public void addStandardUser(String userName, String password, String organisation) throws DuplicationException, NullValueException, InvalidValueException {
 
     }
 
@@ -30,9 +32,11 @@ public class ItAdministration extends TPUser {
      *
      * @param userName the username of the admin.
      * @param password the password of the admin.
-     * @throws SQLException
+     * @throws DuplicationException
+     * @throws WrongCredentialException
+     * @throws InvalidValueException
      */
-    public void addItUser(String userName, String password) throws SQLException {
+    public void addItUser(String userName, String password) throws DuplicationException, WrongCredentialException, InvalidValueException {
 
     }
 
@@ -41,9 +45,10 @@ public class ItAdministration extends TPUser {
      * from the system.
      *
      * @param userName the name of the user being removed.
-     * @throws SQLException
+     * @throws NullValueException
+     * @throws UnknownDatabaseException
      */
-    public void removeUser(String userName) throws SQLException {
+    public void removeUser(String userName) throws NullValueException, UnknownDatabaseException {
 
     }
 
@@ -51,9 +56,11 @@ public class ItAdministration extends TPUser {
      * Creates a new organisation if the organisation doesn't already exist.
      *
      * @param organisation the name of the organisation being created.
-     * @throws SQLException
+     * @throws DuplicationException
+     * @throws NullValueException
+     * @throws InvalidValueException
      */
-    public void addOrganisation(String organisation) throws SQLException {
+    public void addOrganisation(String organisation) throws DuplicationException, NullValueException, InvalidValueException {
 
     }
 
@@ -62,31 +69,34 @@ public class ItAdministration extends TPUser {
      * from the system.
      *
      * @param organisation the organisation to be removed.
-     * @throws SQLException
+     * @throws NullValueException
+     * @throws UnknownDatabaseException
      */
-    public void removeOrganisation(String organisation) throws SQLException {
+    public void removeOrganisation(String organisation) throws NullValueException, UnknownDatabaseException {
 
     }
 
     /**
-     * Adds credits to a specified organisation.
+     * Increases the amount of credits to a specified organisation.
      *
      * @param organisation the name of the organisation.
      * @param credits the value of credits to be added to the organisation.
-     * @throws SQLException
+     * @throws NullValueException
+     * @throws InvalidValueException
      */
-    public void addCredits(String organisation, int credits) throws SQLException {
+    public void increaseCredits(String organisation, int credits) throws NullValueException, InvalidValueException {
 
     }
 
     /**
-     * Removes credits from the specified organisation.
+     * Reduces the amount of  credits from the specified organisation.
      *
      * @param organisation the name of the organisation to remove credits from.
      * @param credits the value of credits to be removed from the organisation.
-     * @throws SQLException
+     * @throws NullValueException
+     * @throws InvalidValueException
      */
-    public void removeCredits(String organisation, int credits) throws SQLException{
+    public void reduceCredits(String organisation, int credits) throws NullValueException, InvalidValueException{
         // throws credits to big exception
     }
 
@@ -96,21 +106,26 @@ public class ItAdministration extends TPUser {
      * @param organisation the organisation the asset is being added too.
      * @param asset the name of the asset being added.
      * @param amount the amount of the asset that is being added.
-     * @throws SQLException
+     * @throws DuplicationException
+     * @throws NullValueException
+     * @throws InvalidValueException
      */
-    public void addAsset(String organisation, String asset, int amount) throws SQLException {
+    public void addAsset(String organisation, String asset, int amount) throws DuplicationException, NullValueException, InvalidValueException {
 
     }
 
     /**
+     *
      * Increases the amount of a pre-existing asset belonging to a specified organisation.
      *
      * @param organisation the name of the organisation that the asset belongs too.
      * @param asset the name of the asset that is being updated.
      * @param amount the amount of the asset that is being updated.
-     * @throws SQLException
+     * @throws DuplicationException
+     * @throws NullValueException
+     * @throws InvalidValueException
      */
-    public void addAssetAmount(String organisation, String asset, int amount) throws SQLException {
+    public void addAssetAmount(String organisation, String asset, int amount) throws DuplicationException, NullValueException, InvalidValueException {
         //excepts negative amount? If so remove asset from organisation.
     }
 
@@ -119,9 +134,11 @@ public class ItAdministration extends TPUser {
      *
      * @param organisation the name of the organisation the asset belongs too.
      * @param asset the name of the asset being removed.
-     * @throws SQLException
+     * @throws NullValueException
+     * @throws InvalidValueException
+     * @throws UnknownDatabaseException
      */
-    public void removeAsset(String organisation, String asset) throws SQLException {
+    public void removeAsset(String organisation, String asset) throws NullValueException, InvalidValueException, UnknownDatabaseException {
 
     }
 }

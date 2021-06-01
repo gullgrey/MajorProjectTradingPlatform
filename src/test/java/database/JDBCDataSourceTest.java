@@ -52,10 +52,9 @@ public class JDBCDataSourceTest {
      */
     @Test
     public void testAddOrganisationData() throws SQLException {
-        int creditAmount = 200;
-        dataSource.addOrganisation(organisationApple, creditAmount);
+        dataSource.addOrganisation(organisationApple, organisationAppleCredits);
         assertTrue(dataSource.getOrganisations().contains(organisationApple));
-        assertEquals(creditAmount, dataSource.getCredits(organisationApple));
+        assertEquals(organisationAppleCredits, dataSource.getCredits(organisationApple));
     }
 
     /**
@@ -94,6 +93,7 @@ public class JDBCDataSourceTest {
 
         assertTrue(dataSource.getAssets(organisationApple).contains(compareAsset));
         assertEquals(dataSource.getAssetAmount(organisationApple, asset1), asset1Amount);
+        //TODO seperate these two into seperate test
     }
 
     /**
