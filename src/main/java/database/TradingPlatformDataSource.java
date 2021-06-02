@@ -28,12 +28,11 @@ public interface TradingPlatformDataSource {
     int updateCredits(String organisation, int credits);
 
     /**
-     * Retrieves a set of assets and their organisations and amounts for a specific organisation.
+     * Retrieves a set of assets and their organisations and amounts.
      *
-     * @param organisation The name of the organisational unit.
      * @return A set of all of the assets that belong to an organisational unit
      */
-    Set<Asset> getAssets(String organisation);
+    Set<Asset> getAssets();
 
     /**
      * Adds a new asset to an organisation and its initial amount.
@@ -155,22 +154,16 @@ public interface TradingPlatformDataSource {
      * @param idx the integer id of a buy or sell order
      * @return an order object that contains all of the order information
      */
-
-    TPOrder getOrder(int idx) throws SQLException;
+    TPOrder getOrder(int idx);
 
     /**
-     * Creates a set of order objects that have values equal to the inputted organisation and
-     * assets. The order information is retrieved from the database.
-     * If either of organisation or asset is blank then it retrieves orders for all organisations,
-     * assets or both.
+     * Creates a set of order objects, either buy or sell orders.
+     * The order information is retrieved from the database.
      *
-     * @param organisation The name of the organisational unit. Can be null.
-     * @param asset The name of the asset. Can be null.
      * @param isBuyOrder True if the orders are buy orders. False if they're sell orders.
      * @return a set of TPOrder objects with all the order information.
      */
-    Set<TPOrder> getOrders(String organisation, String asset,
-                           boolean isBuyOrder);
+    Set<TPOrder> getOrders(boolean isBuyOrder);
 
     /**
      * Adds a new order to the database trading platform. Can be a buy order or sell order.
@@ -207,18 +200,11 @@ public interface TradingPlatformDataSource {
                          String asset, int amount, int credits);
 
     /**
-     * Creates a set of Transaction objects that have values equal to the inputted organisations and
-     * assets. The order information is retrieved from the database.
-     * If any of buyingOrganisation, sellingOrganisation or asset is blank then it retrieves orders
-     * for all organisations, assets or both.
+     * Creates a set of Transaction objects. The order information is retrieved from the database.
      *
-     * @param buyingOrganisation  The name of an organisational unit that bought assets. Can be null.
-     * @param sellingOrganisation  The name of an organisational unit that sold assets. Can be null.
-     * @param asset The name of an asset that was sold.
      * @return a set of Transaction objects with all the transaction information.
      */
-    Set<Transaction> getOrderHistory(String buyingOrganisation,
-                                     String sellingOrganisation, String asset);
+    Set<Transaction> getOrderHistory();
 
     /**
      * Deletes all rows from every table in the database.

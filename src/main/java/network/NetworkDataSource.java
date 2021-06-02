@@ -68,7 +68,7 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     }
 
     @Override
-    public Set<Asset> getAssets(String organisation) {
+    public Set<Asset> getAssets() {
         return null;
     }
 
@@ -146,7 +146,7 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     }
 
     @Override
-    public Set<TPOrder> getOrders(String organisation, String asset, boolean isBuyOrder) {
+    public Set<TPOrder> getOrders(boolean isBuyOrder) {
         return null;
     }
 
@@ -168,7 +168,7 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     }
 
     @Override
-    public Set<Transaction> getOrderHistory(String buyingOrganisation, String sellingOrganisation, String asset) {
+    public Set<Transaction> getOrderHistory() {
         return null;
     }
 

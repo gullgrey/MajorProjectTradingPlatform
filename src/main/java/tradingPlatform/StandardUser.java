@@ -49,7 +49,12 @@ public class StandardUser extends TPUser {
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
     public void removeOrder(int orderId) throws InvalidValueException, NullValueException {
-
+        TPOrder order = dataSource.getOrder(orderId);
+        if (!order.getOrganisation().equals(this.organisation)) {
+            String message = "Order number is not from your organisation.";
+            throw new InvalidValueException(message);
+        }
+        //More still todo
     }
 
     /**

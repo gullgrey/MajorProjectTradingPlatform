@@ -49,7 +49,7 @@ public class StandardUserTest {
      */
     public void testGetAssets() throws NullValueException {
         int expectedNumber = 1;
-        StandardUser standardTest = new StandardUser(bNewUser, bNewUserOrganisation);
+        StandardUser standardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         Set<Asset> allAssets = standardTest.getAssets();
         assertEquals(expectedNumber, allAssets.size());
     }
@@ -61,7 +61,7 @@ public class StandardUserTest {
      */
     public void testGetAssetsAfterAddingAsset() throws NullValueException, SQLException {
         int expectedNumber = 2;
-        StandardUser standardTest = new StandardUser(bNewUser, bNewUserOrganisation);
+        StandardUser standardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         dataSource.addAsset(bNewUserOrganisation, assetName2, fullAssetAmount);
         Set<Asset> allAssets = standardTest.getAssets();
         assertEquals(expectedNumber, allAssets.size());
@@ -74,7 +74,7 @@ public class StandardUserTest {
      */
     public void testGetAssetsAfterRemovingAsset() throws NullValueException, SQLException {
         int expectedNumber = 1;
-        StandardUser standardTest = new StandardUser(bNewUser, bNewUserOrganisation);
+        StandardUser standardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         dataSource.addAsset(bNewUserOrganisation, assetName2, fullAssetAmount);
         dataSource.deleteAsset(bNewUserOrganisation, assetName);
         Set<Asset> allAssets = standardTest.getAssets();
@@ -88,8 +88,8 @@ public class StandardUserTest {
      * @throws DuplicationException
      */
     public void testBuyAssetAutoTransaction() throws InvalidValueException, NullValueException, DuplicationException {
-        StandardUser standardTest = new StandardUser(aNewUser, aNewUserOrganisation);
-        StandardUser otherStandardTest = new StandardUser(bNewUser, bNewUserOrganisation);
+        StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
+        StandardUser otherStandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         int buyerCredits = standardTest.getCredits(); // Storing current credit amount.
         standardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
         otherStandardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
@@ -104,8 +104,8 @@ public class StandardUserTest {
      * @throws DuplicationException
      */
     public void testSellAssetAutoTransaction() throws InvalidValueException, NullValueException, DuplicationException {
-        StandardUser standardTest = new StandardUser(aNewUser, aNewUserOrganisation);
-        StandardUser otherStandardTest = new StandardUser(bNewUser, bNewUserOrganisation);
+        StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
+        StandardUser otherStandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         int sellerCredits = otherStandardTest.getCredits(); // Storing current credit amount.
         standardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
         otherStandardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
@@ -129,7 +129,7 @@ public class StandardUserTest {
      * @throws DuplicationException
      */
     public void getAssetAmount() throws InvalidValueException, NullValueException, DuplicationException {
-        StandardUser standardTest = new StandardUser(bNewUser, bNewUserOrganisation);
+        StandardUser standardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         int currentAssetAmount = standardTest.getAssetAmount(assetName);
         assertTrue( currentAssetAmount == fullAssetAmount);
     }
@@ -141,7 +141,7 @@ public class StandardUserTest {
      * @throws DuplicationException
      */
     public void getAssetAmountAfterSellorder() throws InvalidValueException, NullValueException, DuplicationException {
-        StandardUser standardTest = new StandardUser(bNewUser, bNewUserOrganisation);
+        StandardUser standardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         standardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
         int newAssetAmount = standardTest.getAssetAmount(assetName);
         assertEquals(fullAssetAmount-assetAmount, newAssetAmount);
@@ -153,7 +153,7 @@ public class StandardUserTest {
      * @throws NullValueException
      */
     public void testgetCredits() throws InvalidValueException, NullValueException {
-        StandardUser standardTest = new StandardUser(aNewUser, aNewUserOrganisation);
+        StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
         int currentCredits = standardTest.getCredits();
         assertEquals(startingCredits, currentCredits);
     }
@@ -164,7 +164,7 @@ public class StandardUserTest {
      * @throws NullValueException
      */
     public void testgetCreditsAfterBuyorder() throws InvalidValueException, NullValueException {
-        StandardUser standardTest = new StandardUser(aNewUser, aNewUserOrganisation);
+        StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
         standardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
         int currentCredits = standardTest.getCredits();
         assertEquals(startingCredits - (assetAmount * creditPricePerAsset), currentCredits);

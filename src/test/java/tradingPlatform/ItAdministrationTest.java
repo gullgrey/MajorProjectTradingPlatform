@@ -43,6 +43,11 @@ public class ItAdministrationTest {
         dataSource = new JDBCTradingPlatformDataSource(propsFile);
     }
 
+    //Todo
+    //add ADMIN to organisations fails
+    //delete ADMIN from organisations fails.
+    //
+
     /**
      * Setup an admin account and add an initial organisation to implement tests.
      *
@@ -51,7 +56,7 @@ public class ItAdministrationTest {
      * @throws InvalidValueException value entered is incorrect type.
      */
     @BeforeAll
-    static void setupAdmin() throws DuplicationException, NullValueException, InvalidValueException {
+    static void setupAdmin() throws DuplicationException, NullValueException, InvalidValueException, UnknownDatabaseException {
         adminAccount = new ItAdministration(dataSource, adminUserName);
         adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
         adminAccount.increaseCredits(standardOrganisation, standardOrganisationCredits);
@@ -113,7 +118,7 @@ public class ItAdministrationTest {
      * @throws SQLException
      */
     @Test
-    public void testAddOrganisation() throws DuplicationException, NullValueException, InvalidValueException, SQLException {
+    public void testAddOrganisation() throws DuplicationException, NullValueException, InvalidValueException, SQLException, UnknownDatabaseException {
         adminAccount.addOrganisation(organisation, standardOrganisationCredits);
         Set<Organisation> organisationCheck = dataSource.getOrganisations();
         assertFalse(organisationCheck.contains(userNameCorrect));
@@ -176,7 +181,7 @@ public class ItAdministrationTest {
         String assetName = "NewAsset";
         int size = 1;
         adminAccount.addAsset(organisation, assetName, 10);
-        Set<Asset> allAssets = dataSource.getAssets(organisation);
+        Set<Asset> allAssets = dataSource.getAssets();
         assertEquals(allAssets.size(), size);
     }
 

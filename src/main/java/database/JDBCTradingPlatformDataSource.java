@@ -62,7 +62,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
             "datetime datetime);";
 
     // Asset queries
-    private static final String GET_ASSETS = "SELECT * FROM asset WHERE organisation_name=?";
+    private static final String GET_ASSETS = "SELECT * FROM asset";
     private static final String ADD_ASSET  = "INSERT INTO asset VALUES (?,?,?)";
     private static final String DELETE_ASSET = "DELETE FROM asset WHERE asset_name = ? AND organisation_name = ?";
     private static final String GET_ASSET_AMOUNT = "SELECT amount  FROM asset WHERE organisation_name = ? AND  asset_name = ?";
@@ -71,12 +71,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     // Organisation queries
     private static final String GET_CREDITS = "SELECT credits FROM organisation_units WHERE organisation_name=?";
     private static final String UPDATE_CREDITS = "UPDATE organisation_units SET credits = credits + ? WHERE organisation_name=?";
-    private static final String GET_ORGANISATIONS = "SELECT organisation_name FROM organisation_units";
+    private static final String GET_ORGANISATIONS = "SELECT * FROM organisation_units";
     private static final String ADD_ORGANISATION  = "INSERT INTO organisation_units VALUES (?,?)";
     private static final String DELETE_ORGANISATION = "DELETE FROM organisation_units WHERE organisation_name=?";
 
     // User queries
-    private static final String GET_USERS = "SELECT username FROM user_information";
+    private static final String GET_USERS = "SELECT * FROM user_information";
     private static final String GET_USER_PASSWORD = "SELECT password FROM user_information WHERE username=?";
     private static final String ADD_USER = "INSERT INTO user_information VALUES (?,?,?,?)";
     private static final String DELETE_USER = "DELETE FROM user_information WHERE username=?";
@@ -85,13 +85,13 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     // TPOrder queries
     private static final String GET_ORDER = "SELECT * FROM current_trades WHERE order_id=?";
-    private static final String GET_ORDERS = "SELECT * FROM current_trades WHERE organisation_name=? AND  asset_name=? AND type=?";
+    private static final String GET_ORDERS = "SELECT * FROM current_trades WHERE type=?";
     private static final String ADD_ORDER = "INSERT INTO current_trades (organisation_name, asset_name, credits, amount, date, type) VALUES (?,?,?,?,NOW(),?)"; //use NOW() as datetime for mariaDB.
     private static final String DELETE_ORDER = "DELETE FROM current_trades WHERE order_id=?";
 
     // Transaction and History queries
     private static final String ADD_TRANSACTION = "INSERT INTO trade_history (buy_organisation_name, sell_organisation_name, asset_name, credits, amount, datetime) VALUES (?,?,?,?,?,NOW())";
-    private static final String GET_ORDER_HISTORY  = "SELECT * FROM trade_history WHERE buy_organisation_name=? AND sell_organisation_name=? AND asset_name=?";
+    private static final String GET_ORDER_HISTORY  = "SELECT * FROM trade_history";
 
     private static final String CLEAR_ASSET = "delete from asset;";
     private static final String CLEAR_USER_INFORMATION = "delete from user_information;";
@@ -236,13 +236,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource#getAssets(String) 
+     * @see TradingPlatformDataSource#getAssets()
      */
     @Override
-    public Set<Asset> getAssets(String organisation){
+    public Set<Asset> getAssets(){
         Set<Asset> assetSet = new TreeSet<>();
         try {
-            getAssets.setString(1, organisation);
             ResultSet assetData = getAssets.executeQuery();
             while(assetData.next()) {
                 Asset asset = new Asset();
@@ -507,21 +506,19 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource#getOrders(String, String, boolean)
+     * @see TradingPlatformDataSource#getOrders(boolean)
      */
     @Override
-    public Set<TPOrder> getOrders(String organisation, String asset, boolean isBuyOrder) {
+    public Set<TPOrder> getOrders(boolean isBuyOrder) {
         Set<TPOrder> orders = new TreeSet<>();
         try {
-            getOrders.setString(1, organisation);
-            getOrders.setString(2, asset);
             String type;
             if (isBuyOrder) {
                 type = "BUY";
             } else {
                 type = "SELL";
             }
-            getOrders.setString(3, type);
+            getOrders.setString(1, type);
             ResultSet orderData = getOrders.executeQuery();
             while (orderData.next()) {
                 TPOrder order = new TPOrder();
@@ -601,16 +598,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * @see TradingPlatformDataSource#getOrderHistory(String, String, String)
+     * @see TradingPlatformDataSource#getOrderHistory() 
      */
     @Override
-    public Set<Transaction> getOrderHistory(String buyingOrganisation,
-                                            String sellingOrganisation, String asset) {
+    public Set<Transaction> getOrderHistory() {
         Set<Transaction> transactions = new TreeSet<>();
         try {
-            getOrderHistory.setString(1, buyingOrganisation);
-            getOrderHistory.setString(2, sellingOrganisation);
-            getOrderHistory.setString(3, asset);
             ResultSet transaction_data = getOrderHistory.executeQuery();
             while (transaction_data.next()) {
                 Transaction transaction = new Transaction();

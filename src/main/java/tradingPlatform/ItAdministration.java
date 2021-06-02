@@ -63,10 +63,17 @@ public class ItAdministration extends TPUser {
      * @throws NullValueException
      * @throws InvalidValueException
      */
-    public void addOrganisation(String organisation, int credits) throws DuplicationException, NullValueException, InvalidValueException {
+    public void addOrganisation(String organisation, int credits) throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         if (organisation.equals("ADMIN")) {
             String message = "This organisation name is reserved.";
             throw new InvalidValueException(message);
+        }
+        int rowsAffected = dataSource.addOrganisation(organisation, credits);
+        if (rowsAffected == primaryKeyFail) {
+            String message = "Organisation already exists.";
+            throw new DuplicationException(message);
+        } else if (rowsAffected == generalSQLFail) {
+            throw new UnknownDatabaseException(generalMessage);
         }
         //        if (!organisationList.contains(organisation)) {
 //            int rowsAffected = dataSource.addOrganisation(organisation, )
