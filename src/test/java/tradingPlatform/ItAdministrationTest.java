@@ -116,7 +116,7 @@ public class ItAdministrationTest {
     public void testAddOrganisation() throws DuplicationException, NullValueException, InvalidValueException, SQLException {
         adminAccount.addOrganisation(organisation);
         Set<String> organisationCheck = dataSource.getOrganisations();
-        assertTrue(organisationCheck.contains(userNameCorrect));
+        assertFalse(organisationCheck.contains(userNameCorrect));
     }
 
     /**

@@ -7,6 +7,8 @@ import java.sql.SQLException;
  */
 public abstract class TPUser {
 
+
+
     /**
      * FROM USER PERSPECTIVE: Allows them to change their password.
      * FROM ADMINS PERSPECTIVE : Allows them to update a given users password.

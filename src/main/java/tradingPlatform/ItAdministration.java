@@ -23,7 +23,7 @@ public class ItAdministration extends TPUser {
      * @throws NullValueException specified field does not exist in the database.
      * @throws InvalidValueException value entered is incorrect type.
      */
-    public void addStandardUser(String userName, String password, String organisation) throws DuplicationException, NullValueException, InvalidValueException, SQLException {
+    public void addStandardUser(String userName, String password, String organisation) throws DuplicationException, NullValueException, InvalidValueException {
 
     }
 

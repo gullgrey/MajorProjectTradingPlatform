@@ -17,9 +17,8 @@ public interface TradingPlatformDataSource {
      *
      * @param organisation The name of the organisational unit.
      * @return the number of credits an organisation has.
-     * @throws SQLException
      */
-    int getCredits(String organisation) throws SQLException;
+    int getCredits(String organisation);
 
     /**
      * Updates the number of credits an organisation has by the inputted amount.
@@ -27,18 +26,16 @@ public interface TradingPlatformDataSource {
      * @param organisation The name of the organisational unit.
      * @param credits The amount the organisation's credits change by. Can be positive or negative.
      * @return
-     * @throws SQLException
      */
-    int updateCredits(String organisation, int credits) throws SQLException;
+    int updateCredits(String organisation, int credits);
 
     /**
      * Retrieves a set of assets and their amounts for a specific organisation.
      *
      * @param organisation The name of the organisational unit.
      * @return A set of all of the assets that belong to an organisational unit
-     * @throws SQLException
      */
-    Set<Asset> getAssets(String organisation) throws SQLException;
+    Set<Asset> getAssets(String organisation);
 
     /**
      * Adds a new asset to an organisation and its initial amount.
@@ -46,9 +43,9 @@ public interface TradingPlatformDataSource {
      * @param organisation The name of the organisational unit.
      * @param asset The name of the asset to be added.
      * @param amount The amount of the asset to be added.
-     * @throws SQLException
+     * @returns
      */
-    void addAsset(String organisation, String asset, int amount) throws SQLException;
+    int addAsset(String organisation, String asset, int amount);
 
     /**
      * Retrieves the amount of an asset belonging to an organisation.
@@ -56,9 +53,8 @@ public interface TradingPlatformDataSource {
      * @param organisation The name of the organisational unit.
      * @param asset  The name of the asset.
      * @return the integer value of the amount of the asset from the organisation.
-     * @throws SQLException
      */
-    int getAssetAmount(String organisation, String asset) throws SQLException;
+    int getAssetAmount(String organisation, String asset);
 
     /**
      * Removes an asset from an organisation.
@@ -66,9 +62,8 @@ public interface TradingPlatformDataSource {
      * @param organisation The name of the organisational unit.
      * @param asset The name of the asset to be removed.
      * @return
-     * @throws SQLException
      */
-    int deleteAsset(String organisation, String asset) throws SQLException;
+    int deleteAsset(String organisation, String asset);
 
     /**
      * Updates the amount of an asset an organisation has by the inputted amount.
@@ -77,60 +72,54 @@ public interface TradingPlatformDataSource {
      * @param asset The name of the asset to be updated.
      * @param amount The amount the asset is changed by. Can be positive or negative.
      * @return
-     * @throws SQLException
      */
-    int updateAssetAmount(String organisation, String asset, int amount) throws SQLException;
+    int updateAssetAmount(String organisation, String asset, int amount);
 
     /**
      *  Retrieves the names of all of the organisations in the database
      *
      * @return a set of all the organisation names.
-     * @throws SQLException
      */
-    Set<String> getOrganisations() throws SQLException;
+    Set<String> getOrganisations();
 
     /**
      * Retrieves the name of the organisational unit for the inputted user.
      *
      * @param username The username of a user.
      * @return the organisational unit of the inputted user.
-     * @throws SQLException
      */
-    String getUserOrganisation(String username) throws SQLException;
+    String getUserOrganisation(String username);
 
     /**
      * Adds a new organisation to the database as well as its starting credits.
      *
      * @param organisation The name of the new organisation.
      * @param credits The amount of credits the new organisation starts with.
-     * @throws SQLException
+     * @returns
      */
-    void addOrganisation(String organisation, int credits) throws SQLException;
+    int addOrganisation(String organisation, int credits);
 
     /**
      * Deletes an organisation from the database.
      * @param organisation The name of the organisational unit.
      * @return
-     * @throws SQLException
      */
-    int deleteOrganisation(String organisation) throws SQLException;
+    int deleteOrganisation(String organisation);
 
     /**
      * Retrieves the set of usernames with access to the trading platform.
      *
      * @return a set of usernames.
-     * @throws SQLException
      */
-    Set<String> getUsers() throws SQLException;
+    Set<String> getUsers();
 
     /**
      * Returns the hashed password of the user with the inputted username.
      *
      * @param username The username of a user.
      * @return a hashed password.
-     * @throws SQLException
      */
-    String getUserPassword(String username) throws SQLException;
+    String getUserPassword(String username);
 
     /**
      * Adds a user to the database. Can be a standard user or an IT admin. If its a standard user the
@@ -140,18 +129,17 @@ public interface TradingPlatformDataSource {
      * @param password A hashed password.
      * @param type The type of user being created (STANDARD / ADMIN)
      * @param organisation The name of the organisational unit. Null if the new user is IT admin.
-     * @throws SQLException
+     * @returns
      */
-    void addUser(String username, String password, String type, String organisation) throws SQLException;
+    int addUser(String username, String password, String type, String organisation);
 
     /**
      * Deletes a user from the database.
      *
      * @param username The username of a user.
      * @return
-     * @throws SQLException
      */
-    int deleteUser(String username) throws SQLException;
+    int deleteUser(String username);
 
     /**
      * Updates a users hashed password in the database to the inputted hashed password.
@@ -159,9 +147,8 @@ public interface TradingPlatformDataSource {
      * @param username The username of a user.
      * @param password A hashed password.
      * @return
-     * @throws SQLException
      */
-    int updatePassword(String username, String password) throws SQLException;
+    int updatePassword(String username, String password);
 
     /**
      * Creates an order object from an order in the database with the inputted idx. The order
@@ -169,7 +156,6 @@ public interface TradingPlatformDataSource {
      *
      * @param idx the integer id of a buy or sell order
      * @return an order object that contains all of the order information
-     * @throws SQLException
      */
 
     TPOrder getOrder(int idx) throws SQLException;
@@ -184,10 +170,9 @@ public interface TradingPlatformDataSource {
      * @param asset The name of the asset. Can be null.
      * @param isBuyOrder True if the orders are buy orders. False if they're sell orders.
      * @return a set of TPOrder objects with all the order information.
-     * @throws SQLException
      */
     Set<TPOrder> getOrders(String organisation, String asset,
-                           boolean isBuyOrder) throws SQLException;
+                           boolean isBuyOrder);
 
     /**
      * Adds a new order to the database trading platform. Can be a buy order or sell order.
@@ -197,19 +182,18 @@ public interface TradingPlatformDataSource {
      * @param amount The amount of the asset.
      * @param credits The number of credits the asset is listed for.
      * @param isBuyOrder True if the order is a buy order. False if its a sell order.
-     * @throws SQLException
+     * @returns
      */
-    void addOrder(String organisation, String asset, int amount,
-                  int credits, boolean isBuyOrder) throws SQLException;
+    int addOrder(String organisation, String asset, int amount,
+                  int credits, boolean isBuyOrder);
 
     /**
      * Removes a buy or sell order from the database that corresponds to the inputted id.
      *
      * @param idx the integer id of a buy or sell order.
      * @return
-     * @throws SQLException
      */
-    int deleteOrder(int idx) throws SQLException;
+    int deleteOrder(int idx);
 
     /**
      * Adds a new transaction to the database trade_history after a trade is completed.
@@ -219,10 +203,10 @@ public interface TradingPlatformDataSource {
      * @param asset The name of the asset that was sold.
      * @param amount The amount of the asset that was sold.
      * @param credits The number of credits the asset was sold for.
-     * @throws SQLException
+     * @returns
      */
-    void addTransaction(String buyingOrganisation, String sellingOrganisation,
-                         String asset, int amount, int credits) throws SQLException;
+    int addTransaction(String buyingOrganisation, String sellingOrganisation,
+                         String asset, int amount, int credits);
 
     /**
      * Creates a set of Transaction objects that have values equal to the inputted organisations and
@@ -234,15 +218,14 @@ public interface TradingPlatformDataSource {
      * @param sellingOrganisation  The name of an organisational unit that sold assets. Can be null.
      * @param asset The name of an asset that was sold.
      * @return a set of Transaction objects with all the transaction information.
-     * @throws SQLException
      */
     Set<Transaction> getOrderHistory(String buyingOrganisation,
-                                     String sellingOrganisation, String asset) throws SQLException;
+                                     String sellingOrganisation, String asset);
 
     /**
      * Deletes all rows from every table in the database.
-     * @throws SQLException
+     * @returns
      */
-    void deleteAll() throws SQLException;
+    int deleteAll();
 
 }

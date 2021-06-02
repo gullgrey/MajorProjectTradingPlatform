@@ -101,6 +101,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String CLEAR_TRADE_HISTORY = "delete from trade_history;";
     private static final String CLEAR_ORGANISATION_UNITS = "delete from organisation_units;";
 
+    private static final int primaryKeyFail = -1;
+    private static final int foreignKeyFail = -2;
+    private static final int generalSQLFail = -3;
+
     private Connection connection;
 
     private PreparedStatement getCredits;
@@ -125,7 +129,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private PreparedStatement deleteOrder;
     private PreparedStatement addTransaction;
     private PreparedStatement getOrderHistory;
-    private PreparedStatement deleteAll;
 
 
     public JDBCTradingPlatformDataSource(String propsFile) throws IOException, SQLException {
@@ -179,14 +182,31 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         getOrderHistory  = connection.prepareStatement(GET_ORDER_HISTORY);
     }
 
+    private int encodeSQLException (SQLException e) {
+        if (e.getErrorCode() == 1062) {
+            return primaryKeyFail;
+        } else if (e.getErrorCode() == 1452) {
+            return foreignKeyFail;
+        } else {
+            return generalSQLFail;
+        }
+    }
+
     /**
      * @see TradingPlatformDataSource#getCredits(String)
      */
     @Override
-    public int getCredits(String organisation) throws SQLException {
-        getCredits.setString(1, organisation);
-        ResultSet credits = getCredits.executeQuery();
-        return credits.getInt("credits");
+    public int getCredits(String organisation){
+        int creditNum;
+        try{
+            getCredits.setString(1, organisation);
+            ResultSet credits = getCredits.executeQuery();
+            credits.next();
+            creditNum = credits.getInt("credits");
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+        return creditNum;
     }
 
     /**
@@ -194,26 +214,36 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @return
      */
     @Override
-    public int updateCredits(String organisation, int credits) throws SQLException {
-        updateCredits.setInt(1, credits);
-        updateCredits.setString(2, organisation);
-        return addAsset.executeUpdate();
+    public int updateCredits(String organisation, int credits){
+        int rows_affected;
+        try {
+            updateCredits.setInt(1, credits);
+            updateCredits.setString(2, organisation);
+            rows_affected = addAsset.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+        return rows_affected;
     }
 
     /**
      * @see TradingPlatformDataSource#getAssets(String) 
      */
     @Override
-    public Set<Asset> getAssets(String organisation) throws SQLException {
+    public Set<Asset> getAssets(String organisation){
         Set<Asset> assetSet = new TreeSet<>();
-        getAssets.setString(1, organisation);
-        ResultSet assetData = getAssets.executeQuery();
-        while(assetData.next()) {
-            Asset asset = new Asset();
-            asset.setOrganisation(assetData.getString("organisation_name"));
-            asset.setAsset(assetData.getString("asset_name"));
-            asset.setAmount(assetData.getInt("amount"));
-            assetSet.add(asset);
+        try {
+            getAssets.setString(1, organisation);
+            ResultSet assetData = getAssets.executeQuery();
+            while(assetData.next()) {
+                Asset asset = new Asset();
+                asset.setOrganisation(assetData.getString("organisation_name"));
+                asset.setAsset(assetData.getString("asset_name"));
+                asset.setAmount(assetData.getInt("amount"));
+                assetSet.add(asset);
+            }
+        } catch (SQLException e) {
+            return null;
         }
         return assetSet;
     }
@@ -222,23 +252,35 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#addAsset(String, String, int)
      */
     @Override
-    public void addAsset(String organisation, String asset, int amount) throws SQLException {
-        addAsset.setString(1, asset);
-        addAsset.setString(2, organisation);
-        addAsset.setInt(3, amount);
-        addAsset.executeUpdate();
+    public int addAsset(String organisation, String asset, int amount){
+        int rows_affected;
+        try {
+            addAsset.setString(1, asset);
+            addAsset.setString(2, organisation);
+            addAsset.setInt(3, amount);
+            rows_affected = addAsset.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+        return rows_affected;
     }
 
     /**
      * @see TradingPlatformDataSource#getAssetAmount(String, String)
      */
     @Override
-    public int getAssetAmount(String organisation, String asset) throws SQLException {
-        getAssetAmount.setString(1, organisation);
-        getAssetAmount.setString(2, asset);
-        ResultSet amountData = getAssetAmount.executeQuery();
-        amountData.next();
-        return amountData.getInt("amount");
+    public int getAssetAmount(String organisation, String asset){
+        int amountNum;
+        try {
+            getAssetAmount.setString(1, organisation);
+            getAssetAmount.setString(2, asset);
+            ResultSet amountData = getAssetAmount.executeQuery();
+            amountData.next();
+            amountNum = amountData.getInt("amount");
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+        return amountNum;
     }
 
     /**
@@ -246,10 +288,16 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @return
      */
     @Override
-    public int deleteAsset(String organisation, String asset) throws SQLException {
-        deleteAsset.setString(1, asset);
-        deleteAsset.setString(2, organisation);
-        return deleteAsset.executeUpdate();
+    public int deleteAsset(String organisation, String asset){
+        int rows_affected;
+        try{
+            deleteAsset.setString(1, asset);
+            deleteAsset.setString(2, organisation);
+            rows_affected = deleteAsset.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+        return rows_affected;
     }
 
     /**
@@ -257,22 +305,32 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @return
      */
     @Override
-    public int updateAssetAmount(String organisation, String asset, int amount) throws SQLException {
-        updateAssetAmount.setInt(1, amount);
-        updateAssetAmount.setString(2, asset);
-        updateAssetAmount.setString(3, organisation);
-        return updateAssetAmount.executeUpdate();
+    public int updateAssetAmount(String organisation, String asset, int amount) {
+        int rows_affected;
+        try {
+            updateAssetAmount.setInt(1, amount);
+            updateAssetAmount.setString(2, asset);
+            updateAssetAmount.setString(3, organisation);
+            rows_affected = updateAssetAmount.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+        return rows_affected;
     }
 
     /**
      * @see TradingPlatformDataSource#getOrganisations()
      */
     @Override
-    public Set<String> getOrganisations() throws SQLException {
+    public Set<String> getOrganisations() {
         Set<String> organisations = new TreeSet<>();
-        ResultSet organisation_data = getOrganisations.executeQuery();
-        while (organisation_data.next()) {
-            organisations.add(organisation_data.getString("organisation_name"));
+        try {
+            ResultSet organisation_data = getOrganisations.executeQuery();
+            while (organisation_data.next()) {
+                organisations.add(organisation_data.getString("organisation_name"));
+            }
+        } catch (SQLException e) {
+            return null;
         }
         return organisations;
     }
@@ -281,43 +339,65 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getUserOrganisation(String)
      */
     @Override
-    public String getUserOrganisation(String username) throws SQLException {
-        getUserOrganisation.setString(1, username);
-        ResultSet organisation_data = getUserOrganisation.executeQuery();
-        organisation_data.next();
-        return organisation_data.getString("organisation_name");
+    public String getUserOrganisation(String username) {
+        String organisationString;
+        try {
+            getUserOrganisation.setString(1, username);
+            ResultSet organisationData = getUserOrganisation.executeQuery();
+            organisationData.next();
+            organisationString = organisationData.getString("organisation_name");
+        } catch (SQLException e) {
+            return null;
+        }
+
+        return organisationString;
     }
 
     /**
      * @see TradingPlatformDataSource#addOrganisation(String, int)
      */
     @Override
-    public void addOrganisation(String organisation, int credits) throws SQLException {
-        addOrganisation.setString(1, organisation);
-        addOrganisation.setInt(2, credits);
-        addOrganisation.executeUpdate();
+    public int addOrganisation(String organisation, int credits) {
+        int rowsAffected;
+        try {
+            addOrganisation.setString(1, organisation);
+            addOrganisation.setInt(2, credits);
+            rowsAffected = addOrganisation.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+
+        return rowsAffected;
     }
 
     /**
      * @see TradingPlatformDataSource#deleteOrganisation(String)
-     * @return
      */
     @Override
-    public int deleteOrganisation(String organisation) throws SQLException {
-        deleteOrganisation.setString(1, organisation);
-        return deleteOrganisation.executeUpdate();
+    public int deleteOrganisation(String organisation) {
+        try {
+            deleteOrganisation.setString(1, organisation);
+            return deleteOrganisation.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
     }
 
     /**
      * @see TradingPlatformDataSource#getUsers()
      */
     @Override
-    public Set<String> getUsers() throws SQLException {
+    public Set<String> getUsers() {
         Set<String> users = new TreeSet<String>();
-        ResultSet user_data = getUsers.executeQuery();
-        while(user_data.next()) {
-            users.add(user_data.getString("username"));
+        try {
+            ResultSet user_data = getUsers.executeQuery();
+            while(user_data.next()) {
+                users.add(user_data.getString("username"));
+            }
+        } catch (SQLException e) {
+            return null;
         }
+
         return users;
     }
 
@@ -325,60 +405,83 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getUserPassword(String)
      */
     @Override
-    public String getUserPassword(String username) throws SQLException {
-        getUserPassword.setString(1, username);
-        ResultSet password = getUserPassword.executeQuery();
-        password.next();
-        return password.getString("password");
+    public String getUserPassword(String username) {
+        try {
+            getUserPassword.setString(1, username);
+            ResultSet password = getUserPassword.executeQuery();
+            password.next();
+            return password.getString("password");
+        } catch (SQLException e) {
+            return null;
+        }
+
     }
 
     /**
      * @see TradingPlatformDataSource#addUser(String, String, String, String)
      */
     @Override
-    public void addUser(String username, String password, String type, String organisation) throws SQLException  {
-        addUser.setString(1, username);
-        addUser.setString(2, organisation);
-        addUser.setString(3, type);
-        addUser.setString(4, password);
-        addUser.executeUpdate();
+    public int addUser(String username, String password, String type, String organisation) {
+        try {
+            addUser.setString(1, username);
+            addUser.setString(2, organisation);
+            addUser.setString(3, type);
+            addUser.setString(4, password);
+            return addUser.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+
     }
 
     /**
      * @see TradingPlatformDataSource#deleteUser(String)
-     * @return
      */
     @Override
-    public int deleteUser(String username) throws SQLException  {
-        deleteUser.setString(1, username);
-        return deleteUser.executeUpdate();
+    public int deleteUser(String username) {
+        try {
+            deleteUser.setString(1, username);
+            return deleteUser.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+
     }
 
     /**
      * @see TradingPlatformDataSource#updatePassword(String, String)
-     * @return
      */
     @Override
-    public int updatePassword(String username, String password) throws SQLException  {
-        updatePassword.setString(2, username);
-        updatePassword.setString(1, password);
-        return updatePassword.executeUpdate();
+    public int updatePassword(String username, String password) {
+        try {
+            updatePassword.setString(2, username);
+            updatePassword.setString(1, password);
+            return updatePassword.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+
     }
 
     /**
      * @see TradingPlatformDataSource#getOrder(int)
      */
     @Override
-    public TPOrder getOrder(int idx) throws SQLException  {
+    public TPOrder getOrder(int idx) {
         TPOrder order = new TPOrder();
-        getOrder.setInt(1, idx);
-        ResultSet order_data = getOrder.executeQuery();
-        order.setId(order_data.getInt("order_id"));
-        order.setOrganisation(order_data.getString("organisation_name"));
-        order.setAsset(order_data.getString("asset_name"));
-        order.setAmount(order_data.getInt("amount"));
-        order.setDateTime(order_data.getString("date"));
-        order.setType(order_data.getString("type"));
+        try {
+            getOrder.setInt(1, idx);
+            ResultSet order_data = getOrder.executeQuery();
+            order.setId(order_data.getInt("order_id"));
+            order.setOrganisation(order_data.getString("organisation_name"));
+            order.setAsset(order_data.getString("asset_name"));
+            order.setAmount(order_data.getInt("amount"));
+            order.setDateTime(order_data.getString("date"));
+            order.setType(order_data.getString("type"));
+        } catch (SQLException e) {
+            return null;
+        }
+
         return order;
     }
 
@@ -386,29 +489,34 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getOrders(String, String, boolean)
      */
     @Override
-    public Set<TPOrder> getOrders(String organisation, String asset, boolean isBuyOrder) throws SQLException  {
+    public Set<TPOrder> getOrders(String organisation, String asset, boolean isBuyOrder) {
         Set<TPOrder> orders = new TreeSet<>();
-        getOrders.setString(1, organisation);
-        getOrders.setString(2, asset);
-        String type;
-        if (isBuyOrder) {
-            type = "BUY";
-        } else {
-            type = "SELL";
+        try {
+            getOrders.setString(1, organisation);
+            getOrders.setString(2, asset);
+            String type;
+            if (isBuyOrder) {
+                type = "BUY";
+            } else {
+                type = "SELL";
+            }
+            getOrders.setString(3, type);
+            ResultSet orderData = getOrders.executeQuery();
+            while (orderData.next()) {
+                TPOrder order = new TPOrder();
+                order.setId(orderData.getInt("order_id"));
+                order.setOrganisation(orderData.getString("organisation_name"));
+                order.setAsset(orderData.getString("asset_name"));
+                order.setCredits(orderData.getInt("credits"));
+                order.setAmount(orderData.getInt("amount"));
+                order.setDateTime(orderData.getString("date"));
+                order.setType(orderData.getString("type"));
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            return null;
         }
-        getOrders.setString(3, type);
-        ResultSet orderData = getOrders.executeQuery();
-        while (orderData.next()) {
-            TPOrder order = new TPOrder();
-            order.setId(orderData.getInt("order_id"));
-            order.setOrganisation(orderData.getString("organisation_name"));
-            order.setAsset(orderData.getString("asset_name"));
-            order.setCredits(orderData.getInt("credits"));
-            order.setAmount(orderData.getInt("amount"));
-            order.setDateTime(orderData.getString("date"));
-            order.setType(orderData.getString("type"));
-            orders.add(order);
-        }
+
         return orders;
     }
 
@@ -416,20 +524,25 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#addOrder(String, String, int, int, boolean)
      */
     @Override
-    public void addOrder(String organisation, String asset, int amount,
-                         int credits, boolean isBuyOrder) throws SQLException  {
-        addOrder.setString(1, organisation);
-        addOrder.setString(2, asset);
-        addOrder.setInt(3, credits);
-        addOrder.setInt(4, amount);
-        String type;
-        if (isBuyOrder) {
-            type = "BUY";
-        } else {
-            type = "SELL";
+    public int addOrder(String organisation, String asset, int amount,
+                         int credits, boolean isBuyOrder) {
+        try {
+            addOrder.setString(1, organisation);
+            addOrder.setString(2, asset);
+            addOrder.setInt(3, credits);
+            addOrder.setInt(4, amount);
+            String type;
+            if (isBuyOrder) {
+                type = "BUY";
+            } else {
+                type = "SELL";
+            }
+            addOrder.setString(5, type);
+            return addOrder.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
         }
-        addOrder.setString(5, type);
-        addOrder.executeUpdate();
+
     }
 
     /**
@@ -437,23 +550,33 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @return
      */
     @Override
-    public int deleteOrder(int idx) throws SQLException {
-        deleteOrder.setInt(1, idx);
-        return deleteOrder.executeUpdate();
+    public int deleteOrder(int idx) {
+        try {
+            deleteOrder.setInt(1, idx);
+            return deleteOrder.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+
     }
 
     /**
      * @see TradingPlatformDataSource#addTransaction(String, String, String, int, int)
      */
     @Override
-    public void addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
-                               int credits) throws SQLException {
-        addTransaction.setString(1, buyingOrganisation);
-        addTransaction.setString(2, sellingOrganisation);
-        addTransaction.setString(3, asset);
-        addTransaction.setInt(4,credits);
-        addTransaction.setInt(5, amount);
-        addTransaction.executeUpdate();
+    public int addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
+                               int credits) {
+        try {
+            addTransaction.setString(1, buyingOrganisation);
+            addTransaction.setString(2, sellingOrganisation);
+            addTransaction.setString(3, asset);
+            addTransaction.setInt(4,credits);
+            addTransaction.setInt(5, amount);
+            return addTransaction.executeUpdate();
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+
     }
 
     /**
@@ -461,23 +584,28 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      */
     @Override
     public Set<Transaction> getOrderHistory(String buyingOrganisation,
-                                            String sellingOrganisation, String asset) throws SQLException  {
+                                            String sellingOrganisation, String asset) {
         Set<Transaction> transactions = new TreeSet<>();
-        getOrderHistory.setString(1, buyingOrganisation);
-        getOrderHistory.setString(2, sellingOrganisation);
-        getOrderHistory.setString(3, asset);
-        ResultSet transaction_data = getOrderHistory.executeQuery();
-        while (transaction_data.next()) {
-            Transaction transaction = new Transaction();
-            transaction.setId(transaction_data.getInt("transaction_id"));
-            transaction.setBuyingOrganisation(transaction_data.getString("buy_organisation_name"));
-            transaction.setSellingOrganisation(transaction_data.getString("sell_organisation_name"));
-            transaction.setAsset(transaction_data.getString("asset_name"));
-            transaction.setCredits(transaction_data.getInt("credits"));
-            transaction.setAmount(transaction_data.getInt("amount"));
-            transaction.setDateTime(transaction_data.getString("datetime"));
-            transactions.add(transaction);
+        try {
+            getOrderHistory.setString(1, buyingOrganisation);
+            getOrderHistory.setString(2, sellingOrganisation);
+            getOrderHistory.setString(3, asset);
+            ResultSet transaction_data = getOrderHistory.executeQuery();
+            while (transaction_data.next()) {
+                Transaction transaction = new Transaction();
+                transaction.setId(transaction_data.getInt("transaction_id"));
+                transaction.setBuyingOrganisation(transaction_data.getString("buy_organisation_name"));
+                transaction.setSellingOrganisation(transaction_data.getString("sell_organisation_name"));
+                transaction.setAsset(transaction_data.getString("asset_name"));
+                transaction.setCredits(transaction_data.getInt("credits"));
+                transaction.setAmount(transaction_data.getInt("amount"));
+                transaction.setDateTime(transaction_data.getString("datetime"));
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            return null;
         }
+
         return transactions;
     }
 
@@ -485,13 +613,18 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#deleteAll()
      */
     @Override
-    public void deleteAll() throws SQLException {
-        Statement dropTable = connection.createStatement();
-        dropTable.execute(CLEAR_ASSET);
-        dropTable.execute(CLEAR_TRADE_HISTORY);
-        dropTable.execute(CLEAR_CURRENT_TRADES);
-        dropTable.execute(CLEAR_USER_INFORMATION);
-        dropTable.execute(CLEAR_ORGANISATION_UNITS);
+    public int deleteAll() {
+        try {
+            Statement dropTable = connection.createStatement();
+            dropTable.execute(CLEAR_ASSET);
+            dropTable.execute(CLEAR_TRADE_HISTORY);
+            dropTable.execute(CLEAR_CURRENT_TRADES);
+            dropTable.execute(CLEAR_USER_INFORMATION);
+            dropTable.execute(CLEAR_ORGANISATION_UNITS);
+        } catch (SQLException e) {
+            return encodeSQLException(e);
+        }
+        return 0;
     }
 
 //    /**

@@ -45,6 +45,7 @@ public class JDBCDataSourceTest {
     @BeforeAll
     static void setupDatabase() throws IOException, SQLException {
         dataSource = new JDBCTradingPlatformDataSource(propsFile);
+        dataSource.addOrganisation(organisationApple, organisationAppleCredits);
     }
 
     /**
@@ -62,15 +63,10 @@ public class JDBCDataSourceTest {
      */
     @Test
     public void testAddNewUser() throws SQLException {
-        try {
-            dataSource.addUser(aNewUser, aNewUserInitialPassword, STANDARD, organisationApple);
+
+        dataSource.addUser(aNewUser, aNewUserInitialPassword, STANDARD, organisationApple);
 //            dataSource.addUser(aNewUser, aNewUserInitialPassword, STANDARD, organisationApple);
-        } catch (SQLException e) {
-            System.out.println(e.getErrorCode());
-            e.printStackTrace();
-        }
-        System.out.println(dataSource.getUsers());
-        System.out.println(dataSource.getOrganisations());
+
         assertTrue(dataSource.getUsers().contains(aNewUser));
     }
 
