@@ -2,20 +2,18 @@ package main.java.tradingPlatform;
 
 import main.java.database.TradingPlatformDataSource;
 
-import java.util.Set;
-
 
 /**
- * TODO
+ * This class handles the administration applications sides of the system such as creating
+ * users, updating organisation attributes, updating organisation attributes as well as
+ * removing fields.
  */
 public class ItAdministration extends TPUser {
 
-
-
+    private final String errorMessage = "Encountered and error, please refresh.";
 
     public ItAdministration(TradingPlatformDataSource dataSource, String adminName){
         super(dataSource);
-
     }
 
     /**
@@ -26,10 +24,22 @@ public class ItAdministration extends TPUser {
      * @param organisation the organisation the user belongs too.
      * @throws DuplicationException the specified field already exists.
      * @throws NullValueException specified field does not exist in the database.
-     * @throws InvalidValueException value entered is incorrect type.
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
-    public void addStandardUser(String userName, String password, String organisation) throws DuplicationException, NullValueException, InvalidValueException {
-
+    public void addStandardUser(String userName, String password, String organisation) throws DuplicationException, NullValueException, UnknownDatabaseException {
+        String user = "USER";
+        int rowsAffected = dataSource.addUser(userName, password, user, organisation);
+        if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
+            String message = "User already exists.";
+            throw new DuplicationException(message);
+        }
+        else if (rowsAffected == PlatformGlobals.getForeignKeyFail()) {
+            String message = "Organisation doesn't exist.";
+            throw new NullValueException(message);
+        }
+        else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
+            throw new UnknownDatabaseException(errorMessage);
+        }
     }
 
     /**
@@ -41,15 +51,15 @@ public class ItAdministration extends TPUser {
      * @throws WrongCredentialException
      * @throws InvalidValueException
      */
-    public void addItUser(String userName, String password) throws DuplicationException, WrongCredentialException, InvalidValueException, UnknownDatabaseException {
+    public void addItUser(String userName, String password) throws DuplicationException, UnknownDatabaseException {
         String adminUser = "ADMIN";
         String organisation = "ADMIN";
         int rowsAffected = dataSource.addUser(userName, password, adminUser, organisation);
         if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
-            String message = "Organisation already exists.";
+            String message = "Admin user already exists.";
             throw new DuplicationException(message);
         } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
-            throw new UnknownDatabaseException(generalMessage);
+            throw new UnknownDatabaseException(errorMessage);
         }
     }
 
@@ -62,7 +72,13 @@ public class ItAdministration extends TPUser {
      * @throws UnknownDatabaseException
      */
     public void removeUser(String userName) throws NullValueException, UnknownDatabaseException {
-
+        int rowsAffected = dataSource.deleteUser(userName);
+        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
+            String message = "User doesn't exist.";
+            throw new NullValueException(message);
+        } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
+            throw new UnknownDatabaseException(generalMessage);
+        }
     }
 
     /**
@@ -70,8 +86,8 @@ public class ItAdministration extends TPUser {
      *
      * @param organisation the name of the organisation being created.
      * @throws DuplicationException
-     * @throws NullValueException
      * @throws InvalidValueException
+     * @throws UnknownDatabaseException
      */
     public void addOrganisation(String organisation, int credits) throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         if (organisation.equals("ADMIN")) {
@@ -79,15 +95,12 @@ public class ItAdministration extends TPUser {
             throw new InvalidValueException(message);
         }
         int rowsAffected = dataSource.addOrganisation(organisation, credits);
-        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
+        if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
             String message = "Organisation already exists.";
             throw new DuplicationException(message);
         } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
             throw new UnknownDatabaseException(generalMessage);
         }
-        //        if (!organisationList.contains(organisation)) {
-//            int rowsAffected = dataSource.addOrganisation(organisation, )
-//        }
     }
 
     /**
@@ -99,32 +112,14 @@ public class ItAdministration extends TPUser {
      * @throws UnknownDatabaseException
      */
     public void removeOrganisation(String organisation) throws NullValueException, UnknownDatabaseException {
-
+        int rowsAffected = dataSource.deleteOrganisation(organisation);
+        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
+            String message = "Organisation doesn't exist.";
+            throw new NullValueException(message);
+        } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
+            throw new UnknownDatabaseException(generalMessage);
+        }
     }
-
-//    /**
-//     * Increases the amount of credits to a specified organisation.
-//     *
-//     * @param organisation the name of the organisation.
-//     * @param credits the value of credits to be added to the organisation.
-//     * @throws NullValueException
-//     * @throws InvalidValueException
-//     */
-//    public void increaseCredits(String organisation, int credits) throws NullValueException, InvalidValueException {
-//
-//    }
-//
-//    /**
-//     * Reduces the amount of  credits from the specified organisation.
-//     *
-//     * @param organisation the name of the organisation to remove credits from.
-//     * @param credits the value of credits to be removed from the organisation.
-//     * @throws NullValueException
-//     * @throws InvalidValueException
-//     */
-//    public void reduceCredits(String organisation, int credits) throws NullValueException, InvalidValueException{
-//        // throws credits to big exception
-//    }
 
     /** Updates the amount of credits an organisation has to a specified amount.
      *
@@ -133,17 +128,15 @@ public class ItAdministration extends TPUser {
      * @throws NullValueException
      * @throws InvalidValueException
      */
-    public void updateCredits(String organisation, int credits) throws NullValueException, InvalidValueException, DuplicationException, UnknownDatabaseException {
+    public void updateCreditAmount(String organisation, int credits) throws InvalidValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.updateCredits(organisation, credits);
         if (rowsAffected == PlatformGlobals.getNoRowsAffected()){
-            String message = "This organisation already has this asset.";
-            throw new NullValueException(message);
+            String message = "This organisation doesn't exist.";
+            throw new InvalidValueException(message);
         }
         else if(rowsAffected == PlatformGlobals.getGeneralSQLFail()){
-            String message = "Update did not go through. Please refresh page.";
-            throw new UnknownDatabaseException(message);
+            throw new UnknownDatabaseException(errorMessage);
         }
-
     }
 
     /**
@@ -156,22 +149,19 @@ public class ItAdministration extends TPUser {
      * @throws NullValueException
      * @throws InvalidValueException
      */
-    public void addAsset(String organisation, String asset, int amount) throws DuplicationException, InvalidValueException, UnknownDatabaseException {
-        int rowsAffected = dataSource.addAsset(organisation, asset, amount);
-//        switch (rowsAffected) {
-//            case primaryKeyFail -> {
-//                String message = "This organisation already has this asset.";
-//                throw new DuplicationException(message);
-//            }
-//            case foreignKeyFail -> {
-//                String message = "Organisation does not exist.";
-//                throw new InvalidValueException(message);
-//            }
-//            case generalSQLFail -> {
-//                String message = "Update did not go through. Please refresh page.";
-//                throw new UnknownDatabaseException(message);
-//            }
-//        }
+    public void addAsset(String organisation, String asset, int amount) throws DuplicationException, UnknownDatabaseException, NullValueException {
+        int rowsAffected = dataSource.addAsset(organisation,asset,amount);
+        if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
+            String message = "Asset already exists.";
+            throw new DuplicationException(message);
+        }
+        else if (rowsAffected == PlatformGlobals.getForeignKeyFail()) {
+            String message = "Organisation doesn't exist.";
+            throw new NullValueException(message);
+        }
+        else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
+            throw new UnknownDatabaseException(errorMessage);
+        }
     }
 
     /**
@@ -185,26 +175,20 @@ public class ItAdministration extends TPUser {
      * @throws NullValueException
      * @throws InvalidValueException
      */
-    public void updateAssetAmount(String organisation, String asset, int amount) throws InvalidValueException, UnknownDatabaseException, NullValueException {
+    public void updateAssetAmount(String organisation, String asset, int amount) throws UnknownDatabaseException, NullValueException, DuplicationException {
         int rowsAffected = dataSource.updateAssetAmount(organisation,asset,amount);
-//        switch (rowsAffected) {
-//            case primaryKeyFail -> {
-//                String message = "This organisation already has this asset.";
-//                throw new NullValueException(message);
-//            }
-//            case foreignKeyFail -> {
-//                String message = "Organisation does not exist.";
-//                throw new InvalidValueException(message);
-//            }
-//            case generalSQLFail -> {
-//                String message = "Update did not go through. Please refresh page.";
-//                throw new UnknownDatabaseException(message);
-//            }
-//        }
-        //0 didnt work
-        // +number a table was updated
+        if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
+            String message = "Field entered already exists.";
+            throw new DuplicationException(message);
+        }
+        else if (rowsAffected == PlatformGlobals.getForeignKeyFail()) {
+            String message = "Field entered doesn't exist.";
+            throw new NullValueException(message);
+        }
+        else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
+            throw new UnknownDatabaseException(errorMessage);
+        }
     }
-
 
     /**
      * Removes an asset from a specified organisation.
@@ -216,6 +200,13 @@ public class ItAdministration extends TPUser {
      * @throws UnknownDatabaseException
      */
     public void removeAsset(String organisation, String asset) throws NullValueException, InvalidValueException, UnknownDatabaseException {
-        //SOmething == PlatformGlobals.getNoRowsAffected() (which is 0)
+        int rowsAffected = dataSource.deleteAsset(organisation,asset);
+        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
+            String message = "Entered field doesn't exist.";
+            throw new NullValueException(message);
+        } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
+            throw new UnknownDatabaseException(generalMessage);
+        }
+
     }
 }
