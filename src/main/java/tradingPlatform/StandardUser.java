@@ -1,5 +1,7 @@
 package main.java.tradingPlatform;
 
+import main.java.database.TradingPlatformDataSource;
+
 import java.sql.SQLException;
 import java.util.Set;
 
@@ -11,7 +13,8 @@ public class StandardUser extends TPUser {
     private String username;
     private String organisation;
 
-    public StandardUser(String username, String organisation) {
+    public StandardUser(TradingPlatformDataSource dataSource, String username, String organisation) {
+        super(dataSource);
         this.username = username;
         this.organisation = organisation;
     }

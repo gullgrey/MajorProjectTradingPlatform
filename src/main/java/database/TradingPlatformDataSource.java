@@ -28,7 +28,7 @@ public interface TradingPlatformDataSource {
     int updateCredits(String organisation, int credits);
 
     /**
-     * Retrieves a set of assets and their amounts for a specific organisation.
+     * Retrieves a set of assets and their organisations and amounts for a specific organisation.
      *
      * @param organisation The name of the organisational unit.
      * @return A set of all of the assets that belong to an organisational unit

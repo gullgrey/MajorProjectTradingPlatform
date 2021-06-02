@@ -16,7 +16,7 @@ public abstract class TPUser {
     protected static final int foreignKeyFail = -2;
     protected static final int generalSQLFail = -3;
 
-    DefaultListModel<String> organisationList;
+    DefaultListModel<Organisation> organisationList;
     DefaultListModel<Asset> assetList;
 
 
@@ -25,7 +25,7 @@ public abstract class TPUser {
 
         organisationList = new DefaultListModel<>();
 
-        for (String organisation : this.dataSource.getOrganisations()) {
+        for (Organisation organisation : this.dataSource.getOrganisations()) {
             organisationList.addElement(organisation);
         }
 
