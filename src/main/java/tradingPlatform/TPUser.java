@@ -12,9 +12,7 @@ public abstract class TPUser {
 
     TradingPlatformDataSource dataSource;
 
-    static final int primaryKeyFail = -1;
-    static final int foreignKeyFail = -2;
-    static final int generalSQLFail = -3;
+
     static final String generalMessage = "Update did not go through. Please refresh page.";
 
     DefaultListModel<Organisation> organisationList;
