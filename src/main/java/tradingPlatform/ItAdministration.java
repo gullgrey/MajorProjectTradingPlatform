@@ -158,20 +158,20 @@ public class ItAdministration extends TPUser {
      */
     public void addAsset(String organisation, String asset, int amount) throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.addAsset(organisation, asset, amount);
-        switch (rowsAffected) {
-            case primaryKeyFail -> {
-                String message = "This organisation already has this asset.";
-                throw new DuplicationException(message);
-            }
-            case foreignKeyFail -> {
-                String message = "Organisation does not exist.";
-                throw new InvalidValueException(message);
-            }
-            case generalSQLFail -> {
-                String message = "Update did not go through. Please refresh page.";
-                throw new UnknownDatabaseException(message);
-            }
-        }
+//        switch (rowsAffected) {
+//            case primaryKeyFail -> {
+//                String message = "This organisation already has this asset.";
+//                throw new DuplicationException(message);
+//            }
+//            case foreignKeyFail -> {
+//                String message = "Organisation does not exist.";
+//                throw new InvalidValueException(message);
+//            }
+//            case generalSQLFail -> {
+//                String message = "Update did not go through. Please refresh page.";
+//                throw new UnknownDatabaseException(message);
+//            }
+//        }
     }
 
     /**
@@ -187,20 +187,20 @@ public class ItAdministration extends TPUser {
      */
     public void updateAssetAmount(String organisation, String asset, int amount) throws InvalidValueException, UnknownDatabaseException, NullValueException {
         int rowsAffected = dataSource.updateAssetAmount(organisation,asset,amount);
-        switch (rowsAffected) {
-            case primaryKeyFail -> {
-                String message = "This organisation already has this asset.";
-                throw new NullValueException(message);
-            }
-            case foreignKeyFail -> {
-                String message = "Organisation does not exist.";
-                throw new InvalidValueException(message);
-            }
-            case generalSQLFail -> {
-                String message = "Update did not go through. Please refresh page.";
-                throw new UnknownDatabaseException(message);
-            }
-        }
+//        switch (rowsAffected) {
+//            case primaryKeyFail -> {
+//                String message = "This organisation already has this asset.";
+//                throw new NullValueException(message);
+//            }
+//            case foreignKeyFail -> {
+//                String message = "Organisation does not exist.";
+//                throw new InvalidValueException(message);
+//            }
+//            case generalSQLFail -> {
+//                String message = "Update did not go through. Please refresh page.";
+//                throw new UnknownDatabaseException(message);
+//            }
+//        }
         //0 didnt work
         // +number a table was updated
     }

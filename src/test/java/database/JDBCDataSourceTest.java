@@ -165,8 +165,9 @@ public class JDBCDataSourceTest {
                 addOrderCreditAmount,true);
 //        Set<TPOrder> tempOrders = dataSource.getOrders(organisationApple,asset1, true);
 //        TPOrder tempOrder = tempOrders.iterator().next();
-        int idx = 1;
-        dataSource.deleteOrder(idx);
+
+        for (TPOrder order : dataSource.getOrders(true))
+            dataSource.deleteOrder(order.getId());
         assertTrue(dataSource.getOrders( true).isEmpty());
     }
 

@@ -66,11 +66,11 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String ADD_ASSET  = "INSERT INTO asset VALUES (?,?,?)";
     private static final String DELETE_ASSET = "DELETE FROM asset WHERE asset_name = ? AND organisation_name = ?";
     private static final String GET_ASSET_AMOUNT = "SELECT amount  FROM asset WHERE organisation_name = ? AND  asset_name = ?";
-    private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount = amount + ? WHERE asset_name = ? AND organisation_name = ?";
+    private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount = greatest(amount + ?, 0) WHERE asset_name = ? AND organisation_name = ?";
 
     // Organisation queries
     private static final String GET_CREDITS = "SELECT credits FROM organisation_units WHERE organisation_name=?";
-    private static final String UPDATE_CREDITS = "UPDATE organisation_units SET credits = credits + ? WHERE organisation_name=?";
+    private static final String UPDATE_CREDITS = "UPDATE organisation_units SET credits = greatest(credits + ?, 0) WHERE organisation_name=?";
     private static final String GET_ORGANISATIONS = "SELECT * FROM organisation_units";
     private static final String ADD_ORGANISATION  = "INSERT INTO organisation_units VALUES (?,?)";
     private static final String DELETE_ORGANISATION = "DELETE FROM organisation_units WHERE organisation_name=?";
@@ -98,11 +98,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String CLEAR_CURRENT_TRADES = "delete from current_trades;";
     private static final String CLEAR_TRADE_HISTORY = "delete from trade_history;";
     private static final String CLEAR_ORGANISATION_UNITS = "delete from organisation_units;";
-
-    private static final int primaryKeyFail = -1;
-    private static final int foreignKeyFail = -2;
-    private static final int generalSQLFail = -3;
-    private static final String adminOrganisation = "ADMIN";
 
     private Connection connection;
 
@@ -184,7 +179,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         addTransaction  = connection.prepareStatement(ADD_TRANSACTION);
         getOrderHistory  = connection.prepareStatement(GET_ORDER_HISTORY);
         try {
-            addOrganisation.setString(1,adminOrganisation);
+            addOrganisation.setString(1,PlatformGlobals.getAdminOrganisation());
             addOrganisation.setInt(2, 0);
             addOrganisation.executeUpdate();
         } catch (SQLException e) {
@@ -193,12 +188,14 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     private int encodeSQLException (SQLException e) {
-        if (e.getErrorCode() == 1062) {
-            return primaryKeyFail;
-        } else if (e.getErrorCode() == 1452) {
-            return foreignKeyFail;
+        int primaryKeyError = 1062;
+        int foreignKeyError = 1452;
+        if (e.getErrorCode() == primaryKeyError) {
+            return PlatformGlobals.getPrimaryKeyFail();
+        } else if (e.getErrorCode() == foreignKeyError) {
+            return PlatformGlobals.getForeignKeyFail();
         } else {
-            return generalSQLFail;
+            return PlatformGlobals.getGeneralSQLFail();
         }
     }
 
@@ -384,7 +381,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      */
     @Override
     public int deleteOrganisation(String organisation) {
-        if (organisation.equals(adminOrganisation)) {
+        if (organisation.equals(PlatformGlobals.getAdminOrganisation())) {
             return 0;
         }
         try {
@@ -407,8 +404,8 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
                 UserOrganisation user = new UserOrganisation();
                 user.setUser(user_data.getString("username"));
                 String type = user_data.getString("account_type");
-                if (type.equals(adminOrganisation)) {
-                    user.setOrganisation(adminOrganisation);
+                if (type.equals(PlatformGlobals.getAdminOrganisation())) {
+                    user.setOrganisation(PlatformGlobals.getAdminOrganisation());
                 } else {
                     user.setOrganisation(user_data.getString("organisation_name"));
                 }

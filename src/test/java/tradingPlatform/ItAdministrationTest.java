@@ -59,7 +59,7 @@ public class ItAdministrationTest {
     static void setupAdmin() throws DuplicationException, NullValueException, InvalidValueException, UnknownDatabaseException {
         adminAccount = new ItAdministration(dataSource, adminUserName);
         adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
-        adminAccount.increaseCredits(standardOrganisation, standardOrganisationCredits);
+        adminAccount.updateCredits(standardOrganisation, standardOrganisationCredits);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ItAdministrationTest {
      * @throws WrongCredentialException
      */
     @Test
-    public void testAddItUser() throws DuplicationException, InvalidValueException, SQLException, WrongCredentialException {
+    public void testAddItUser() throws DuplicationException, InvalidValueException, SQLException, WrongCredentialException, UnknownDatabaseException {
         adminAccount.addItUser(userNameCorrect,correctPassword);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
         assertTrue(userCheck.contains(userNameCorrect));
@@ -146,9 +146,9 @@ public class ItAdministrationTest {
      * @throws SQLException
      */
     @Test
-    public void testIncreaseCredits() throws NullValueException, InvalidValueException, SQLException {
+    public void testIncreaseCredits() throws NullValueException, InvalidValueException, SQLException, DuplicationException, UnknownDatabaseException {
         int increasedAmount = 100;
-        adminAccount.increaseCredits(standardOrganisation, increasedAmount);
+        adminAccount.updateCredits(standardOrganisation, increasedAmount);
         int newAmount = dataSource.getCredits(standardOrganisation);
         assertEquals(standardOrganisationCredits + increasedAmount, newAmount);
     }
@@ -161,9 +161,9 @@ public class ItAdministrationTest {
      * @throws SQLException
      */
     @Test
-    public void testReduceCredits() throws NullValueException, InvalidValueException, SQLException {
+    public void testReduceCredits() throws NullValueException, InvalidValueException, SQLException, DuplicationException, UnknownDatabaseException {
         int decreasedAmount = 20;
-        adminAccount.reduceCredits(standardOrganisation, decreasedAmount);
+        adminAccount.updateCredits(standardOrganisation, decreasedAmount);
         int newAmount = dataSource.getCredits(standardOrganisation);
         assertEquals(standardOrganisationCredits + decreasedAmount, newAmount);
     }

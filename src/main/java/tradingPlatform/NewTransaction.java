@@ -25,6 +25,11 @@ public class NewTransaction {
         return null;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public int removeOrder(int id) {
        TPOrder order = dataSource.getOrder(id);
        if (order == null) {
@@ -47,6 +52,6 @@ public class NewTransaction {
            }
        }
 
-       return 0;
+       return PlatformGlobals.getNoRowsAffected();
     }
 }
