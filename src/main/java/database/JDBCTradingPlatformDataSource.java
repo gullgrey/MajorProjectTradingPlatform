@@ -1,8 +1,6 @@
 package main.java.database;
 
-import main.java.tradingPlatform.Asset;
-import main.java.tradingPlatform.TPOrder;
-import main.java.tradingPlatform.Transaction;
+import main.java.tradingPlatform.*;
 
 import java.io.IOException;
 import java.sql.*;
@@ -104,6 +102,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final int primaryKeyFail = -1;
     private static final int foreignKeyFail = -2;
     private static final int generalSQLFail = -3;
+    private static final String adminOrganisation = "ADMIN";
 
     private Connection connection;
 
@@ -157,6 +156,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     }
 
+    /**
+     * todo
+     * @throws SQLException
+     */
     private void prepareQueries() throws SQLException {
         getCredits = connection.prepareStatement(GET_CREDITS);
         updateCredits = connection.prepareStatement(UPDATE_CREDITS);
@@ -180,6 +183,13 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         deleteOrder  = connection.prepareStatement(DELETE_ORDER);
         addTransaction  = connection.prepareStatement(ADD_TRANSACTION);
         getOrderHistory  = connection.prepareStatement(GET_ORDER_HISTORY);
+        try {
+            addOrganisation.setString(1,adminOrganisation);
+            addOrganisation.setInt(2, 0);
+            addOrganisation.executeUpdate();
+        } catch (SQLException e) {
+
+        }
     }
 
     private int encodeSQLException (SQLException e) {
@@ -211,7 +221,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     /**
      * @see TradingPlatformDataSource#updateCredits(String, int)
-     * @return
      */
     @Override
     public int updateCredits(String organisation, int credits){
@@ -285,7 +294,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     /**
      * @see TradingPlatformDataSource#deleteAsset(String, String)
-     * @return
      */
     @Override
     public int deleteAsset(String organisation, String asset){
@@ -302,7 +310,6 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     /**
      * @see TradingPlatformDataSource#updateAssetAmount(String, String, int)
-     * @return
      */
     @Override
     public int updateAssetAmount(String organisation, String asset, int amount) {
@@ -322,12 +329,15 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getOrganisations()
      */
     @Override
-    public Set<String> getOrganisations() {
-        Set<String> organisations = new TreeSet<>();
+    public Set<Organisation> getOrganisations() {
+        Set<Organisation> organisations = new TreeSet<>();
         try {
             ResultSet organisation_data = getOrganisations.executeQuery();
             while (organisation_data.next()) {
-                organisations.add(organisation_data.getString("organisation_name"));
+                Organisation organisation = new Organisation();
+                organisation.setOrganisation(organisation_data.getString("organisation_name"));
+                organisation.setCredits(organisation_data.getInt("credits"));
+                organisations.add(organisation);
             }
         } catch (SQLException e) {
             return null;
@@ -375,6 +385,9 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      */
     @Override
     public int deleteOrganisation(String organisation) {
+        if (organisation.equals(adminOrganisation)) {
+            return 0;
+        }
         try {
             deleteOrganisation.setString(1, organisation);
             return deleteOrganisation.executeUpdate();
@@ -387,12 +400,20 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
      * @see TradingPlatformDataSource#getUsers()
      */
     @Override
-    public Set<String> getUsers() {
-        Set<String> users = new TreeSet<String>();
+    public Set<UserOrganisation> getUsers() {
+        Set<UserOrganisation> users = new TreeSet<>();
         try {
             ResultSet user_data = getUsers.executeQuery();
             while(user_data.next()) {
-                users.add(user_data.getString("username"));
+                UserOrganisation user = new UserOrganisation();
+                user.setUser(user_data.getString("username"));
+                String type = user_data.getString("account_type");
+                if (type.equals(adminOrganisation)) {
+                    user.setOrganisation(adminOrganisation);
+                } else {
+                    user.setOrganisation(user_data.getString("organisation_name"));
+                }
+                users.add(user);
             }
         } catch (SQLException e) {
             return null;
@@ -626,13 +647,4 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         }
         return 0;
     }
-
-//    /**
-//     *
-//     * @param password
-//     * @return
-//     */
-//    private String hashPassword(String password) {
-//        return null;
-//    }
 }

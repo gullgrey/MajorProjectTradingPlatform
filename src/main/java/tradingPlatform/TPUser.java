@@ -1,5 +1,8 @@
 package main.java.tradingPlatform;
 
+import main.java.database.TradingPlatformDataSource;
+
+import javax.swing.*;
 import java.sql.SQLException;
 
 /**
@@ -7,7 +10,31 @@ import java.sql.SQLException;
  */
 public abstract class TPUser {
 
+    TradingPlatformDataSource dataSource;
 
+    protected static final int primaryKeyFail = -1;
+    protected static final int foreignKeyFail = -2;
+    protected static final int generalSQLFail = -3;
+
+    DefaultListModel<String> organisationList;
+    DefaultListModel<Asset> assetList;
+
+
+    public TPUser(TradingPlatformDataSource dataSource) {
+        this.dataSource = dataSource;
+
+        organisationList = new DefaultListModel<>();
+
+        for (String organisation : this.dataSource.getOrganisations()) {
+            organisationList.addElement(organisation);
+        }
+
+        assetList = new DefaultListModel<>();
+
+        for (Asset asset : this.dataSource.getAssets(null)) {
+            assetList.addElement(asset);
+        }
+    }
 
     /**
      * FROM USER PERSPECTIVE: Allows them to change their password.

@@ -1,8 +1,6 @@
 package main.java.database;
 
-import main.java.tradingPlatform.Asset;
-import main.java.tradingPlatform.TPOrder;
-import main.java.tradingPlatform.Transaction;
+import main.java.tradingPlatform.*;
 
 import java.sql.SQLException;
 import java.util.Set;
@@ -80,7 +78,7 @@ public interface TradingPlatformDataSource {
      *
      * @return a set of all the organisation names.
      */
-    Set<String> getOrganisations();
+    Set<Organisation> getOrganisations();
 
     /**
      * Retrieves the name of the organisational unit for the inputted user.
@@ -111,7 +109,7 @@ public interface TradingPlatformDataSource {
      *
      * @return a set of usernames.
      */
-    Set<String> getUsers();
+    Set<UserOrganisation> getUsers();
 
     /**
      * Returns the hashed password of the user with the inputted username.

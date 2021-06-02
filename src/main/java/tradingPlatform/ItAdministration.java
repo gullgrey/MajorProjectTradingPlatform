@@ -1,5 +1,7 @@
 package main.java.tradingPlatform;
 
+import main.java.database.TradingPlatformDataSource;
+
 import java.sql.SQLException;
 
 /**
@@ -9,7 +11,8 @@ public class ItAdministration extends TPUser {
 
     String adminName;
 
-    public ItAdministration(String adminName){
+    public ItAdministration(TradingPlatformDataSource dataSource, String adminName){
+        super(dataSource);
         this.adminName = adminName;
     }
 
@@ -60,8 +63,14 @@ public class ItAdministration extends TPUser {
      * @throws NullValueException
      * @throws InvalidValueException
      */
-    public void addOrganisation(String organisation) throws DuplicationException, NullValueException, InvalidValueException {
-
+    public void addOrganisation(String organisation, int credits) throws DuplicationException, NullValueException, InvalidValueException {
+        if (organisation.equals("ADMIN")) {
+            String message = "This organisation name is reserved.";
+            throw new InvalidValueException(message);
+        }
+        //        if (!organisationList.contains(organisation)) {
+//            int rowsAffected = dataSource.addOrganisation(organisation, )
+//        }
     }
 
     /**
@@ -110,7 +119,23 @@ public class ItAdministration extends TPUser {
      * @throws NullValueException
      * @throws InvalidValueException
      */
-    public void addAsset(String organisation, String asset, int amount) throws DuplicationException, NullValueException, InvalidValueException {
+    public void addAsset(String organisation, String asset, int amount) throws DuplicationException, InvalidValueException, UnknownDatabaseException {
+        int rowsAffected = dataSource.addAsset(organisation, asset, amount);
+        switch (rowsAffected) {
+            case primaryKeyFail -> {
+                String message = "This organisation already has this asset.";
+                throw new DuplicationException(message);
+            }
+            case foreignKeyFail -> {
+                String message = "Organisation does not exist.";
+                throw new InvalidValueException(message);
+            }
+            case generalSQLFail -> {
+                String message = "Update did not go through. Please refresh page.";
+                throw new UnknownDatabaseException(message);
+
+            }
+        }
 
     }
 

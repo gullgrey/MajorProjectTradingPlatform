@@ -1,9 +1,7 @@
 package main.java.network;
 
 import main.java.database.TradingPlatformDataSource;
-import main.java.tradingPlatform.Asset;
-import main.java.tradingPlatform.TPOrder;
-import main.java.tradingPlatform.Transaction;
+import main.java.tradingPlatform.*;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -96,7 +94,7 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     }
 
     @Override
-    public Set<String> getOrganisations() {
+    public Set<Organisation> getOrganisations() {
         return null;
     }
 
@@ -117,7 +115,7 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     }
 
     @Override
-    public Set<String> getUsers() {
+    public Set<UserOrganisation> getUsers() {
         return null;
     }
 
