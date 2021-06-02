@@ -25,7 +25,28 @@ public class NewTransaction {
         return null;
     }
 
-    public int removeOrder(TPOrder order) {
+    public int removeOrder(int id) {
+       TPOrder order = dataSource.getOrder(id);
+       if (order == null) {
+           return PlatformGlobals.getGeneralSQLFail();
+       }
+       String organisation = order.getOrganisation();
+       String asset = order.getAsset();
+       int amount = order.getAmount();
+       int credits = order.getCredits();
+       boolean isBuyOrder;
+       isBuyOrder = order.getType().equals(PlatformGlobals.getBuyOrder());
+       dataSource.deleteOrder(id);
+       if (isBuyOrder) {
+           dataSource.updateCredits(organisation, credits * amount);
+       } else { //is Sell Order
+           if (dataSource.getAssetAmount(organisation, asset) < PlatformGlobals.getNoRowsAffected()) {
+               dataSource.addAsset(organisation, asset, amount);
+           } else {
+                dataSource.updateAssetAmount(organisation, asset, amount);
+           }
+       }
+
        return 0;
     }
 }
