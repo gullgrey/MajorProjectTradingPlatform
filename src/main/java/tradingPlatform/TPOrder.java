@@ -1,9 +1,11 @@
 package main.java.tradingPlatform;
 
+import java.io.Serializable;
+
 /**
  * TODO
  */
-public class TPOrder implements Comparable<TPOrder>{
+public class TPOrder implements Comparable<TPOrder>, Serializable {
 
     private int id;
     private String organisation;

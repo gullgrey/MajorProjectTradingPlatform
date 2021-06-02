@@ -1,9 +1,11 @@
 package main.java.tradingPlatform;
 
+import java.io.Serializable;
+
 /**
  * Retrieves and sets information associated with assets.
  */
-public class Asset implements Comparable<Asset>{
+public class Asset implements Comparable<Asset>, Serializable {
 
     String organisation;
     String asset;

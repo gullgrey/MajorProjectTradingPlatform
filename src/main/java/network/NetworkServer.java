@@ -81,6 +81,50 @@ public class NetworkServer {
                 }
                 outputStream.flush();
             }
+
+            case ADD_ASSET -> {
+                final String organisation = (String) inputStream.readObject();
+                final String asset = (String) inputStream.readObject();
+                final int amount = inputStream.readInt();
+                synchronized (database) {
+                    int rowsAffected = database.addAsset(organisation, asset, amount);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case DELETE_ASSET -> {
+                final String organisation = (String) inputStream.readObject();
+                final String asset = (String) inputStream.readObject();
+                synchronized (database) {
+                    int rowsAffected = database.deleteAsset(organisation, asset);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case GET_ASSET_AMOUNT -> {
+                final String organisation = (String) inputStream.readObject();
+                final String asset = (String) inputStream.readObject();
+                synchronized (database) {
+                    int amount = database.getAssetAmount(organisation, asset);
+                    outputStream.writeInt(amount);
+                }
+                outputStream.flush();
+            }
+
+
+
+            case ADD_ORGANISATION -> {
+                final String organisation = (String) inputStream.readObject();
+                final int credits = inputStream.readInt();
+                System.out.println("Hi there");
+                synchronized (database) {
+                    int rowsAffected = database.addOrganisation(organisation, credits);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
         }
     }
 

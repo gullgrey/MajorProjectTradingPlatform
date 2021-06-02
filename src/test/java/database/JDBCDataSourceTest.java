@@ -1,6 +1,8 @@
 package test.java.database;
 
 import main.java.database.JDBCTradingPlatformDataSource;
+import main.java.database.TradingPlatformDataSource;
+import main.java.network.NetworkDataSource;
 import main.java.tradingPlatform.Asset;
 import main.java.tradingPlatform.TPOrder;
 import org.junit.jupiter.api.*;
@@ -20,7 +22,7 @@ import org.junit.jupiter.api.Test;
 public class JDBCDataSourceTest {
 
     private static final String propsFile = "src/test/resources/maria.props";
-    private static JDBCTradingPlatformDataSource dataSource;
+    private static TradingPlatformDataSource dataSource;
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
     private static final String aNewUserSecondPassword = "Password123";
@@ -44,7 +46,7 @@ public class JDBCDataSourceTest {
      */
     @BeforeAll
     static void setupDatabase() throws IOException, SQLException {
-        dataSource = new JDBCTradingPlatformDataSource(propsFile);
+        dataSource = new NetworkDataSource();
         dataSource.addOrganisation(organisationApple, organisationAppleCredits);
     }
 

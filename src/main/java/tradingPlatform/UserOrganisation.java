@@ -1,9 +1,11 @@
 package main.java.tradingPlatform;
 
+import java.io.Serializable;
+
 /**
  * todo
  */
-public class UserOrganisation implements Comparable<UserOrganisation>{
+public class UserOrganisation implements Comparable<UserOrganisation>, Serializable {
     private String user;
     private String organisation;
 

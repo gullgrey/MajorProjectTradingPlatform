@@ -1,6 +1,8 @@
 package main.java.tradingPlatform;
 
-public class Organisation implements Comparable<Organisation>{
+import java.io.Serializable;
+
+public class Organisation implements Comparable<Organisation>, Serializable {
 
     private String organisation;
     private int credits;

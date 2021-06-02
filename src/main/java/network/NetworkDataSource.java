@@ -3,6 +3,7 @@ package main.java.network;
 import main.java.database.TradingPlatformDataSource;
 import main.java.tradingPlatform.*;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -26,6 +27,7 @@ public class NetworkDataSource implements TradingPlatformDataSource {
         DELETE_ASSET,
         GET_ASSET_AMOUNT,
         UPDATE_ASSET_AMOUNT,
+
         // Organisation commands
         GET_CREDITS,
         UPDATE_CREDITS,
@@ -54,7 +56,15 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     }
 
     public NetworkDataSource() {
+        try {
 
+            socket = new Socket(HOSTNAME, PORT);
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            //TODO handle this better
+            System.out.println("Failed to connect to networkExercise.server");
+        }
     }
 
     @Override
@@ -69,23 +79,64 @@ public class NetworkDataSource implements TradingPlatformDataSource {
 
     @Override
     public Set<Asset> getAssets() {
-        return null;
+
+        try {
+            outputStream.writeObject(Command.GET_ASSETS);
+            outputStream.flush();
+
+            @SuppressWarnings("unchecked")
+            Set<Asset> assets = (Set<Asset>) inputStream.readObject();
+            return assets;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     @Override
     public int addAsset(String organisation, String asset, int amount) {
 
-        return 0;
+        try {
+            outputStream.writeObject(Command.ADD_ASSET);
+            outputStream.writeObject(organisation);
+            outputStream.writeObject(asset);
+            outputStream.writeInt(amount);
+            outputStream.flush();
+
+            return inputStream.readInt();
+
+        } catch (IOException e) {
+            return PlatformGlobals.getGeneralSQLFail();
+        }
     }
 
     @Override
     public int getAssetAmount(String organisation, String asset) {
-        return 0;
+        try {
+            outputStream.writeObject(Command.GET_ASSET_AMOUNT);
+            outputStream.writeObject(organisation);
+            outputStream.writeObject(asset);
+            outputStream.flush();
+
+            return inputStream.readInt();
+        } catch (IOException e) {
+            return PlatformGlobals.getGeneralSQLFail();
+        }
     }
 
     @Override
     public int deleteAsset(String organisation, String asset) {
-        return 0;
+        try {
+            outputStream.writeObject(Command.DELETE_ASSET);
+            outputStream.writeObject(organisation);
+            outputStream.writeObject(asset);
+            outputStream.flush();
+
+            return inputStream.readInt();
+        } catch (IOException e) {
+            return PlatformGlobals.getGeneralSQLFail();
+        }
     }
 
     @Override
@@ -106,7 +157,16 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     @Override
     public int addOrganisation(String organisation, int credits) {
 
-        return 0;
+        try {
+            outputStream.writeObject(Command.ADD_ORGANISATION);
+            outputStream.writeObject(organisation);
+            outputStream.writeInt(credits);
+            outputStream.flush();
+
+            return inputStream.readInt();
+        } catch (IOException e) {
+            return PlatformGlobals.getGeneralSQLFail();
+        }
     }
 
     @Override
