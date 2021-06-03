@@ -294,6 +294,14 @@ public class NetworkServer {
                 }
                 outputStream.flush();
             }
+
+            case DELETE_ALL -> {
+                synchronized (database) {
+                    int rowsAffected = database.deleteAll();
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
         }
     }
 
