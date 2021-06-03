@@ -207,7 +207,8 @@ public interface TradingPlatformDataSource {
     Set<Transaction> getOrderHistory();
 
     /**
-     * Deletes all rows from every table in the database.
+     * Deletes all rows from every table in the database, except for the organisation
+     * with the name "ADMIN".
      * @returns
      */
     int deleteAll();

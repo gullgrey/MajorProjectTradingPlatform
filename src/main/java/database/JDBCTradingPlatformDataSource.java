@@ -129,7 +129,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         connection = DBConnection.getInstance(propsFile);
         prepareDatabase();
         prepareQueries();
-
+        addAdmin();
     }
 
     /**
@@ -178,11 +178,14 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         deleteOrder  = connection.prepareStatement(DELETE_ORDER);
         addTransaction  = connection.prepareStatement(ADD_TRANSACTION);
         getOrderHistory  = connection.prepareStatement(GET_ORDER_HISTORY);
+    }
+
+    private void addAdmin() {
         try {
             addOrganisation.setString(1,PlatformGlobals.getAdminOrganisation());
             addOrganisation.setInt(2, 0);
             addOrganisation.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException ignored) {
 
         }
     }
@@ -626,12 +629,14 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     @Override
     public int deleteAll() {
         try {
-            Statement dropTable = connection.createStatement();
-            dropTable.execute(CLEAR_ASSET);
-            dropTable.execute(CLEAR_TRADE_HISTORY);
-            dropTable.execute(CLEAR_CURRENT_TRADES);
-            dropTable.execute(CLEAR_USER_INFORMATION);
-            dropTable.execute(CLEAR_ORGANISATION_UNITS);
+            Statement clearTable = connection.createStatement();
+            clearTable.execute(CLEAR_ASSET);
+            clearTable.execute(CLEAR_TRADE_HISTORY);
+            clearTable.execute(CLEAR_CURRENT_TRADES);
+            clearTable.execute(CLEAR_USER_INFORMATION);
+            clearTable.execute(CLEAR_ORGANISATION_UNITS);
+            addAdmin();
+
         } catch (SQLException e) {
             return encodeSQLException(e);
         }
