@@ -10,6 +10,8 @@ import main.java.tradingPlatform.*;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.TreeSet;
@@ -179,7 +181,6 @@ public class StandardUserTest {
         int currentCredits = standardTest.getCredits();
         assertEquals(startingCredits - (assetAmount * creditPricePerAsset), currentCredits);
     }
-
 
     @AfterEach
     public void resetDatabaseAftereach(){

@@ -1,5 +1,10 @@
 package main.java.tradingPlatform;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 public class Login {
 
     private String username;
@@ -53,6 +58,20 @@ public class Login {
     private void getUserFromDB(){
         //TODO Speak with Tom and owen about this class and see if it needs take any variables as
         // i am unsure how this knows what user information to get.
+    }
+
+    public String hashedPassword(String password) throws NoSuchAlgorithmException {
+        SecureRandom random = new SecureRandom(username.getBytes(StandardCharsets.UTF_8));
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        md.update(salt);
+
+        StringBuilder sb = new StringBuilder();
+        for (byte b : salt){
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
     }
 
 }

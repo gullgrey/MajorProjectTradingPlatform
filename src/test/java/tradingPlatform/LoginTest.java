@@ -4,10 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import main.java.tradingPlatform.Login;
+import main.java.tradingPlatform.StandardUser;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class LoginTest {
@@ -40,4 +42,21 @@ public class LoginTest {
         assertTrue(testLI.checkSuppliedCredentials());
     }
 
+//
+//    @Test
+//    public void hashtest() throws NoSuchAlgorithmException {
+//        StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
+//        String salt = standardTest.hashedPassword("aaaaaa");
+//        String expectedHasedpassword = "1f04146469fa1ead4dd7e590d53471ac";
+//        assertEquals(expectedHasedpassword, salt);
+//
+//    }
+//    @Test
+//    public void hashtest2() throws NoSuchAlgorithmException {
+//        StandardUser standardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
+//        String salt = standardTest.hashedPassword("aaaaaa");
+//        String expectedHasedpassword = "6305e39aeecdd330ab6ea760e083da29";
+//        assertEquals(expectedHasedpassword, salt);
+//
+//    }
 }
