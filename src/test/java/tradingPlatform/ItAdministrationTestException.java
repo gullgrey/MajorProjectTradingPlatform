@@ -35,6 +35,7 @@ public class ItAdministrationTestException {
     private static final int addOrderCreditAmount = 40;
     private static final String falseVariable = "DoesNotExist";
     private static  ItAdministration adminUser;
+    private static final String reserved = "ADMIN";
 
     /**
      * Initializes the database for testing.
@@ -65,7 +66,27 @@ public class ItAdministrationTestException {
     //delete ADMIN from organisations fails.
     //
 
+    /**
+     * Test to see that when admin is added as an organisation it throws an exception as this is reserved.
+     *
+     */
+    @Test
+    public void testAddingAdminOrganisationFails()  {
+        assertThrows(InvalidValueException.class , () -> {
+        adminAccount.addOrganisation(reserved, addOrderCreditAmount);
+        });
+    }
 
+    /**
+     * Test to see that when admin is added as an organisation it throws an exception as this is reserved.
+     *
+     */
+    @Test
+    public void testRemoveAdminOrganisationFails()  {
+        assertThrows(InvalidValueException.class , () -> {
+            adminAccount.removeOrganisation(reserved);
+        });
+    }
 
     /**
      * Testing if the program throws an exception if the same user is added.
@@ -73,8 +94,8 @@ public class ItAdministrationTestException {
     @Test
     public void addStandardUserThrowsDuplicate() {
         assertThrows(DuplicationException.class , () -> {
-            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
-            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
+            adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
+            adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
         });
     }
 
@@ -84,7 +105,7 @@ public class ItAdministrationTestException {
     @Test
     public void addStandardUserThrowsNoOrganisation() {
         assertThrows(NullValueException.class , () -> {
-            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
+            adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation2);
         });
     }
 
@@ -94,8 +115,8 @@ public class ItAdministrationTestException {
     @Test
     public void addItUserThrowsDuplicate() {
         assertThrows(DuplicationException.class , () -> {
-            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
-            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
+            adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
+            adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
         });
     }
 
@@ -105,9 +126,9 @@ public class ItAdministrationTestException {
      */
     @Test
     public void removeUserThrowsNull() {
-        assertThrows(DuplicationException.class , () -> {
+        assertThrows(NullValueException.class , () -> {
             String notAUser = "NoUser";
-            adminUser.removeUser(notAUser);
+            adminAccount.removeUser(notAUser);
         });
     }
 
@@ -119,7 +140,7 @@ public class ItAdministrationTestException {
     public void addOrganisationThrowsReserve() {
         assertThrows(InvalidValueException.class , () -> {
             String reserved = "ADMIN";
-            adminUser.addOrganisation(reserved, addOrderCreditAmount);
+            adminAccount.addOrganisation(reserved, addOrderCreditAmount);
         });
     }
 
@@ -130,8 +151,8 @@ public class ItAdministrationTestException {
     @Test
     public void addOrganisationThrowsDuplicate() {
         assertThrows(DuplicationException.class , () -> {
-            adminUser.addOrganisation(organisation1, addOrderCreditAmount);
-            adminUser.addOrganisation(organisation1, addOrderCreditAmount);
+            adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
+            adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
         });
     }
 
@@ -142,7 +163,7 @@ public class ItAdministrationTestException {
     @Test
     public void removeOrganisationThrows() {
         assertThrows(NullValueException.class , () -> {
-            adminUser.addOrganisation(organisation1, addOrderCreditAmount);
+            adminAccount.removeOrganisation(organisation2);
         });
     }
 }

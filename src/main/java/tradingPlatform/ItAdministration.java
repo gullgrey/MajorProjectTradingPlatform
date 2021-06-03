@@ -202,7 +202,7 @@ public class ItAdministration extends TPUser {
      * @throws InvalidValueException
      * @throws UnknownDatabaseException
      */
-    public void removeAsset(String organisation, String asset) throws NullValueException, InvalidValueException, UnknownDatabaseException {
+    public void removeAsset(String organisation, String asset) throws NullValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.deleteAsset(organisation,asset);
         if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
             String message = "Entered field doesn't exist.";

@@ -29,7 +29,10 @@ public class ItAdministrationTest {
     private static final String standardOrganisation2 = "Samsung";
     private static int standardOrganisationCredits = 40;
     private static final String standardAsset = "Computer";
+    private static final String aNewAsset = "ThisAsset";
+    private static final int aNewAssetAmount = 20;
     private static final String organisation = "Apple";
+
 
     /**
      * Initializes the database for testing.
@@ -55,20 +58,6 @@ public class ItAdministrationTest {
     static void clearDatabase2()  {
         dataSource.deleteAll();
     }
-    //Todo
-    //add ADMIN to organisations fails
-    //delete ADMIN from organisations fails.
-    //
-
-    /**
-     * Setup an admin account and add an initial organisation to implement tests.
-     *
-     * @throws DuplicationException the specified field already exists.
-     * @throws NullValueException specified field does not exist in the database.
-     * @throws InvalidValueException value entered is incorrect type.
-     */
-
-
 
     /**
      * Test to add a new standard user to the system.
@@ -143,7 +132,7 @@ public class ItAdministrationTest {
      * @throws UnknownDatabaseException
      */
     @Test
-    public void testRemoveOrganisation() throws NullValueException, UnknownDatabaseException, InvalidValueException, DuplicationException {
+    public void testRemoveOrganisation() throws NullValueException, UnknownDatabaseException, InvalidValueException {
         adminAccount.removeOrganisation(standardOrganisation);
         Set<Organisation> organisationCheck = dataSource.getOrganisations();
         assertEquals(1, organisationCheck.size());
@@ -204,13 +193,20 @@ public class ItAdministrationTest {
      * @throws SQLException
      */
     @Test
-    public void testAddAssetAmount() throws DuplicationException, NullValueException, InvalidValueException, SQLException {
-        //TODO
+    public void testAddAssetAmount() throws DuplicationException, NullValueException, UnknownDatabaseException {
+        adminAccount.addAsset(organisation, aNewAsset, aNewAssetAmount);
+        Set<Asset> allAssets = dataSource.getAssets();
+        assertEquals(allAssets.size(), 1);
     }
 
     @Test
-    public void testRemoveAsset() throws DuplicationException, NullValueException, InvalidValueException, SQLException {
-        //TODO
+    public void testRemoveAsset() throws DuplicationException, NullValueException, InvalidValueException,
+            UnknownDatabaseException {
+        adminAccount.addAsset(standardOrganisation, aNewAsset, aNewAssetAmount);
+        Set<Asset> allAssets = dataSource.getAssets();
+        assertEquals(allAssets.size(), 1);
+        adminAccount.removeAsset(standardOrganisation, aNewAsset);
+        Set<Asset> allAssets2 = dataSource.getAssets();
+        assertEquals(allAssets2.size(), 0);
     }
-
 }
