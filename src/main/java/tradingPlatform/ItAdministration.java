@@ -12,9 +12,11 @@ public class ItAdministration extends TPUser {
 
     private final String errorMessage = "Encountered an error, please refresh.";
 
+
     public ItAdministration(TradingPlatformDataSource dataSource, String adminName){
         super(dataSource);
     }
+
 
     /**
      * Creates a new standard user account if the user doesn't already exist.
@@ -24,7 +26,7 @@ public class ItAdministration extends TPUser {
      * @param organisation the organisation the user belongs too.
      * @throws DuplicationException the specified field already exists.
      * @throws NullValueException specified field does not exist in the database.
-     * @throws UnknownDatabaseException specified field does not exist in the database.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void addStandardUser(String userName, String password, String organisation) throws DuplicationException, NullValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.addUser(userName, password, PlatformGlobals.getStandardOrganisation(), organisation);
@@ -46,9 +48,8 @@ public class ItAdministration extends TPUser {
      *
      * @param userName the username of the admin.
      * @param password the password of the admin.
-     * @throws DuplicationException
-     * @throws WrongCredentialException
-     * @throws InvalidValueException
+     * @throws DuplicationException the specified field already exists.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void addItUser(String userName, String password) throws DuplicationException, UnknownDatabaseException {
         int rowsAffected = dataSource.addUser(userName, password, PlatformGlobals.getAdminOrganisation(),
@@ -67,8 +68,8 @@ public class ItAdministration extends TPUser {
      * from the system.
      *
      * @param userName the name of the user being removed.
-     * @throws NullValueException
-     * @throws UnknownDatabaseException
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void removeUser(String userName) throws NullValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.deleteUser(userName);
@@ -84,9 +85,9 @@ public class ItAdministration extends TPUser {
      * Creates a new organisation if the organisation doesn't already exist.
      *
      * @param organisation the name of the organisation being created.
-     * @throws DuplicationException
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
+     * @throws DuplicationException the specified field already exists.
+     * @throws InvalidValueException the field doesn't exist.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void addOrganisation(String organisation, int credits) throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         if (organisation.equals("ADMIN")) {
@@ -107,8 +108,9 @@ public class ItAdministration extends TPUser {
      * from the system.
      *
      * @param organisation the organisation to be removed.
-     * @throws NullValueException
-     * @throws UnknownDatabaseException
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
+     * @throws InvalidValueException the field doesn't exist.
      */
     public void removeOrganisation(String organisation) throws NullValueException, UnknownDatabaseException, InvalidValueException {
         if (organisation.equals("ADMIN")) {
@@ -128,8 +130,8 @@ public class ItAdministration extends TPUser {
      *
      * @param organisation the name of the organisation to remove credits from.
      * @param credits the value of credits to be removed from the organisation.
-     * @throws NullValueException
-     * @throws InvalidValueException
+     * @throws InvalidValueException the field doesn't exist.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void updateCreditAmount(String organisation, int credits) throws InvalidValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.updateCredits(organisation, credits);
@@ -148,9 +150,9 @@ public class ItAdministration extends TPUser {
      * @param organisation the organisation the asset is being added too.
      * @param asset the name of the asset being added.
      * @param amount the amount of the asset that is being added.
-     * @throws DuplicationException
-     * @throws NullValueException
-     * @throws InvalidValueException
+     * @throws DuplicationException the specified field already exists.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
+     * @throws NullValueException specified field does not exist in the database.
      */
     public void addAsset(String organisation, String asset, int amount) throws DuplicationException, UnknownDatabaseException, NullValueException {
         int rowsAffected = dataSource.addAsset(organisation,asset,amount);
@@ -174,9 +176,9 @@ public class ItAdministration extends TPUser {
      * @param organisation the name of the organisation that the asset belongs too.
      * @param asset the name of the asset that is being updated.
      * @param amount the amount of the asset that is being updated.
-     * @throws DuplicationException
-     * @throws NullValueException
-     * @throws InvalidValueException
+     * @throws DuplicationException the specified field already exists.
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void updateAssetAmount(String organisation, String asset, int amount) throws UnknownDatabaseException, NullValueException, DuplicationException {
         int rowsAffected = dataSource.updateAssetAmount(organisation,asset,amount);
@@ -198,9 +200,8 @@ public class ItAdministration extends TPUser {
      *
      * @param organisation the name of the organisation the asset belongs too.
      * @param asset the name of the asset being removed.
-     * @throws NullValueException
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void removeAsset(String organisation, String asset) throws NullValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.deleteAsset(organisation,asset);

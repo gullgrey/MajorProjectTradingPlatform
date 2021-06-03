@@ -61,10 +61,6 @@ public class ItAdministrationTestException {
     static void clearDatabase2() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         dataSource.deleteAll();
     }
-    //Todo
-    //add ADMIN to organisations fails
-    //delete ADMIN from organisations fails.
-    //
 
     /**
      * Test to see that when admin is added as an organisation it throws an exception as this is reserved.

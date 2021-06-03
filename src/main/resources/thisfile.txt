@@ -1,0 +1,9 @@
+Client
+hostname= "127.0.0.1"
+port= 10000
+
+Server
+port= 10000
+socket_accept_timeout= 100
+socket_read_timeout= 500
+propsfile= "src/main/resources/maria.props"

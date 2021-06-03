@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.*;
@@ -30,30 +31,44 @@ public class ItAdministrationTest {
     private static int standardOrganisationCredits = 40;
     private static final String standardAsset = "Computer";
     private static final String aNewAsset = "ThisAsset";
-    private static final int aNewAssetAmount = 20;
+    private static final int aNewAssetAmount = 100;
+    private static final int aNewAssetAmountReduce = -30;
     private static final String organisation = "Apple";
+    private static ConfigReader fileReader;
+
 
 
     /**
      * Initializes the database for testing.
      *
-     * @throws IOException
-     * @throws SQLException
+     * @throws DuplicationException
+     * @throws InvalidValueException
+     * @throws UnknownDatabaseException
      */
     @BeforeAll
       static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         dataSource = new NetworkDataSource();
         adminAccount = new ItAdministration(dataSource, adminUserName);
-        adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
+        //adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
     }
 
-
+    /**
+     * Clears the database after each test to prevent discrepancies.
+     *
+     * @throws DuplicationException
+     * @throws InvalidValueException
+     * @throws UnknownDatabaseException
+     */
     @AfterEach
     public void clearDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         dataSource.deleteAll();
         adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
 
     }
+
+    /**
+     * Clears the database after each test to prevent discrepancies.
+     */
     @AfterAll
     static void clearDatabase2()  {
         dataSource.deleteAll();
@@ -64,8 +79,7 @@ public class ItAdministrationTest {
      *
      * @throws DuplicationException the specified field already exists.
      * @throws NullValueException specified field does not exist in the database.
-     * @throws InvalidValueException value entered is incorrect type.
-     * @throws SQLException
+     * @throws UnknownDatabaseException value entered is incorrect type.
      */
     @Test
     public void testAddStandardUser() throws DuplicationException, NullValueException,  UnknownDatabaseException {
@@ -76,13 +90,19 @@ public class ItAdministrationTest {
         assertEquals(userNameCorrect, user.getUser());
     }
 
+    @Test
+    public void testReadFile() throws IOException {
+        Set<String> configs = fileReader.readClientFile();
+        System.out.println(configs.iterator().next());
+
+    }
+
+
     /**
      * Test to add a new IT admin user to the system.
      *
      * @throws DuplicationException the specified field already exists.
-     * @throws InvalidValueException value entered is incorrect type.
-     * @throws SQLException
-     * @throws WrongCredentialException
+     * @throws UnknownDatabaseException value entered is incorrect type.
      */
     @Test
     public void testAddItUser() throws DuplicationException, UnknownDatabaseException {
@@ -96,10 +116,8 @@ public class ItAdministrationTest {
      * Test to remove a user from the system.
      *
      * @throws NullValueException specified field does not exist in the database.
-     * @throws SQLException
      * @throws UnknownDatabaseException
      * @throws DuplicationException the specified field already exists.
-     * @throws InvalidValueException value entered is incorrect type.
      */
     @Test
     public void testRemoveUser() throws NullValueException, UnknownDatabaseException, DuplicationException {
@@ -113,9 +131,8 @@ public class ItAdministrationTest {
      * Test to add a new organisation to the system.
      *
      * @throws DuplicationException the specified field already exists.
-     * @throws NullValueException specified field does not exist in the database.
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      * @throws InvalidValueException value entered is incorrect type.
-     * @throws SQLException
      */
     @Test
     public void testAddOrganisation() throws DuplicationException, InvalidValueException,  UnknownDatabaseException {
@@ -128,7 +145,7 @@ public class ItAdministrationTest {
      * Test to remove an organisation if it exists.
      *
      * @throws NullValueException specified field does not exist in the database.
-     * @throws SQLException
+     * @throws InvalidValueException
      * @throws UnknownDatabaseException
      */
     @Test
@@ -141,9 +158,8 @@ public class ItAdministrationTest {
     /**
      * Test to increase the credits of an existing organisation.
      *
-     * @throws NullValueException specified field does not exist in the database.
      * @throws InvalidValueException value entered is incorrect type.
-     * @throws SQLException
+     * @throws UnknownDatabaseException
      */
     @Test
     public void testIncreaseCredits() throws InvalidValueException, UnknownDatabaseException {
@@ -156,9 +172,8 @@ public class ItAdministrationTest {
     /**
      * Test to reduce the credits of an existing organisation.
      *
-     * @throws NullValueException specified field does not exist in the database.
      * @throws InvalidValueException value entered is incorrect type.
-     * @throws SQLException
+     * @throws UnknownDatabaseException
      */
     @Test
     public void testReduceCredits() throws InvalidValueException, UnknownDatabaseException {
@@ -189,16 +204,25 @@ public class ItAdministrationTest {
      *
      * @throws DuplicationException the specified field already exists.
      * @throws NullValueException specified field does not exist in the database.
-     * @throws InvalidValueException value entered is incorrect type.
-     * @throws SQLException
+     * @throws UnknownDatabaseException value entered is incorrect type.
+     * @throws InvalidValueException
      */
     @Test
-    public void testAddAssetAmount() throws DuplicationException, NullValueException, UnknownDatabaseException {
+    public void testAddAssetAmount() throws DuplicationException, NullValueException, UnknownDatabaseException, InvalidValueException {
+        adminAccount.addOrganisation(organisation,standardOrganisationCredits);
         adminAccount.addAsset(organisation, aNewAsset, aNewAssetAmount);
         Set<Asset> allAssets = dataSource.getAssets();
         assertEquals(allAssets.size(), 1);
     }
 
+    /**
+     * Test to remove and asset from a specified organisation.
+     *
+     * @throws DuplicationException
+     * @throws NullValueException
+     * @throws InvalidValueException
+     * @throws UnknownDatabaseException
+     */
     @Test
     public void testRemoveAsset() throws DuplicationException, NullValueException, InvalidValueException,
             UnknownDatabaseException {
@@ -208,5 +232,39 @@ public class ItAdministrationTest {
         adminAccount.removeAsset(standardOrganisation, aNewAsset);
         Set<Asset> allAssets2 = dataSource.getAssets();
         assertEquals(allAssets2.size(), 0);
+    }
+
+    /**
+     * Test to increase an asset by a specified amount.
+     *
+     * @throws DuplicationException
+     * @throws NullValueException
+     * @throws InvalidValueException
+     * @throws UnknownDatabaseException
+     */
+    @Test
+    public void testUpdateAssetIncrease() throws DuplicationException, NullValueException, InvalidValueException,
+            UnknownDatabaseException {
+        adminAccount.addAsset(standardOrganisation, standardAsset, aNewAssetAmount);
+        adminAccount.updateAssetAmount(standardOrganisation, standardAsset, aNewAssetAmount);
+        int assetAmount = dataSource.getAssetAmount(standardOrganisation, standardAsset);
+        assertEquals(aNewAssetAmount + aNewAssetAmount, assetAmount);
+    }
+
+    /**
+     * Test to decrese and asset by as specified amount.
+     *
+     * @throws DuplicationException
+     * @throws NullValueException
+     * @throws InvalidValueException
+     * @throws UnknownDatabaseException
+     */
+    @Test
+    public void testUpdateAssetDecrease() throws DuplicationException, NullValueException, InvalidValueException,
+            UnknownDatabaseException {
+        adminAccount.addAsset(standardOrganisation, standardAsset, aNewAssetAmount);
+        adminAccount.updateAssetAmount(standardOrganisation, standardAsset, aNewAssetAmountReduce);
+        int assetAmount = dataSource.getAssetAmount(standardOrganisation, standardAsset);
+        assertEquals(aNewAssetAmount + aNewAssetAmountReduce, assetAmount);
     }
 }
