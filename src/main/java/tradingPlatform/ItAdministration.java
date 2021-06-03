@@ -10,7 +10,7 @@ import main.java.database.TradingPlatformDataSource;
  */
 public class ItAdministration extends TPUser {
 
-    private final String errorMessage = "Encountered and error, please refresh.";
+    private final String errorMessage = "Encountered an error, please refresh.";
 
     public ItAdministration(TradingPlatformDataSource dataSource, String adminName){
         super(dataSource);
@@ -27,8 +27,7 @@ public class ItAdministration extends TPUser {
      * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     public void addStandardUser(String userName, String password, String organisation) throws DuplicationException, NullValueException, UnknownDatabaseException {
-        String user = "USER";
-        int rowsAffected = dataSource.addUser(userName, password, user, organisation);
+        int rowsAffected = dataSource.addUser(userName, password, PlatformGlobals.getStandardOrganisation(), organisation);
         if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
             String message = "User already exists.";
             throw new DuplicationException(message);
@@ -52,9 +51,9 @@ public class ItAdministration extends TPUser {
      * @throws InvalidValueException
      */
     public void addItUser(String userName, String password) throws DuplicationException, UnknownDatabaseException {
-        String adminUser = "ADMIN";
-        String organisation = "ADMIN";
-        int rowsAffected = dataSource.addUser(userName, password, adminUser, organisation);
+        int rowsAffected = dataSource.addUser(userName, password, PlatformGlobals.getAdminOrganisation(),
+                PlatformGlobals.getAdminOrganisation());
+        System.out.println(rowsAffected);
         if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
             String message = "Admin user already exists.";
             throw new DuplicationException(message);
@@ -111,7 +110,11 @@ public class ItAdministration extends TPUser {
      * @throws NullValueException
      * @throws UnknownDatabaseException
      */
-    public void removeOrganisation(String organisation) throws NullValueException, UnknownDatabaseException {
+    public void removeOrganisation(String organisation) throws NullValueException, UnknownDatabaseException, InvalidValueException {
+        if (organisation.equals("ADMIN")) {
+            String message = "This organisation name is reserved.";
+            throw new InvalidValueException(message);
+        }
         int rowsAffected = dataSource.deleteOrganisation(organisation);
         if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
             String message = "Organisation doesn't exist.";

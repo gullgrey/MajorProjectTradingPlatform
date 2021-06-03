@@ -1,6 +1,8 @@
 package test.java.tradingPlatform;
 
 import main.java.database.JDBCTradingPlatformDataSource;
+import main.java.database.TradingPlatformDataSource;
+import main.java.network.NetworkDataSource;
 import main.java.tradingPlatform.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,14 +12,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 
 public class ItAdministrationTest {
 
-    private static final String propsFile = "src/test/resources/JDBCDataSourceTest.props";
-    private static JDBCTradingPlatformDataSource dataSource;
+    private static final String propsFile = "src/test/resources/maria.props";
+    private static TradingPlatformDataSource dataSource;
     private static final String adminUserName = "Admin";
     private static final int adminUserIncorrect = 1234;
     private static final String userNameCorrect = "User1";
@@ -25,7 +26,8 @@ public class ItAdministrationTest {
     private static final String correctPassword = "12345";
     private static ItAdministration adminAccount;
     private static final String standardOrganisation = "Microsoft";
-    private static final int standardOrganisationCredits = 40;
+    private static final String standardOrganisation2 = "Samsung";
+    private static int standardOrganisationCredits = 40;
     private static final String standardAsset = "Computer";
     private static final String organisation = "Apple";
 
@@ -36,10 +38,23 @@ public class ItAdministrationTest {
      * @throws SQLException
      */
     @BeforeAll
-    static void setupDatabase() throws IOException, SQLException {
-        dataSource = new JDBCTradingPlatformDataSource(propsFile);
+      static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
+        dataSource = new NetworkDataSource();
+        adminAccount = new ItAdministration(dataSource, adminUserName);
+        adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
     }
 
+
+    @AfterEach
+    public void clearDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
+        dataSource.deleteAll();
+        adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
+
+    }
+    @AfterAll
+    static void clearDatabase2()  {
+        dataSource.deleteAll();
+    }
     //Todo
     //add ADMIN to organisations fails
     //delete ADMIN from organisations fails.
@@ -52,12 +67,8 @@ public class ItAdministrationTest {
      * @throws NullValueException specified field does not exist in the database.
      * @throws InvalidValueException value entered is incorrect type.
      */
-    @BeforeAll
-    static void setupAdmin() throws DuplicationException, NullValueException, InvalidValueException, UnknownDatabaseException {
-        adminAccount = new ItAdministration(dataSource, adminUserName);
-        adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
-        adminAccount.updateCreditAmount(standardOrganisation, standardOrganisationCredits);
-    }
+
+
 
     /**
      * Test to add a new standard user to the system.
@@ -68,10 +79,12 @@ public class ItAdministrationTest {
      * @throws SQLException
      */
     @Test
-    public void testAddStandardUser() throws DuplicationException, NullValueException, InvalidValueException,  UnknownDatabaseException {
-        adminAccount.addStandardUser(userNameCorrect,correctPassword, organisation);
+    public void testAddStandardUser() throws DuplicationException, NullValueException,  UnknownDatabaseException {
+
+        adminAccount.addStandardUser(userNameCorrect,correctPassword, standardOrganisation);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
-        assertTrue(userCheck.contains(userNameCorrect));
+        UserOrganisation user = userCheck.iterator().next();
+        assertEquals(userNameCorrect, user.getUser());
     }
 
     /**
@@ -83,10 +96,11 @@ public class ItAdministrationTest {
      * @throws WrongCredentialException
      */
     @Test
-    public void testAddItUser() throws DuplicationException, InvalidValueException,  WrongCredentialException, UnknownDatabaseException {
+    public void testAddItUser() throws DuplicationException, UnknownDatabaseException {
         adminAccount.addItUser(userNameCorrect,correctPassword);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
-        assertTrue(userCheck.contains(userNameCorrect));
+        UserOrganisation user = userCheck.iterator().next();
+        assertEquals(userNameCorrect, user.getUser());
     }
 
     /**
@@ -99,11 +113,11 @@ public class ItAdministrationTest {
      * @throws InvalidValueException value entered is incorrect type.
      */
     @Test
-    public void testRemoveUser() throws NullValueException, UnknownDatabaseException, DuplicationException, InvalidValueException {
-        adminAccount.addStandardUser(userNameCorrect,correctPassword, organisation);
+    public void testRemoveUser() throws NullValueException, UnknownDatabaseException, DuplicationException {
+        adminAccount.addStandardUser(userNameCorrect,correctPassword, standardOrganisation);
         adminAccount.removeUser(userNameCorrect);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
-        assertFalse(userCheck.contains(userNameCorrect));
+        assertEquals(userCheck.size(), PlatformGlobals.getNoRowsAffected());
     }
 
     /**
@@ -116,9 +130,9 @@ public class ItAdministrationTest {
      */
     @Test
     public void testAddOrganisation() throws DuplicationException, InvalidValueException,  UnknownDatabaseException {
-        adminAccount.addOrganisation(organisation, standardOrganisationCredits);
+        adminAccount.addOrganisation(organisation,standardOrganisationCredits);
         Set<Organisation> organisationCheck = dataSource.getOrganisations();
-        assertFalse(organisationCheck.contains(userNameCorrect));
+        assertEquals(3, organisationCheck.size());
     }
 
     /**
@@ -129,10 +143,10 @@ public class ItAdministrationTest {
      * @throws UnknownDatabaseException
      */
     @Test
-    public void testRemoveOrganisation() throws  NullValueException, UnknownDatabaseException {
+    public void testRemoveOrganisation() throws NullValueException, UnknownDatabaseException, InvalidValueException, DuplicationException {
         adminAccount.removeOrganisation(standardOrganisation);
         Set<Organisation> organisationCheck = dataSource.getOrganisations();
-        assertFalse(organisationCheck.contains(userNameCorrect));
+        assertEquals(1, organisationCheck.size());
     }
 
     /**
@@ -143,7 +157,7 @@ public class ItAdministrationTest {
      * @throws SQLException
      */
     @Test
-    public void testIncreaseCredits() throws NullValueException, InvalidValueException,  DuplicationException, UnknownDatabaseException {
+    public void testIncreaseCredits() throws InvalidValueException, UnknownDatabaseException {
         int increasedAmount = 100;
         adminAccount.updateCreditAmount(standardOrganisation, increasedAmount);
         int newAmount = dataSource.getCredits(standardOrganisation);
@@ -158,8 +172,8 @@ public class ItAdministrationTest {
      * @throws SQLException
      */
     @Test
-    public void testReduceCredits() throws NullValueException, InvalidValueException, DuplicationException, UnknownDatabaseException {
-        int decreasedAmount = 20;
+    public void testReduceCredits() throws InvalidValueException, UnknownDatabaseException {
+        int decreasedAmount = -20;
         adminAccount.updateCreditAmount(standardOrganisation, decreasedAmount);
         int newAmount = dataSource.getCredits(standardOrganisation);
         assertEquals(standardOrganisationCredits + decreasedAmount, newAmount);
@@ -174,12 +188,11 @@ public class ItAdministrationTest {
      * @throws SQLException
      */
     @Test
-    public void testAddAsset() throws DuplicationException, UnknownDatabaseException, NullValueException {
-        String assetName = "NewAsset";
-        int size = 1;
-        adminAccount.addAsset(organisation, assetName, 10);
+    public void testAddAsset() throws DuplicationException, UnknownDatabaseException, NullValueException, InvalidValueException {
+        adminAccount.addOrganisation(organisation,standardOrganisationCredits);
+        adminAccount.addAsset(organisation, standardAsset, 10);
         Set<Asset> allAssets = dataSource.getAssets();
-        assertEquals(allAssets.size(), size);
+        assertEquals(allAssets.size(), 1);
     }
 
     /**
@@ -199,4 +212,5 @@ public class ItAdministrationTest {
     public void testRemoveAsset() throws DuplicationException, NullValueException, InvalidValueException, SQLException {
         //TODO
     }
+
 }

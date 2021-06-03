@@ -1,10 +1,9 @@
 package test.java.tradingPlatform;
 
 import main.java.database.JDBCTradingPlatformDataSource;
-import main.java.tradingPlatform.DuplicationException;
-import main.java.tradingPlatform.InvalidValueException;
-import main.java.tradingPlatform.NullValueException;
-import main.java.tradingPlatform.TPOrder;
+import main.java.database.TradingPlatformDataSource;
+import main.java.network.NetworkDataSource;
+import main.java.tradingPlatform.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,8 +19,10 @@ import org.junit.jupiter.api.Test;
 
 public class ItAdministrationTestException {
 
-    private static final String propsFile = "src/test/resources/JDBCDataSourceTest.props";
-    private static JDBCTradingPlatformDataSource dataSource;
+    private static final String propsFile = "src/test/resources/maria.props";
+    private static TradingPlatformDataSource dataSource;
+    private static ItAdministration adminAccount;
+    //private static NetworkDataSource dataSource;
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
     private static final String aNewUserType = "USER";
@@ -33,14 +34,38 @@ public class ItAdministrationTestException {
     private static final int asset1Amount = 2;
     private static final int addOrderCreditAmount = 40;
     private static final String falseVariable = "DoesNotExist";
+    private static  ItAdministration adminUser;
 
     /**
-     * Prepare the database
+     * Initializes the database for testing.
+     *
+     * @throws IOException
+     * @throws SQLException
      */
     @BeforeAll
-    static void setupDatabase() throws IOException, SQLException {
-        dataSource = new JDBCTradingPlatformDataSource(propsFile);
+    static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
+        dataSource = new NetworkDataSource();
+        adminAccount = new ItAdministration(dataSource, aNewUser);
+        adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
     }
+
+
+    @AfterEach
+    public void clearDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
+        dataSource.deleteAll();
+        adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
+
+    }
+    @AfterAll
+    static void clearDatabase2() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
+        dataSource.deleteAll();
+    }
+    //Todo
+    //add ADMIN to organisations fails
+    //delete ADMIN from organisations fails.
+    //
+
+
 
     /**
      * Testing if the program throws an exception if the same user is added.
@@ -48,8 +73,8 @@ public class ItAdministrationTestException {
     @Test
     public void addStandardUserThrowsDuplicate() {
         assertThrows(DuplicationException.class , () -> {
-            dataSource.addUser(aNewUser,aNewUserInitialPassword, aNewUserType,organisation1);
-            dataSource.addUser(aNewUser,aNewUserInitialPassword, aNewUserType,organisation1);
+            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
+            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
         });
     }
 
@@ -59,7 +84,7 @@ public class ItAdministrationTestException {
     @Test
     public void addStandardUserThrowsNoOrganisation() {
         assertThrows(NullValueException.class , () -> {
-            dataSource.addUser(aNewUser,aNewUserInitialPassword, aNewUserType,organisation1);
+            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
         });
     }
 
@@ -69,8 +94,8 @@ public class ItAdministrationTestException {
     @Test
     public void addItUserThrowsDuplicate() {
         assertThrows(DuplicationException.class , () -> {
-            dataSource.addUser(aNewUser,aNewUserInitialPassword, aNewUserType,organisation1);
-            dataSource.addUser(aNewUser,aNewUserInitialPassword, aNewUserType,organisation1);
+            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
+            adminUser.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
         });
     }
 
@@ -82,7 +107,7 @@ public class ItAdministrationTestException {
     public void removeUserThrowsNull() {
         assertThrows(DuplicationException.class , () -> {
             String notAUser = "NoUser";
-            dataSource.deleteUser(notAUser);
+            adminUser.removeUser(notAUser);
         });
     }
 
@@ -94,7 +119,7 @@ public class ItAdministrationTestException {
     public void addOrganisationThrowsReserve() {
         assertThrows(InvalidValueException.class , () -> {
             String reserved = "ADMIN";
-            dataSource.addOrganisation(reserved, addOrderCreditAmount);
+            adminUser.addOrganisation(reserved, addOrderCreditAmount);
         });
     }
 
@@ -105,8 +130,8 @@ public class ItAdministrationTestException {
     @Test
     public void addOrganisationThrowsDuplicate() {
         assertThrows(DuplicationException.class , () -> {
-            dataSource.addOrganisation(organisation1, addOrderCreditAmount);
-            dataSource.addOrganisation(organisation1, addOrderCreditAmount);
+            adminUser.addOrganisation(organisation1, addOrderCreditAmount);
+            adminUser.addOrganisation(organisation1, addOrderCreditAmount);
         });
     }
 
@@ -117,13 +142,7 @@ public class ItAdministrationTestException {
     @Test
     public void removeOrganisationThrows() {
         assertThrows(NullValueException.class , () -> {
-            dataSource.addOrganisation(organisation1, addOrderCreditAmount);
+            adminUser.addOrganisation(organisation1, addOrderCreditAmount);
         });
     }
-
-
-
-
-
-
 }

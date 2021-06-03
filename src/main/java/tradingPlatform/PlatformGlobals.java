@@ -5,6 +5,7 @@ public class PlatformGlobals {
     private static final int primaryKeyFail = -1;
     private static final int foreignKeyFail = -2;
     private static final int generalSQLFail = -3;
+    private static final String unknownSQLMessage = "Encountered an error, please refresh.";
     private static final String adminOrganisation = "ADMIN";
     private static final String standardOrganisation = "STANDARD";
     private static final String buyOrder = "BUY";
