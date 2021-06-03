@@ -93,7 +93,8 @@ public class StandardUserTest {
      * @throws DuplicationException
      */
     @Test
-    public void testBuyAssetAutoTransaction() throws NullValueException, DuplicationException, InvalidValueException {
+    public void testBuyAssetAutoTransaction() throws NullValueException, DuplicationException,
+            InvalidValueException, UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
         StandardUser otherStandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         int buyerCredits = standardTest.getCredits(); // Storing current credit amount.
@@ -110,7 +111,8 @@ public class StandardUserTest {
      * @throws DuplicationException
      */
     @Test
-    public void testSellAssetAutoTransaction() throws NullValueException, DuplicationException, InvalidValueException {
+    public void testSellAssetAutoTransaction() throws NullValueException, DuplicationException,
+            InvalidValueException, UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
         StandardUser otherStandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         int sellerCredits = otherStandardTest.getCredits(); // Storing current credit amount.
@@ -120,7 +122,8 @@ public class StandardUserTest {
         assertTrue(newSellerCredits == sellerCredits + (assetAmount * creditPricePerAsset));
     }
     @Test
-    public void testRemovingOrder() throws DuplicationException, NullValueException, InvalidValueException, SQLException {
+    public void testRemovingOrder() throws DuplicationException, NullValueException,
+            InvalidValueException, UnknownDatabaseException {
         StandardUser StandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         StandardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
         Set<TPOrder> organisationsOrders = dataSource.getOrders(false);
@@ -137,7 +140,7 @@ public class StandardUserTest {
      * @throws DuplicationException
      */
     @Test
-    public void getAssetAmount() throws NullValueException {
+    public void getAssetAmount() throws NullValueException, UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         int currentAssetAmount = standardTest.getAssetAmount(assetName);
         assertEquals(fullAssetAmount, currentAssetAmount);
@@ -150,7 +153,8 @@ public class StandardUserTest {
      * @throws DuplicationException
      */
     @Test
-    public void getAssetAmountAfterSellorder() throws DuplicationException, NullValueException, InvalidValueException {
+    public void getAssetAmountAfterSellorder() throws DuplicationException, NullValueException,
+            InvalidValueException, UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         standardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
         int newAssetAmount = standardTest.getAssetAmount(assetName);
@@ -163,7 +167,7 @@ public class StandardUserTest {
      * @throws NullValueException
      */
     @Test
-    public void testgetCredits() throws NullValueException {
+    public void testgetCredits() throws UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
         int currentCredits = standardTest.getCredits();
         assertEquals(startingCredits, currentCredits);
@@ -175,7 +179,8 @@ public class StandardUserTest {
      * @throws NullValueException
      */
     @Test
-    public void testgetCreditsAfterBuyorder() throws NullValueException, DuplicationException, InvalidValueException {
+    public void testgetCreditsAfterBuyorder() throws NullValueException, DuplicationException,
+            InvalidValueException, UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
         standardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
         int currentCredits = standardTest.getCredits();

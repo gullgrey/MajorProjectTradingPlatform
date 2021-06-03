@@ -61,16 +61,16 @@ public class NewTransactionTest {
         sellOrder.setType(PlatformGlobals.getSellOrder());
     }
 
-//    @AfterEach
-//    public void resetAssets() {
-//        dataSource.deleteAll();
-//        dataSource.addOrganisation(buyOrganisation, standardOrganisationCredits);
-//        dataSource.addOrganisation(sellOrganisation, standardOrganisationCredits);
-//        dataSource.addAsset(buyOrganisation, standardAsset, startingAssets);
-//        dataSource.addAsset(sellOrganisation, standardAsset, startingAssets);
-//        buyOrder.setCredits(assetPriceLow);
-//        sellOrder.setCredits(assetPriceLow);
-//    }
+    @AfterEach
+    public void resetAssets() {
+        dataSource.deleteAll();
+        dataSource.addOrganisation(buyOrganisation, standardOrganisationCredits);
+        dataSource.addOrganisation(sellOrganisation, standardOrganisationCredits);
+        dataSource.addAsset(buyOrganisation, standardAsset, startingAssets);
+        dataSource.addAsset(sellOrganisation, standardAsset, startingAssets);
+        buyOrder.setCredits(assetPriceLow);
+        sellOrder.setCredits(assetPriceLow);
+    }
 
     @Test
     public void testAddBuyOrder() {

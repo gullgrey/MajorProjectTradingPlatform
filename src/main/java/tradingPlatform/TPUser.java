@@ -16,27 +16,23 @@ public abstract class TPUser {
     static final String generalMessage = "Update did not go through. Please refresh page.";
 
     DefaultListModel<Organisation> organisationList;
-    DefaultListModel<UserOrganisation> users;
+    DefaultListModel<UserOrganisation> userList;
     DefaultListModel<Asset> assetList;
-    DefaultListModel<TPOrder> buyOrders;
-    DefaultListModel<TPOrder> sellOrders;
-    DefaultListModel<Transaction> Transaction;
+    DefaultListModel<TPOrder> buyOrderList;
+    DefaultListModel<TPOrder> sellOrderList;
+    DefaultListModel<Transaction> transactionList;
 
 
     public TPUser(TradingPlatformDataSource dataSource) {
         this.dataSource = dataSource;
 
         organisationList = new DefaultListModel<>();
-
-        for (Organisation organisation : this.dataSource.getOrganisations()) {
-            organisationList.addElement(organisation);
-        }
-
+        userList = new DefaultListModel<>();
         assetList = new DefaultListModel<>();
-
-        for (Asset asset : this.dataSource.getAssets()) {
-            assetList.addElement(asset);
-        }
+        buyOrderList = new DefaultListModel<>();
+        sellOrderList = new DefaultListModel<>();
+        transactionList  = new DefaultListModel<>();
+        refreshAll();
     }
 
     /**
@@ -44,9 +40,64 @@ public abstract class TPUser {
      * FROM ADMINS PERSPECTIVE : Allows them to update a given users password.
      * @param username the user whose password is to be changed.
      * @param password new password to set for the user
-     * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public void changeUserPassword(String username, String password) throws SQLException {
+    public void changeUserPassword(String username, String password) {
 
+    }
+
+    public void refreshOrganisations() {
+        organisationList.removeAllElements();
+        for (Organisation organisation : this.dataSource.getOrganisations()) {
+            organisationList.addElement(organisation);
+        }
+    }
+
+    public void refreshUsers() {
+        userList.removeAllElements();
+        for (UserOrganisation user : this.dataSource.getUsers()) {
+            userList.addElement(user);
+        }
+    }
+
+    public void refreshAssets() {
+        assetList.removeAllElements();
+        for (Asset asset : this.dataSource.getAssets()) {
+            assetList.addElement(asset);
+        }
+    }
+
+    public void refreshBuyOrders() {
+        buyOrderList.removeAllElements();
+        for (TPOrder order : this.dataSource.getOrders(true)) {
+            buyOrderList.addElement(order);
+        }
+    }
+
+    public void refreshSellOrders() {
+        sellOrderList.removeAllElements();
+        for (TPOrder order : this.dataSource.getOrders(false)) {
+            sellOrderList.addElement(order);
+        }
+    }
+
+    public void refreshTransactions() {
+        transactionList.removeAllElements();
+        for (Transaction transaction : this.dataSource.getOrderHistory()) {
+            transactionList.addElement(transaction);
+        }
+    }
+
+    public void refreshAll() {
+        refreshOrganisations();
+        refreshUsers();
+        refreshAssets();
+        refreshBuyOrders();
+        refreshSellOrders();
+        refreshTransactions();
+    }
+
+    public void refreshOrders() {
+        refreshBuyOrders();
+        refreshSellOrders();
     }
 }
