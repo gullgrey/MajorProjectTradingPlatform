@@ -140,12 +140,12 @@ public class NewTransactionTest {
 
     @Test
     public void deleteThis() { //todo delete this
-//        buyOrder.setAmount(15);
-//        buyOrder.setCredits(assetPriceHigh);
-//        newTransaction.addBuyOrder(buyOrder);
+        buyOrder.setAmount(60);
+        buyOrder.setCredits(assetPriceHigh);
+        newTransaction.addBuyOrder(buyOrder);
 
-        sellOrder.setAmount(40);
-        newTransaction.addSellOrder(sellOrder);
+//        sellOrder.setAmount(40);
+//        newTransaction.addSellOrder(sellOrder);
     }
 
 

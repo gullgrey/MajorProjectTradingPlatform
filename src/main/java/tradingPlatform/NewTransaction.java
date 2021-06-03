@@ -57,7 +57,26 @@ public class NewTransaction {
             // Remove the sell order from the market.
             dataSource.deleteOrder(sellOrder.getId());
 
-            automaticTransaction(buyOrder, sellOrder);
+            // Adds the asset to the buy organisation if it doesn't exist.
+            dataSource.addAsset(buyOrder.getOrganisation(), buyOrder.getAsset(), 0);
+
+            // Adds the sold assets to the buying organisation.
+            dataSource.updateAssetAmount(buyOrder.getOrganisation(), buyOrder.getAsset(),
+                    sellOrder.getAmount());
+
+            // Update the selling organisation's credits.
+            int sellProfit = sellOrder.getCredits() * sellOrder.getAmount();
+            dataSource.updateCredits(sellOrder.getOrganisation(), sellProfit);
+
+            // Add the completed transaction to the history.
+            dataSource.addTransaction(buyOrder.getOrganisation(), sellOrder.getOrganisation(),
+                    sellOrder.getAsset(), sellOrder.getAmount(), sellOrder.getCredits());
+
+            //If the buy order was listed higher then the sell order, refund the buying
+            //organisation by the difference.
+            int creditDifference = buyOrder.getCredits() - sellOrder.getCredits();
+            int creditRefund = creditDifference * sellOrder.getAmount();
+            dataSource.updateCredits(buyOrder.getOrganisation(), creditRefund);
 
             if (amountUsed == 0) break;
         }
@@ -82,7 +101,7 @@ public class NewTransaction {
             return PlatformGlobals.getGeneralSQLFail();
         }
         dataSource.updateAssetAmount(sellOrder.getOrganisation(),
-                sellOrder.getAsset(), sellOrder.getAmount());
+                sellOrder.getAsset(), -sellOrder.getAmount());
 
         Set<TPOrder> buyOrders = dataSource.getOrders(true);
         Set<TPOrder> transactionOrders = new TreeSet<>();
@@ -107,7 +126,26 @@ public class NewTransaction {
             // Remove the buy order from the market.
             dataSource.deleteOrder(buyOrder.getId());
 
-            automaticTransaction(buyOrder, sellOrder);
+            // Adds the asset to the buy organisation if it doesn't exist.
+            dataSource.addAsset(buyOrder.getOrganisation(), buyOrder.getAsset(), 0);
+
+            // Adds the sold assets to the buying organisation.
+            dataSource.updateAssetAmount(buyOrder.getOrganisation(), buyOrder.getAsset(),
+                    buyOrder.getAmount());
+
+            // Update the selling organisation's credits.
+            int sellProfit = sellOrder.getCredits() * buyOrder.getAmount();
+            dataSource.updateCredits(sellOrder.getOrganisation(), sellProfit);
+
+            // Add the completed transaction to the history.
+            dataSource.addTransaction(buyOrder.getOrganisation(), sellOrder.getOrganisation(),
+                    buyOrder.getAsset(), buyOrder.getAmount(), sellOrder.getCredits());
+
+            //If the buy order was listed higher then the sell order, refund the buying
+            //organisation by the difference.
+            int creditDifference = buyOrder.getCredits() - sellOrder.getCredits();
+            int creditRefund = creditDifference * buyOrder.getAmount();
+            dataSource.updateCredits(buyOrder.getOrganisation(), creditRefund);
 
             if (amountUsed == 0) break;
         }
