@@ -8,12 +8,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class NetworkServerGUI {
-    public static void main(String[] args) throws IOException {
-        NetworkServer server = new NetworkServer();
-        SwingUtilities.invokeLater(() -> createAndShowGUI(server));
+    public static void main(String[] args) {
         try {
-            String propsFile = "src/test/resources/maria.props";
-            server.start(propsFile);
+            NetworkServer server = new NetworkServer();
+            SwingUtilities.invokeLater(() -> createAndShowGUI(server));
+            server.start();
         } catch (IOException | SQLException e) {
             // In the case of an exception, show an error message and terminate
             SwingUtilities.invokeLater(() -> {

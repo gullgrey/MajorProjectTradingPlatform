@@ -12,12 +12,15 @@ public class NewTransaction {
 
     //TODO Might need helper method for similar code in buy order and sell order.
 
-    public TPOrder addBuyOrder(TPOrder buyOrder) {
-        return null;
+    public int addBuyOrder(TPOrder order) {
+
+         return dataSource.addOrder(order.getOrganisation(), order.getAsset(), order.getAmount(),
+                order.getCredits(), true);
     }
 
-    public TPOrder addSellOrder(TPOrder sellOrder) {
-        return null;
+    public int addSellOrder(TPOrder order) {
+        return dataSource.addOrder(order.getOrganisation(), order.getAsset(), order.getAmount(),
+                order.getCredits(), false);
     }
 
     private TPOrder automaticTransaction(TPOrder order) {
@@ -33,7 +36,7 @@ public class NewTransaction {
     public int removeOrder(int id) {
        TPOrder order = dataSource.getOrder(id);
        if (order == null) {
-           return PlatformGlobals.getGeneralSQLFail();
+           return PlatformGlobals.getNoRowsAffected();
        }
        String organisation = order.getOrganisation();
        String asset = order.getAsset();
@@ -41,7 +44,7 @@ public class NewTransaction {
        int credits = order.getCredits();
        boolean isBuyOrder;
        isBuyOrder = order.getType().equals(PlatformGlobals.getBuyOrder());
-       dataSource.deleteOrder(id);
+       int rowsAffected = dataSource.deleteOrder(id);
        if (isBuyOrder) {
            dataSource.updateCredits(organisation, credits * amount);
        } else { //is Sell Order
@@ -52,6 +55,6 @@ public class NewTransaction {
            }
        }
 
-       return PlatformGlobals.getNoRowsAffected();
+       return rowsAffected;
     }
 }

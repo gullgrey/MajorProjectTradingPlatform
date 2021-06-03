@@ -50,7 +50,10 @@ public class StandardUser extends TPUser {
      */
     public void removeOrder(int orderId) throws InvalidValueException, NullValueException {
         TPOrder order = dataSource.getOrder(orderId);
-        if (!order.getOrganisation().equals(this.organisation)) {
+        if (order == null) {
+            String message = "Order with that ID does not exist.";
+            throw new NullValueException(message);
+        } else if (!order.getOrganisation().equals(this.organisation)) {
             String message = "Order number is not from your organisation.";
             throw new InvalidValueException(message);
         }

@@ -2,7 +2,7 @@ package main.java.network;
 
 import main.java.database.JDBCTradingPlatformDataSource;
 import main.java.database.TradingPlatformDataSource;
-import main.java.tradingPlatform.Asset;
+import main.java.tradingPlatform.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,24 +16,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NetworkServer {
 
+    //Todo make from config file
     private static final int PORT = 10000;
 
-    /**
-     * this is the timeout inbetween accepting clients, not reading from the socket itself.
-     */
+    //This is the timeout in between accepting clients, not reading from the socket itself.
     private static final int SOCKET_ACCEPT_TIMEOUT = 100;
 
-    /**
-     * This timeout is used for the actual clients.
-     */
+    //This timeout is used for the actual clients.
     private static final int SOCKET_READ_TIMEOUT = 5000;
+    private static final String propsFile = "src/main/resources/maria.props";
 
-    private AtomicBoolean running = new AtomicBoolean(true);
+    private final AtomicBoolean running = new AtomicBoolean(true);
+    private final TradingPlatformDataSource database;
 
-    /**
-     * The connection to the database where everything is stored.
-     */
-    private TradingPlatformDataSource database;
+    public NetworkServer() throws IOException, SQLException {
+        database = new JDBCTradingPlatformDataSource(propsFile);
+    }
 
     /**
      * Handles the connection received from ServerSocket.
@@ -50,8 +48,8 @@ public class NetworkServer {
                 try {
 
                     final NetworkDataSource.Command command = (NetworkDataSource.Command) inputStream.readObject();
-                    handleCommand(socket, inputStream, outputStream, command);
-                } catch (SocketTimeoutException e) {
+                    handleCommand(inputStream, outputStream, command);
+                } catch (SocketTimeoutException ignored) {
 
                 }
             }
@@ -63,14 +61,13 @@ public class NetworkServer {
 
     /**
      * Handles a request from the client.
-     * @param socket socket for the client
      * @param inputStream input stream to read objects from
      * @param outputStream output stream to write objects to
      * @param command command we're handling
      * @throws IOException if the client has disconnected
      * @throws ClassNotFoundException if the client sends an invalid object
      */
-    private void handleCommand(Socket socket, ObjectInputStream inputStream, ObjectOutputStream outputStream,
+    private void handleCommand(ObjectInputStream inputStream, ObjectOutputStream outputStream,
                                NetworkDataSource.Command command) throws IOException, ClassNotFoundException {
 
         switch (command) {
@@ -113,7 +110,43 @@ public class NetworkServer {
                 outputStream.flush();
             }
 
+            case UPDATE_ASSET_AMOUNT -> {
+                final String organisation = (String) inputStream.readObject();
+                final String asset = (String) inputStream.readObject();
+                final int amount = inputStream.readInt();
+                synchronized (database) {
+                    int rowsAffected = database.updateAssetAmount(organisation, asset, amount);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
 
+            case GET_CREDITS -> {
+                final String organisation = (String) inputStream.readObject();
+                synchronized (database) {
+                    int credits = database.getCredits(organisation);
+                    outputStream.writeInt(credits);
+                }
+                outputStream.flush();
+            }
+
+            case UPDATE_CREDITS -> {
+                final String organisation = (String) inputStream.readObject();
+                final int credits = inputStream.readInt();
+                synchronized (database) {
+                    int rowsAffected = database.updateCredits(organisation, credits);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case GET_ORGANISATIONS -> {
+                synchronized (database) {
+                    Set<Organisation> organisations = database.getOrganisations();
+                    outputStream.writeObject(organisations);
+                }
+                outputStream.flush();
+            }
 
             case ADD_ORGANISATION -> {
                 final String organisation = (String) inputStream.readObject();
@@ -122,6 +155,142 @@ public class NetworkServer {
                 synchronized (database) {
                     int rowsAffected = database.addOrganisation(organisation, credits);
                     outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case DELETE_ORGANISATION -> {
+                final String organisation = (String) inputStream.readObject();
+                synchronized (database) {
+                    int rowsAffected = database.deleteOrganisation(organisation);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case GET_USERS -> {
+                synchronized (database) {
+                    Set<UserOrganisation> users = database.getUsers();
+                    outputStream.writeObject(users);
+                }
+                outputStream.flush();
+            }
+
+            case GET_USER_PASSWORD -> {
+                final String username = (String) inputStream.readObject();
+                synchronized (database) {
+                    String password = database.getUserPassword(username);
+                    outputStream.writeObject(password);
+                }
+                outputStream.flush();
+            }
+
+            case ADD_USER -> {
+                final String username = (String) inputStream.readObject();
+                final String password = (String) inputStream.readObject();
+                final String type = (String) inputStream.readObject();
+                final String organisation = (String) inputStream.readObject();
+                synchronized (database) {
+                    int rowsAffected = database.addUser(username, password, type, organisation);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case DELETE_USER -> {
+                final String username = (String) inputStream.readObject();
+                synchronized (database) {
+                    int rowsAffected = database.deleteUser(username);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case UPDATE_PASSWORD -> {
+                final String username = (String) inputStream.readObject();
+                final String password = (String) inputStream.readObject();
+                synchronized (database) {
+                    int rowsAffected = database.updatePassword(username, password);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case GET_USER_ORGANISATION -> {
+                final String username = (String) inputStream.readObject();
+                synchronized (database) {
+                    String organisation = database.getUserOrganisation(username);
+                    outputStream.writeObject(organisation);
+                }
+                outputStream.flush();
+            }
+
+            case GET_ORDER -> {
+                final int idx = inputStream.readInt();
+                synchronized (database) {
+                    TPOrder order = database.getOrder(idx);
+                    outputStream.writeObject(order);
+                }
+                outputStream.flush();
+            }
+
+            case GET_ORDERS -> {
+                final boolean isBuyOrder = inputStream.readBoolean();
+                synchronized (database) {
+                    Set<TPOrder> orders = database.getOrders(isBuyOrder);
+                    outputStream.writeObject(orders);
+                }
+                outputStream.flush();
+            }
+
+            case ADD_ORDER -> {
+                NewTransaction newTransaction = new NewTransaction(database);
+                TPOrder order = new TPOrder();
+                order.setOrganisation((String) inputStream.readObject());
+                order.setAsset((String) inputStream.readObject());
+                order.setAmount(inputStream.readInt());
+                order.setCredits(inputStream.readInt());
+                final boolean isBuyOrder = inputStream.readBoolean();
+                synchronized (database) {
+                    int rowsAffected;
+                    if (isBuyOrder) {
+                        rowsAffected = newTransaction.addBuyOrder(order);
+                    } else {
+                        rowsAffected = newTransaction.addSellOrder(order);
+                    }
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case DELETE_ORDER -> {
+                NewTransaction newTransaction = new NewTransaction(database);
+                final int orderId = inputStream.readInt();
+                synchronized (database) {
+                    int rowsAffected = newTransaction.removeOrder(orderId);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case ADD_TRANSACTION -> {
+                final String buyingOrganisation = (String) inputStream.readObject();
+                final String sellingOrganisation = (String) inputStream.readObject();
+                final String asset = (String) inputStream.readObject();
+                final int amount = inputStream.readInt();
+                final int credits = inputStream.readInt();
+                synchronized (database) {
+                    int rowsAffected = database.addTransaction(buyingOrganisation, sellingOrganisation,
+                            asset, amount, credits);
+                    outputStream.writeInt(rowsAffected);
+                }
+                outputStream.flush();
+            }
+
+            case GET_ORDER_HISTORY -> {
+                synchronized (database) {
+                    Set<Transaction> transactions = database.getOrderHistory();
+                    outputStream.writeObject(transactions);
                 }
                 outputStream.flush();
             }
@@ -139,11 +308,10 @@ public class NetworkServer {
 
     /**
      * Starts the networkServer running on the default port.
-     * @param propsFile
      */
-    public void start(String propsFile) throws IOException, SQLException {
+    public void start() throws IOException, SQLException {
 
-        database = new JDBCTradingPlatformDataSource(propsFile);
+//        database = new JDBCTradingPlatformDataSource(propsFile);
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             serverSocket.setSoTimeout(SOCKET_ACCEPT_TIMEOUT);
@@ -159,6 +327,7 @@ public class NetworkServer {
                         try {
                             handleConnection(socket);
                         } catch (SQLException throwables) {
+                            //todo change
                             throwables.printStackTrace();
                         }
                     });
@@ -172,6 +341,7 @@ public class NetworkServer {
                 }
             }
         } catch (IOException e) {
+            //todo change
             // If we get an error starting up, show an error dialog then exit
             e.printStackTrace();
             System.exit(1);
