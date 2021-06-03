@@ -32,7 +32,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
             "username varchar(30) not null," +
             "organisation_name varchar(30) not null," +
             "account_type varchar(8) not null," +
-            "password varchar(30) not null," +  //TODO subject to change, check how hashing works.
+            "password varchar(60) not null," +
             "primary key (username)," +
             "constraint fk_organisation_user " +
             "foreign key (organisation_name)" +

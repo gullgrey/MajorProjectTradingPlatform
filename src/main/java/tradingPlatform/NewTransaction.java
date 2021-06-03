@@ -6,6 +6,11 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.lang.Math.abs;
+
+/**
+ * todo
+ */
 public class NewTransaction {
 
     private final TradingPlatformDataSource dataSource;
@@ -24,9 +29,11 @@ public class NewTransaction {
      */
     public int addBuyOrder(TPOrder buyOrder) {
         int organisationCredits = dataSource.getCredits(buyOrder.getOrganisation());
-        if (buyOrder.getCredits() > organisationCredits) {
+        int transactionCredits = buyOrder.getCredits() * buyOrder.getAmount();
+        if (transactionCredits > organisationCredits) {
             return PlatformGlobals.getGeneralSQLFail();
         }
+        dataSource.updateCredits(buyOrder.getOrganisation(), -transactionCredits);
 
         Set<TPOrder> sellOrders = dataSource.getOrders(false);
         Set<TPOrder> transactionOrders = new TreeSet<>();
@@ -37,37 +44,109 @@ public class NewTransaction {
             }
         }
         int amountUsed = buyOrder.getAmount();
-        for (Iterator<TPOrder> iterator = transactionOrders.iterator(); iterator.hasNext();) {
-            TPOrder sellOrder = iterator.next();
+        for (TPOrder sellOrder : transactionOrders) {
             amountUsed -= sellOrder.getAmount();
-            if (amountUsed <= 0) break;
+            if (amountUsed < 0) {
+
+                // Relist a sell order that is partially completed by a buy order.
+                sellOrder.setAmount(sellOrder.getAmount() + amountUsed);
+                dataSource.addOrder(sellOrder.getOrganisation(), sellOrder.getAsset(),
+                        abs(amountUsed), sellOrder.getCredits(), false);
+                amountUsed = 0;
+            }
+            // Remove the sell order from the market.
             dataSource.deleteOrder(sellOrder.getId());
 
-        }
-        if (amountUsed >= 0) {
+            automaticTransaction(buyOrder, sellOrder);
 
+            if (amountUsed == 0) break;
+        }
+        if (amountUsed > 0) {
+            dataSource.addOrder(buyOrder.getOrganisation(), buyOrder.getAsset(), amountUsed,
+                    buyOrder.getCredits(), true);
         }
 
         //return number of assets bought
-        return dataSource.addOrder(buyOrder.getOrganisation(), buyOrder.getAsset(), buyOrder.getAmount(),
-                buyOrder.getCredits(), true);
+        return buyOrder.getAmount() - amountUsed;
     }
 
     /**
      *
-     * @param order
+     * @param sellOrder
      * @return int - The number of assets that were immediately sold, OR
-     *      PlatformGlobals.getGeneralSQLFail() if order did not go through.
+     *      PlatformGlobals.getGeneralSQLFail() if sellOrder did not go through.
      */
-    public int addSellOrder(TPOrder order) {
+    public int addSellOrder(TPOrder sellOrder) {
+        int organisationAssets = dataSource.getAssetAmount(sellOrder.getOrganisation(), sellOrder.getAsset());
+        if (sellOrder.getAmount() > organisationAssets) {
+            return PlatformGlobals.getGeneralSQLFail();
+        }
+        dataSource.updateAssetAmount(sellOrder.getOrganisation(),
+                sellOrder.getAsset(), sellOrder.getAmount());
+
+        Set<TPOrder> buyOrders = dataSource.getOrders(true);
+        Set<TPOrder> transactionOrders = new TreeSet<>();
+        for (TPOrder buyOrder : buyOrders) {
+            if(sellOrder.getAsset().equals(buyOrder.getAsset())
+                    && sellOrder.getCredits() <= buyOrder.getCredits()) {
+                transactionOrders.add(buyOrder);
+            }
+        }
+
+        int amountUsed = sellOrder.getAmount();
+        for (TPOrder buyOrder : transactionOrders) {
+            amountUsed -= buyOrder.getAmount();
+            if (amountUsed < 0) {
+
+                // Relist a buy order that is partially completed by a sell order.
+                buyOrder.setAmount(buyOrder.getAmount() + amountUsed);
+                dataSource.addOrder(buyOrder.getOrganisation(), buyOrder.getAsset(),
+                        abs(amountUsed), buyOrder.getCredits(), true);
+                amountUsed = 0;
+            }
+            // Remove the buy order from the market.
+            dataSource.deleteOrder(buyOrder.getId());
+
+            automaticTransaction(buyOrder, sellOrder);
+
+            if (amountUsed == 0) break;
+        }
+
+        if (amountUsed > 0) {
+            dataSource.addOrder(sellOrder.getOrganisation(), sellOrder.getAsset(), amountUsed,
+                    sellOrder.getCredits(), false);
+        }
+
         //return number of assets sold
-        return dataSource.addOrder(order.getOrganisation(), order.getAsset(), order.getAmount(),
-                order.getCredits(), false);
+        return sellOrder.getAmount() - amountUsed;
     }
 
-    private TPOrder automaticTransaction(TPOrder order) {
-        //Could do message at GUI level that states what transaction took place.
-        return null;
+    /**
+     *
+     * @param buyOrder
+     * @param sellOrder
+     */
+    private void automaticTransaction(TPOrder buyOrder, TPOrder sellOrder) {
+        // Adds the asset to the buy organisation if it doesn't exist.
+        dataSource.addAsset(buyOrder.getOrganisation(), buyOrder.getAsset(), 0);
+
+        // Adds the sold assets to the buying organisation.
+        dataSource.updateAssetAmount(buyOrder.getOrganisation(), buyOrder.getAsset(),
+                sellOrder.getAmount());
+
+        // Update the selling organisation's credits.
+        int sellProfit = sellOrder.getCredits() * sellOrder.getAmount();
+        dataSource.updateCredits(sellOrder.getOrganisation(), sellProfit);
+
+        // Add the completed transaction to the history.
+        dataSource.addTransaction(buyOrder.getOrganisation(), sellOrder.getOrganisation(),
+                sellOrder.getAsset(), sellOrder.getAmount(), sellOrder.getCredits());
+
+        //If the buy order was listed higher then the sell order, refund the buying
+        //organisation by the difference.
+        int creditDifference = buyOrder.getCredits() - sellOrder.getCredits();
+        int creditRefund = creditDifference * sellOrder.getAmount();
+        dataSource.updateCredits(buyOrder.getOrganisation(), creditRefund);
     }
 
     /**

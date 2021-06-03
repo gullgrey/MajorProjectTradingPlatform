@@ -1,5 +1,6 @@
 package test.java.tradingPlatform;
 
+import main.java.database.JDBCTradingPlatformDataSource;
 import main.java.database.TradingPlatformDataSource;
 import main.java.network.NetworkDataSource;
 import main.java.tradingPlatform.NewTransaction;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,10 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NewTransactionTest {
 
+    private static final String propsFile = "src/test/resources/maria.props";
     private static TradingPlatformDataSource dataSource;
     private static NewTransaction newTransaction;
     private static final String buyOrganisation = "Microsoft";
-    private static final int standardOrganisationCredits = 40;
+    private static final int standardOrganisationCredits = 1000;
+    private static final int startingAssets = 100;
     private static final int assetAmount = 10;
     private static final int assetPriceLow = 2;
     private static final int assetPriceHigh = 3;
@@ -33,13 +38,13 @@ public class NewTransactionTest {
      * Initializes the database for testing.
      */
     @BeforeAll
-    static void setupDatabase() {
-        dataSource = new NetworkDataSource();
+    static void setupDatabase() throws IOException, SQLException {
+        dataSource = new JDBCTradingPlatformDataSource(propsFile);
         newTransaction = new NewTransaction(dataSource);
         dataSource.addOrganisation(buyOrganisation, standardOrganisationCredits);
         dataSource.addOrganisation(sellOrganisation, standardOrganisationCredits);
-        dataSource.addAsset(buyOrganisation, standardAsset, assetAmount);
-        dataSource.addAsset(sellOrganisation, standardAsset, assetAmount);
+        dataSource.addAsset(buyOrganisation, standardAsset, startingAssets);
+        dataSource.addAsset(sellOrganisation, standardAsset, startingAssets);
 
         buyOrder = new TPOrder();
         buyOrder.setOrganisation(buyOrganisation);
@@ -56,16 +61,16 @@ public class NewTransactionTest {
         sellOrder.setType(PlatformGlobals.getSellOrder());
     }
 
-    @AfterEach
-    public void resetAssets() {
-        dataSource.deleteAll();
-        dataSource.addOrganisation(buyOrganisation, standardOrganisationCredits);
-        dataSource.addOrganisation(sellOrganisation, standardOrganisationCredits);
-        dataSource.addAsset(buyOrganisation, standardAsset, assetAmount);
-        dataSource.addAsset(sellOrganisation, standardAsset, assetAmount);
-        buyOrder.setCredits(assetPriceLow);
-        sellOrder.setCredits(assetPriceLow);
-    }
+//    @AfterEach
+//    public void resetAssets() {
+//        dataSource.deleteAll();
+//        dataSource.addOrganisation(buyOrganisation, standardOrganisationCredits);
+//        dataSource.addOrganisation(sellOrganisation, standardOrganisationCredits);
+//        dataSource.addAsset(buyOrganisation, standardAsset, startingAssets);
+//        dataSource.addAsset(sellOrganisation, standardAsset, startingAssets);
+//        buyOrder.setCredits(assetPriceLow);
+//        sellOrder.setCredits(assetPriceLow);
+//    }
 
     @Test
     public void testAddBuyOrder() {
@@ -106,6 +111,23 @@ public class NewTransactionTest {
     }
 
     @Test
+    public void testTransactionGainedAsset() {
+        newTransaction.addSellOrder(sellOrder);
+        newTransaction.addBuyOrder(buyOrder);
+        assertEquals(startingAssets + assetAmount,
+                dataSource.getAssetAmount(buyOrganisation, standardAsset));
+    }
+
+    @Test
+    public void testTransactionGainedCredits() {
+        newTransaction.addSellOrder(sellOrder);
+        newTransaction.addBuyOrder(buyOrder);
+        int profit = assetAmount * assetPriceLow;
+        assertEquals(standardOrganisationCredits + profit,
+                dataSource.getCredits(sellOrganisation));
+    }
+
+    @Test
     public void testRemoveOrder() {
         newTransaction.addBuyOrder(buyOrder);
         Set<TPOrder> orders = dataSource.getOrders(true);
@@ -116,10 +138,20 @@ public class NewTransactionTest {
         assertTrue(newOrders.isEmpty());
     }
 
+    @Test
+    public void deleteThis() { //todo delete this
+//        buyOrder.setAmount(15);
+//        buyOrder.setCredits(assetPriceHigh);
+//        newTransaction.addBuyOrder(buyOrder);
 
-
-    @AfterAll
-    static void resetDatabase() {
-        dataSource.deleteAll();
+        sellOrder.setAmount(40);
+        newTransaction.addSellOrder(sellOrder);
     }
+
+
+
+//    @AfterAll
+//    static void resetDatabase() {
+//        dataSource.deleteAll();
+//    }
 }
