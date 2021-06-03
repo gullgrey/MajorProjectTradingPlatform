@@ -11,6 +11,7 @@ public class PlatformGlobals {
     private static final String buyOrder = "BUY";
     private static final String sellOrder = "SELL";
 
+
     public static int getNoRowsAffected() {
         return noRowsAffected;
     }
@@ -26,6 +27,8 @@ public class PlatformGlobals {
     public static int getGeneralSQLFail() {
         return generalSQLFail;
     }
+
+    public static String getUnknownSQLMessage() {return unknownSQLMessage;}
 
     public static String getAdminOrganisation() {
         return adminOrganisation;
