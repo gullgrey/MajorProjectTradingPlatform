@@ -1,4 +1,4 @@
-jdbc.url=jdbc:sqlite:StandardUserTestTest.db
+jdbc.url=jdbc:sqlite:StandardUserTest.db
 jdbc.schema=
 jdbc.username=
 jdbc.password=

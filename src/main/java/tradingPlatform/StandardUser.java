@@ -25,10 +25,17 @@ public class StandardUser extends TPUser {
      * @param amount amount they would like to get of the asset.
      * @param credits number of credits per asset they would like to pay.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
+     * @return number of assets immediately bought
      */
-    public void buyAsset(String asset, int amount, int credits) throws NullValueException, InvalidValueException {
-        //handle credits not enough here.
-        //handle negative credits
+    public int buyAsset(String asset, int amount, int credits) throws NullValueException, InvalidValueException, DuplicationException {
+        if(amount <= 0){
+            throw new InvalidValueException("Asset amount cannot be <= 0");
+        }
+        if(credits <= 0) {
+            throw new InvalidValueException("Asset price cannot be <= 0");
+        }
+        int buyRequest = dataSource.addOrder(organisation, asset, amount, credits, true);
+        return buyRequest;
     }
 
     /**
@@ -37,10 +44,18 @@ public class StandardUser extends TPUser {
      * @param amount amount of the asset they are selling.
      * @param credits amount per assert.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
+     * @return number of assets immediately sold
      */
-    public void sellAsset(String asset, int amount, int credits) throws NullValueException, InvalidValueException, DuplicationException {
-        //handle assets not enough/available here.
-        //handle negative credits
+    public int sellAsset(String asset, int amount, int credits) throws NullValueException, InvalidValueException, DuplicationException {
+        if(amount <= 0){
+            throw new InvalidValueException("Asset amount cannot be <= 0");
+        }
+        if(credits <= 0) {
+            throw new InvalidValueException("Asset price cannot be <= 0");
+        }
+        int sellRequest = dataSource.addOrder(organisation, asset, amount, credits, false);
+        return sellRequest;
+        //TODO Speak with TOM about this return value.
     }
 
     /**
@@ -57,7 +72,7 @@ public class StandardUser extends TPUser {
             String message = "Order number is not from your organisation.";
             throw new InvalidValueException(message);
         }
-        //More still todo
+        dataSource.deleteOrder(orderId);
     }
 
     /**
@@ -65,8 +80,12 @@ public class StandardUser extends TPUser {
      * @return a set containing all the assets that relate to the organisation.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public Set<Asset> getAssets() throws NullValueException {
-        return null;
+    public Set<Asset> getAssets() throws UnknownDatabaseException {
+        Set<Asset> Asset = dataSource.getAssets();
+        if (Asset == null) {
+            throw new UnknownDatabaseException(PlatformGlobals.getUnknownSQLMessage());
+        }
+        return Asset;
     }
 
     /**
@@ -76,8 +95,8 @@ public class StandardUser extends TPUser {
      * @return the amount of the asset for that organisation.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public int getAssetAmount(String asset) throws InvalidValueException, NullValueException{
-        return 0;
+    public int getAssetAmount(String asset) throws NullValueException{
+        return dataSource.getAssetAmount(organisation, asset);
     }
 
     /**
@@ -85,7 +104,7 @@ public class StandardUser extends TPUser {
      * @return value of the organisations credits.
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
-    public int getCredits() throws InvalidValueException, NullValueException {
-        return 0;
+    public int getCredits() throws NullValueException {
+        return dataSource.getCredits(organisation);
     }
 }
