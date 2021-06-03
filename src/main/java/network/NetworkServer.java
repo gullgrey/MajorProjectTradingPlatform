@@ -151,7 +151,6 @@ public class NetworkServer {
             case ADD_ORGANISATION -> {
                 final String organisation = (String) inputStream.readObject();
                 final int credits = inputStream.readInt();
-                System.out.println("Hi there");
                 synchronized (database) {
                     int rowsAffected = database.addOrganisation(organisation, credits);
                     outputStream.writeInt(rowsAffected);

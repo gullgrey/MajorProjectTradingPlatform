@@ -105,8 +105,18 @@ public class NewTransactionTest {
         assertEquals(finalAmount, dataSource.getAssetAmount(sellOrganisation, standardAsset));
     }
 
-//    @Test
-//    public void
+    @Test
+    public void testRemoveOrder() {
+        newTransaction.addBuyOrder(buyOrder);
+        Set<TPOrder> orders = dataSource.getOrders(true);
+        TPOrder order = orders.iterator().next();
+        int orderID = order.getId();
+        newTransaction.removeOrder(orderID);
+        Set<TPOrder> newOrders = dataSource.getOrders(true);
+        assertTrue(newOrders.isEmpty());
+    }
+
+
 
     @AfterAll
     static void resetDatabase() {

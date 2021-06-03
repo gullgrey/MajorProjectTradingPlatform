@@ -228,7 +228,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try {
             updateCredits.setInt(1, credits);
             updateCredits.setString(2, organisation);
-            rows_affected = addAsset.executeUpdate();
+            rows_affected = updateCredits.executeUpdate();
         } catch (SQLException e) {
             return encodeSQLException(e);
         }
@@ -492,6 +492,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try {
             getOrder.setInt(1, idx);
             ResultSet order_data = getOrder.executeQuery();
+            order_data.next();
             order.setId(order_data.getInt("order_id"));
             order.setOrganisation(order_data.getString("organisation_name"));
             order.setAsset(order_data.getString("asset_name"));
@@ -514,9 +515,9 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try {
             String type;
             if (isBuyOrder) {
-                type = "BUY";
+                type = PlatformGlobals.getBuyOrder();
             } else {
-                type = "SELL";
+                type = PlatformGlobals.getSellOrder();
             }
             getOrders.setString(1, type);
             ResultSet orderData = getOrders.executeQuery();
