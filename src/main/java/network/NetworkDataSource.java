@@ -336,7 +336,6 @@ public class NetworkDataSource implements TradingPlatformDataSource {
             }
             outputStream.writeInt(out);
             outputStream.flush();
-            outputStream.flush();
 
             @SuppressWarnings("unchecked")
             Set<TPOrder> orders = (Set<TPOrder>) inputStream.readObject();

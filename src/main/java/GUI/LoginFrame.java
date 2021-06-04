@@ -102,6 +102,7 @@ public class LoginFrame extends JFrame implements ActionListener {
             try {
                 login.checkSuppliedCredentials();
                 TPUser user = login.getUserInfo();
+//                user.refreshOrders();
                 new MainFrame(user);
                 setVisible(false);
                 dispose();

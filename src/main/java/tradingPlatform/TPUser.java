@@ -1,6 +1,7 @@
 package main.java.tradingPlatform;
 
 import main.java.database.TradingPlatformDataSource;
+import main.java.network.NetworkDataSource;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -73,6 +74,7 @@ public abstract class TPUser {
     }
 
     public void refreshBuyOrders() {
+
         buyOrderList.removeAllElements();
         Set<TPOrder> orders = dataSource.getOrders(true);
         if (orders != null) {
@@ -80,9 +82,11 @@ public abstract class TPUser {
                 buyOrderList.addElement(order);
             }
         }
+        dataSource = new NetworkDataSource();
     }
 
     public void refreshSellOrders() {
+        dataSource = new NetworkDataSource();
         sellOrderList.removeAllElements();
         Set<TPOrder> orders = dataSource.getOrders(false);
         if (orders != null) {
@@ -90,6 +94,7 @@ public abstract class TPUser {
                 sellOrderList.addElement(order);
             }
         }
+        dataSource = new NetworkDataSource();
 
     }
 
@@ -104,6 +109,7 @@ public abstract class TPUser {
     }
 
     public void refreshAll() {
+
         refreshOrganisations();
         refreshUsers();
         refreshAssets();

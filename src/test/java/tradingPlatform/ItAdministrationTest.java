@@ -49,6 +49,12 @@ public class ItAdministrationTest {
       static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         dataSource = new NetworkDataSource();
         adminAccount = new ItAdministration(dataSource, adminUserName);
+        dataSource.getUsers();
+        dataSource.getAssets();
+        dataSource.getOrganisations();
+        Set<TPOrder> order1 = dataSource.getOrders(true);
+        Set<TPOrder> order2 = dataSource.getOrders(false);
+        dataSource.getOrderHistory();
         //adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
     }
 
