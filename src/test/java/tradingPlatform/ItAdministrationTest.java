@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.*;
@@ -34,8 +35,7 @@ public class ItAdministrationTest {
     private static final int aNewAssetAmount = 100;
     private static final int aNewAssetAmountReduce = -30;
     private static final String organisation = "Apple";
-    private static ConfigReader fileReader;
-
+    private static ConfigReader fileReader = new ConfigReader();
 
 
     /**
@@ -96,11 +96,28 @@ public class ItAdministrationTest {
         assertEquals(userNameCorrect, user.getUser());
     }
 
+    /**
+     * Test to confirm configuration file formatting.
+     * @throws IOException
+     */
     @Test
-    public void testReadFile() throws IOException {
-        Set<String> configs = fileReader.readClientFile();
-        System.out.println(configs.iterator().next());
+    public void testReadFileClient() throws IOException {
+        Set<String> newSet = fileReader.readClientFile();
+        System.out.println(newSet);
+        String array[] = new String[5];
+        array = newSet.toArray(array);
+    }
 
+    /**
+     * Test to confirm configuration file formatting.
+     * @throws IOException
+     */
+    @Test
+    public void testReadFileServer() throws IOException {
+        Set<String> newSet = fileReader.readServerFile();
+        System.out.println(newSet);
+        String array[] = new String[5];
+        array = newSet.toArray(array);
     }
 
 

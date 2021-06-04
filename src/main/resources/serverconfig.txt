@@ -1,5 +1,4 @@
-Server
 port= 10000
 socket_accept_timeout= 100
-socket_read_timeout= 500
-propsfile= "src/main/resources/maria.props"
+socket_read_timeout= 5000
+propsfile= src/main/resources/maria.props

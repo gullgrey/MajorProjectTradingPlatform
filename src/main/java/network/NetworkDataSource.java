@@ -16,8 +16,8 @@ import java.util.Set;
 public class NetworkDataSource implements TradingPlatformDataSource {
 
     //TODO Make these an initialised input using config file.
-    private static final String HOSTNAME = "127.0.0.1";
-    private static final int PORT = 10000;
+    private static String HOSTNAME;
+    private static int PORT;
 
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
@@ -58,6 +58,7 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     }
 
     public NetworkDataSource() {
+        initializeConfigFile();
         try {
 
             Socket socket = new Socket(HOSTNAME, PORT);
@@ -66,6 +67,23 @@ public class NetworkDataSource implements TradingPlatformDataSource {
         } catch (IOException e) {
             //TODO handle this better
             System.out.println("Failed to connect to networkExercise.server");
+        }
+    }
+
+    /**
+     * Method used to read the client information from a configuration file.
+     */
+    private void initializeConfigFile(){
+        try{
+            ConfigReader configReader = new ConfigReader();
+            Set<String> configSet = configReader.readClientFile();
+            String[] array = new String[5];
+            array = configSet.toArray(array);
+            HOSTNAME = array[1];
+            PORT = Integer.parseInt(array[0]);
+        }catch (IOException e){
+            //TODO handle this better
+            System.out.println("Config FIle problem.");
         }
     }
 
