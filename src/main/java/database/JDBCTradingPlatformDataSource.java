@@ -3,6 +3,7 @@ package main.java.database;
 import main.java.tradingPlatform.*;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.Set;
 import java.util.TreeSet;
@@ -182,10 +183,21 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     private void addAdmin() {
         try {
-            addOrganisation.setString(1,PlatformGlobals.getAdminOrganisation());
-            addOrganisation.setInt(2, 0);
-            addOrganisation.executeUpdate();
-        } catch (SQLException ignored) {
+            String admin = PlatformGlobals.getAdminOrganisation();
+            addOrganisation(admin, 0);
+//            addOrganisation.setString(1,admin);
+//            addOrganisation.setInt(2, 0);
+//            addOrganisation.executeUpdate();
+
+            String password = HashPassword.hashedPassword(admin, admin);
+
+            addUser(admin, password, admin, admin);
+//            addUser.setString(1, admin);
+//            addUser.setString(2, admin);
+//            addUser.setString(3, admin);
+//            addUser.setString(4, password);
+//            addUser.executeUpdate();
+        } catch (NoSuchAlgorithmException ignored) {
 
         }
     }

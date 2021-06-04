@@ -328,7 +328,14 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     public Set<TPOrder> getOrders(boolean isBuyOrder) {
         try {
             outputStream.writeObject(Command.GET_ORDERS);
-            outputStream.writeBoolean(isBuyOrder);
+            int out;
+            if (isBuyOrder) {
+                out = 1;
+            } else {
+                out = 0;
+            }
+            outputStream.writeInt(out);
+            outputStream.flush();
             outputStream.flush();
 
             @SuppressWarnings("unchecked")

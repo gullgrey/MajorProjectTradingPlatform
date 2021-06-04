@@ -54,6 +54,7 @@ public class NetworkServer {
                 }
             }
         } catch (IOException | ClassCastException | ClassNotFoundException e) {
+            e.printStackTrace();
             //Todo change
             System.out.printf("Connection %s closed%n", socket.toString());
         }
@@ -234,7 +235,11 @@ public class NetworkServer {
             }
 
             case GET_ORDERS -> {
-                final boolean isBuyOrder = inputStream.readBoolean();
+                final int in = inputStream.readInt();
+                boolean isBuyOrder = true;
+                if (in == 0){
+                    isBuyOrder = false;
+                }
                 synchronized (database) {
                     Set<TPOrder> orders = database.getOrders(isBuyOrder);
                     outputStream.writeObject(orders);

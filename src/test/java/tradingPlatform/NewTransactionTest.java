@@ -106,7 +106,7 @@ public class NewTransactionTest {
     @Test
     public void testSellOrderAssets() {
         newTransaction.addSellOrder(sellOrder);
-        int finalAmount = 0;
+        int finalAmount = startingAssets - assetAmount;
         assertEquals(finalAmount, dataSource.getAssetAmount(sellOrganisation, standardAsset));
     }
 
@@ -150,8 +150,8 @@ public class NewTransactionTest {
 
 
 
-//    @AfterAll
-//    static void resetDatabase() {
-//        dataSource.deleteAll();
-//    }
+    @AfterAll
+    static void resetDatabase() {
+        dataSource.deleteAll();
+    }
 }

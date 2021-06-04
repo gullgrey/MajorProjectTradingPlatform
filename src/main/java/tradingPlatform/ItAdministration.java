@@ -14,7 +14,7 @@ public class ItAdministration extends TPUser {
 
 
     public ItAdministration(TradingPlatformDataSource dataSource, String adminName){
-        super(dataSource);
+        super(dataSource, adminName);
     }
 
 

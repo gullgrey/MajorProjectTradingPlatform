@@ -10,24 +10,18 @@ import java.util.Set;
  */
 public class StandardUser extends TPUser {
 
-    private final String username;
     private final String organisation;
 
     private static final String amountMessage = "Asset amount cannot be less then 1.";
     private static final String priceMessage = "Asset price cannot be less then 1.";
 
     public StandardUser(TradingPlatformDataSource dataSource, String username, String organisation) {
-        super(dataSource);
-        this.username = username;
+        super(dataSource, username);
         this.organisation = organisation;
     }
 
     public String getOrganisation() {
         return organisation;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     /**

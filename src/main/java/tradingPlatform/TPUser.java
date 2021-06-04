@@ -4,6 +4,7 @@ import main.java.database.TradingPlatformDataSource;
 
 import javax.swing.*;
 import java.sql.SQLException;
+import java.util.Set;
 
 /**
  * TODO
@@ -11,7 +12,7 @@ import java.sql.SQLException;
 public abstract class TPUser {
 
     TradingPlatformDataSource dataSource;
-
+    String username;
 
     static final String generalMessage = "Update did not go through. Please refresh page.";
 
@@ -23,8 +24,9 @@ public abstract class TPUser {
     DefaultListModel<Transaction> transactionList;
 
 
-    public TPUser(TradingPlatformDataSource dataSource) {
+    public TPUser(TradingPlatformDataSource dataSource, String username) {
         this.dataSource = dataSource;
+        this.username = username;
 
         organisationList = new DefaultListModel<>();
         userList = new DefaultListModel<>();
@@ -33,6 +35,10 @@ public abstract class TPUser {
         sellOrderList = new DefaultListModel<>();
         transactionList  = new DefaultListModel<>();
         refreshAll();
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     /**
@@ -68,22 +74,32 @@ public abstract class TPUser {
 
     public void refreshBuyOrders() {
         buyOrderList.removeAllElements();
-        for (TPOrder order : this.dataSource.getOrders(true)) {
-            buyOrderList.addElement(order);
+        Set<TPOrder> orders = dataSource.getOrders(true);
+        if (orders != null) {
+            for (TPOrder order : orders) {
+                buyOrderList.addElement(order);
+            }
         }
     }
 
     public void refreshSellOrders() {
         sellOrderList.removeAllElements();
-        for (TPOrder order : this.dataSource.getOrders(false)) {
-            sellOrderList.addElement(order);
+        Set<TPOrder> orders = dataSource.getOrders(false);
+        if (orders != null) {
+            for (TPOrder order : orders) {
+                sellOrderList.addElement(order);
+            }
         }
+
     }
 
     public void refreshTransactions() {
         transactionList.removeAllElements();
-        for (Transaction transaction : this.dataSource.getOrderHistory()) {
-            transactionList.addElement(transaction);
+        Set<Transaction> transactions = dataSource.getOrderHistory();
+        if (transactions != null) {
+            for (Transaction transaction : transactions) {
+                transactionList.addElement(transaction);
+            }
         }
     }
 
