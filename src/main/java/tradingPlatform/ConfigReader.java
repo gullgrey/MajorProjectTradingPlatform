@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigReader {
 
@@ -19,63 +16,66 @@ public class ConfigReader {
 
 
     public ConfigReader() {
-
+        propsfile = "this file";
     }
 
     public Set<String> readClientFile() throws IOException {
         //TODO MAKE EXCEPTIONS INCASE SOMEONE RUINS CONFIG FILE
+        Set<String> mySet = new HashSet<String>();
         File fileName = new File("src/main/resources/clientconfig.txt");
+
         FileReader fileReader = new FileReader(fileName);
+
         BufferedReader bufferedReader = new BufferedReader(fileReader);
+
         Scanner scanner = new Scanner(bufferedReader);
-        Set<String> configFile = new HashSet<String>();
-        configFile.add("Test");
-        System.out.println(configFile);
+
 
         for (; ; ) {
             if (!scanner.hasNext()) break;
-            String token = scanner.next("[a-z]*");
-            if (token.equals("Client")) {
-                String hostname = scanner.next();
-
-                configFile.add(scanner.next());
-
-                //configFile.add(hostnameIP);
-
-                String port = scanner.next();
-                String portID = scanner.next();
-                configFile.add(portID);
-            }
+            String token = scanner.next();
+            String port1 = scanner.next();
+            mySet.add(port1);
+            String token2 = scanner.next();
+            String port2 = scanner.next();
+            mySet.add(port2);
         }
+        bufferedReader.close();
         scanner.close();
-        return configFile;
+        return mySet;
     }
 
-    public Set<String> readServerFile() throws IOException {
 
-        File fileName = new File("src/main/resources/thisfile.txt");
+    public Set<String> readServerFile() throws IOException {
+//TODO MAKE EXCEPTIONS INCASE SOMEONE RUINS CONFIG FILE
+        Set<String> mySet = new HashSet<String>();
+        File fileName = new File("src/main/resources/serverconfig.txt");
+
         FileReader fileReader = new FileReader(fileName);
+
         BufferedReader bufferedReader = new BufferedReader(fileReader);
+
         Scanner scanner = new Scanner(bufferedReader);
-        Set<String> configFile = null;
 
         for (; ; ) {
             if (!scanner.hasNext()) break;
-            String token = scanner.next("[a-z]*");
-            if (token.equals("Client")) {
-                String hostname = scanner.next();
-                String hostnameIP = scanner.next();
-                configFile.add(hostnameIP);
-                //System.out.println(portvalue);
+            String token = scanner.next();
+            String port1 = scanner.next();
+            mySet.add(port1);
+            String token2 = scanner.next();
+            String port2 = scanner.next();
+            mySet.add(port2);
+            String token3 = scanner.next();
+            String port3 = scanner.next();
+            mySet.add(port3);
+            String token4 = scanner.next();
+            String port4 = scanner.next();
+            mySet.add(port4);
 
-            }
-            //String token = scanner.next("[a-z]*");
-
-            //System.out.println(token);
         }
-
+        bufferedReader.close();
         scanner.close();
-        return configFile;
+        return mySet;
     }
 }
 

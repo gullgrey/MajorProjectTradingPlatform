@@ -17,19 +17,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class NetworkServer {
 
     //Todo make from config file
-    private static final int PORT = 10000;
+    private static int PORT;
 
     //This is the timeout in between accepting clients, not reading from the socket itself.
-    private static final int SOCKET_ACCEPT_TIMEOUT = 100;
+    private static int SOCKET_ACCEPT_TIMEOUT;
 
     //This timeout is used for the actual clients.
-    private static final int SOCKET_READ_TIMEOUT = 5000;
-    private static final String propsFile = "src/main/resources/maria.props";
+    private static int SOCKET_READ_TIMEOUT;
+    private static String propsFile;
 
     private final AtomicBoolean running = new AtomicBoolean(true);
     private final TradingPlatformDataSource database;
 
     public NetworkServer() throws IOException, SQLException {
+        initializeConfigFile(); // Read from the config file
         database = new JDBCTradingPlatformDataSource(propsFile);
     }
 
@@ -46,7 +47,6 @@ public class NetworkServer {
 
             while (running.get()) {
                 try {
-
                     final NetworkDataSource.Command command = (NetworkDataSource.Command) inputStream.readObject();
                     handleCommand(inputStream, outputStream, command);
                 } catch (SocketTimeoutException ignored) {
@@ -57,6 +57,26 @@ public class NetworkServer {
             e.printStackTrace();
             //Todo change
             System.out.printf("Connection %s closed%n", socket.toString());
+        }
+    }
+
+    /**
+     * Method used to read the server information from a configuration file.
+     */
+    private void initializeConfigFile(){
+        try{
+            ConfigReader configReader = new ConfigReader();
+            Set<String> configSet = configReader.readServerFile();
+            String[] array = new String[5];
+            array = configSet.toArray(array);
+            SOCKET_ACCEPT_TIMEOUT = Integer.parseInt(array[0]);
+            SOCKET_READ_TIMEOUT = Integer.parseInt(array[1]);
+            propsFile = array[2];
+            PORT = Integer.parseInt(array[3]);
+
+        }catch (IOException e){
+            //TODO handle this better
+            System.out.println("Config File problem.");
         }
     }
 
