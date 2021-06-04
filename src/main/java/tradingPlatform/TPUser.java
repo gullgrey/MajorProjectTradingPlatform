@@ -5,6 +5,7 @@ import main.java.network.NetworkDataSource;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.Vector;
 
@@ -93,14 +94,44 @@ public abstract class TPUser {
     }
 
     public void refreshUsers() {
-        try {
-            userList.setRowCount(0);
-            for (UserOrganisation user : this.dataSource.getUsers()) {
+//        try {
+////            userList.addRow(new String[]{"", ""});
+//        userList.setRowCount(0);
+        Set<UserOrganisation> actualUsers = dataSource.getUsers();
+        ArrayList<String> actualNames = new ArrayList<>();
+        for (UserOrganisation user : actualUsers) {
+            actualNames.add(user.getUser());
+            System.out.println(user.getUser());
+        }
+
+        ArrayList<Integer> deleteValues = new ArrayList<>();
+        ArrayList<String> checkUsernames = new ArrayList<>();
+        for (int row = 0; row < userList.getRowCount(); row++) {
+            String username = userList.getValueAt(row, 0).toString();
+            checkUsernames.add(username);
+            if (!actualNames.contains(username)) {
+                deleteValues.add(row);
+
+            }
+        }
+
+        int indexShift = 0;
+        for (int deleteIndex : deleteValues) {
+
+            userList.removeRow(deleteIndex - indexShift);
+            indexShift--;
+        }
+
+        for (UserOrganisation user : actualUsers) {
+            if (!checkUsernames.contains(user.getUser())){
                 userList.addRow(new String[]{user.getUser(), user.getOrganisation()});
             }
-        } catch (ArrayIndexOutOfBoundsException ignore) {
 
         }
+//        dataSource = new NetworkDataSource();
+//        } catch (ArrayIndexOutOfBoundsException ignore) {
+//
+//        }
     }
 
     public void refreshAssets() {

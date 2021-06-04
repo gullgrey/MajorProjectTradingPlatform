@@ -14,13 +14,14 @@ public class UserPane extends JTabbedPane implements ActionListener {
 
     ItAdministration user;
 
-    private JTable userList;
+//    private JTable userList;
     private JTextField username;
     private JTextField organisation;
     private JTextField password;
     private final JButton addButton = new JButton("Add User");
-    JScrollPane scroller;
-    JPanel addUserPanel;
+    JPanel addUser;
+
+
 
     public UserPane(ItAdministration user) {
         this.user = user;
@@ -29,13 +30,13 @@ public class UserPane extends JTabbedPane implements ActionListener {
     }
 
     private void setUserPane(){
-        addUserPanel = addUserPanel();
+        JPanel addUserPanel = addUserPanel();
         //
         addTab("Add", addUserPanel);
     }
 
     private JPanel addUserPanel() {
-        JPanel addUser = new JPanel();
+        addUser = new JPanel();
         addUser.setLayout(new BoxLayout(addUser, BoxLayout.X_AXIS));
         int horizontalStrut = 20;
         addUser.add(Box.createVerticalStrut(horizontalStrut));
@@ -49,7 +50,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
 
     private JScrollPane makeUserListPane() {
 
-        userList = new JTable(user.getUserList());
+        JTable userList = new JTable(user.getUserList());
         userList.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
                 // do some actions here, for example
@@ -60,7 +61,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
             }
         });
 
-        scroller = new JScrollPane(userList);
+        JScrollPane scroller = new JScrollPane(userList);
         scroller.setViewportView(userList);
         scroller
                 .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -139,11 +140,12 @@ public class UserPane extends JTabbedPane implements ActionListener {
                 } else {
                     user.addStandardUser(username.getText(), password.getText(), organisation.getText());
                 }
-                user.refreshUsers();
+
             }
         } catch (DuplicationException | UnknownDatabaseException | NullValueException error) {
             JOptionPane.showMessageDialog(this, error.getMessage(),
                     "Dialog", JOptionPane.ERROR_MESSAGE);
         }
+        user.refreshUsers();
     }
 }
