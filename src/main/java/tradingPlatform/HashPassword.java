@@ -8,17 +8,23 @@ import java.security.SecureRandom;
 public class HashPassword {
 
     public static String hashedPassword(String username, String password) throws NoSuchAlgorithmException {
-        String seededpassword = username+password; // Generated see based on the username and password.
-        SecureRandom random = new SecureRandom(seededpassword.getBytes(StandardCharsets.UTF_8));
-        byte[] salt = new byte[55]; // Length of the Hashed password
-        random.nextBytes(salt); // Getting the next character in the password.
-        MessageDigest md = MessageDigest.getInstance("SHA-512"); // Encryption method being used
-        md.update(salt); // Adding the encrypted char to the password.
-
-        StringBuilder sb = new StringBuilder();
-        for (byte b : salt){
-            sb.append(String.format("%02x", b));
-        }
-        return sb.toString();
+        MessageDigest md = MessageDigest.getInstance("SHA-256"); // Encryption method being used
+        md.reset();
+        md.update(username.getBytes());
+        byte[] hash = md.digest(password.getBytes()); // Adding the encrypted char to the password.
+        return bytesToStringHex(hash);
     }
+
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+    private static String bytesToStringHex(byte[] bytes){
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j=0; j < bytes.length; j++){
+            int v = bytes[j] & 0xFF;
+            hexChars[j *2 ] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v &0x0F];
+        }
+        return new String(hexChars);
+    }
+
 }
