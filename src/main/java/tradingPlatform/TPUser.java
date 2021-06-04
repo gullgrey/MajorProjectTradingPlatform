@@ -4,8 +4,9 @@ import main.java.database.TradingPlatformDataSource;
 import main.java.network.NetworkDataSource;
 
 import javax.swing.*;
-import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
 import java.util.Set;
+import java.util.Vector;
 
 /**
  * TODO
@@ -14,28 +15,60 @@ public abstract class TPUser {
 
     TradingPlatformDataSource dataSource;
     String username;
+    String organisation;
 
     static final String generalMessage = "Update did not go through. Please refresh page.";
 
     DefaultListModel<Organisation> organisationList;
-    DefaultListModel<UserOrganisation> userList;
+    DefaultTableModel userList;
     DefaultListModel<Asset> assetList;
     DefaultListModel<TPOrder> buyOrderList;
     DefaultListModel<TPOrder> sellOrderList;
     DefaultListModel<Transaction> transactionList;
 
 
-    public TPUser(TradingPlatformDataSource dataSource, String username) {
+    public TPUser(TradingPlatformDataSource dataSource, String username, String organisation) {
         this.dataSource = dataSource;
         this.username = username;
+        this.organisation = organisation;
 
         organisationList = new DefaultListModel<>();
-        userList = new DefaultListModel<>();
+        userList = new DefaultTableModel();
+        userList.addColumn("Username");
+        userList.addColumn("Organisation");
         assetList = new DefaultListModel<>();
         buyOrderList = new DefaultListModel<>();
         sellOrderList = new DefaultListModel<>();
         transactionList  = new DefaultListModel<>();
         refreshAll();
+    }
+
+    public DefaultListModel<Organisation> getOrganisationList() {
+        return organisationList;
+    }
+
+    public DefaultTableModel getUserList() {
+        return userList;
+    }
+
+    public DefaultListModel<Asset> getAssetList() {
+        return assetList;
+    }
+
+    public DefaultListModel<TPOrder> getBuyOrderList() {
+        return buyOrderList;
+    }
+
+    public DefaultListModel<TPOrder> getSellOrderList() {
+        return sellOrderList;
+    }
+
+    public DefaultListModel<Transaction> getTransactionList() {
+        return transactionList;
+    }
+
+    public String getOrganisation() {
+        return organisation;
     }
 
     public String getUsername() {
@@ -60,9 +93,13 @@ public abstract class TPUser {
     }
 
     public void refreshUsers() {
-        userList.removeAllElements();
-        for (UserOrganisation user : this.dataSource.getUsers()) {
-            userList.addElement(user);
+        try {
+            userList.setRowCount(0);
+            for (UserOrganisation user : this.dataSource.getUsers()) {
+                userList.addRow(new String[]{user.getUser(), user.getOrganisation()});
+            }
+        } catch (ArrayIndexOutOfBoundsException ignore) {
+
         }
     }
 

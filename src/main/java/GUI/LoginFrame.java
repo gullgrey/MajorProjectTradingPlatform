@@ -1,10 +1,7 @@
 package main.java.GUI;
 
 import main.java.database.TradingPlatformDataSource;
-import main.java.tradingPlatform.Login;
-import main.java.tradingPlatform.NullValueException;
-import main.java.tradingPlatform.TPUser;
-import main.java.tradingPlatform.UnknownDatabaseException;
+import main.java.tradingPlatform.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,8 +24,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         this.dataSource = dataSource;
 
         setLayoutManager();
-        userTextField.setMaximumSize(new Dimension(150, 30));
-        passwordField.setMaximumSize(new Dimension(150, 30));
+
         addActionEvent();
 
         setTitle("Client Login");
@@ -42,6 +38,8 @@ public class LoginFrame extends JFrame implements ActionListener {
     private void setLayoutManager() {
         contentPane.setLayout(new GridLayout(7, 0));
         int verticalStrut = 20;
+        userTextField.setMaximumSize(new Dimension(150, 30));
+        passwordField.setMaximumSize(new Dimension(150, 30));
         contentPane.add(Box.createVerticalStrut(verticalStrut));
         contentPane.add(makeUserPanel());
         contentPane.add(Box.createVerticalStrut(0));
@@ -100,15 +98,17 @@ public class LoginFrame extends JFrame implements ActionListener {
             passwordText = passwordField.getText();
             Login login = new Login(userText, passwordText, dataSource);
             try {
-                login.checkSuppliedCredentials();
-                TPUser user = login.getUserInfo();
-//                user.refreshOrders();
-                new MainFrame(user);
+                if (login.checkSuppliedCredentials()) {
+                    ItAdministration user = login.getItAdministration();
+                    new MainFrame(user);
+                } else {
+                    //todo
+                }
                 setVisible(false);
                 dispose();
             } catch (NullValueException | UnknownDatabaseException error) {
                 JOptionPane.showMessageDialog(this, error.getMessage(),
-                        "Dialog", JOptionPane.ERROR_MESSAGE);
+                        error.getClass().toString(), JOptionPane.ERROR_MESSAGE);
             }
 
         }

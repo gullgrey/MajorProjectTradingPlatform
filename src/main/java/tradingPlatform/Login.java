@@ -32,30 +32,37 @@ public class Login {
     }
 
     /**
-     * Based off the current values of usename, Password. This look get the remaining data about
+     * Based off the current values of username, Password. This look get the remaining data about
      * the user from the database.
      *
-     * @return All the information about the user in the database (e.g. Username, Password, Organisation and
-     * if they are an admin.
+     * @return All the information about the It Admin in the database (e.g. Username, Password, Organisation).
      */
-    public TPUser getUserInfo(){
-        TPUser userInformation;
-        if (isAdmin) {
-            userInformation = new ItAdministration(dataSource, username);
-        } else {
-            userInformation = new StandardUser(dataSource, username, organisationalUnit);
-        }
-        return userInformation;
+    public ItAdministration getItAdministration(){
+        return new ItAdministration(dataSource, username);
+    }
+
+    /**
+     * Based off the current values of username, Password. This look get the remaining data about
+     * the user from the database.
+     *
+     * @return All the information about the Standard User in the database (e.g. Username, Password, Organisation).
+     */
+    public StandardUser getStandardUser() {
+        return new StandardUser(dataSource, username, organisationalUnit);
     }
 
     /**
      * Function is used to check if the user exists in the DB.
      * @return boolean of whether or not the user existed.
      */
-    public void checkSuppliedCredentials() throws NullValueException, UnknownDatabaseException {
+    public boolean checkSuppliedCredentials() throws NullValueException, UnknownDatabaseException {
         try {
             String hashedPassword = HashPassword.hashedPassword(username, password);
+            String hashedP = HashPassword.hashedPassword(username, password);
             String checkPassword = dataSource.getUserPassword(username);
+            System.out.println(hashedPassword);
+            System.out.println(hashedP);
+            System.out.println(checkPassword);
             String message = "Invalid Username or Password";
             if (checkPassword == null) {
 
@@ -63,6 +70,7 @@ public class Login {
             }
             if (hashedPassword.equals(checkPassword)) {
                 getUserFromDB();
+                return isAdmin;
             } else {
                 throw new NullValueException(message);
             }
