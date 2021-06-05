@@ -34,8 +34,6 @@ public class StandardUserTest {
     /**
      * Creates a new database and instantiates two organisations with the second
      * containing an asset.
-     * @throws IOException
-     * @throws SQLException
      */
     @BeforeEach
     public void setupDatabase() {
@@ -47,7 +45,7 @@ public class StandardUserTest {
 
     /**
      * Checks that the number of assets for the second organisation is 1.
-     * @throws NullValueException
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
     public void testGetAssets() throws UnknownDatabaseException {
@@ -59,8 +57,7 @@ public class StandardUserTest {
 
     /**
      * Checks that the number of assets increases when a new asset is added.
-     * @throws NullValueException
-     * @throws SQLException
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
     public void testGetAssetsAfterAddingAsset() throws UnknownDatabaseException {
@@ -73,8 +70,7 @@ public class StandardUserTest {
 
     /**
      * Checks that when an asset is removed
-     * @throws NullValueException
-     * @throws SQLException
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
     public void testGetAssetsAfterRemovingAsset() throws UnknownDatabaseException {
@@ -88,13 +84,11 @@ public class StandardUserTest {
 
     /**
      * Checking that when an buy and sell order match it will update the buying users credits.
-     * @throws InvalidValueException
-     * @throws NullValueException
-     * @throws DuplicationException
+     * @throws InvalidValueException value entered is incorrect type.
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
-    public void testBuyAssetAutoTransaction() throws NullValueException, DuplicationException,
-            InvalidValueException, UnknownDatabaseException {
+    public void testBuyAssetAutoTransaction() throws InvalidValueException, UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
         StandardUser otherStandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         int buyerCredits = standardTest.getCredits(); // Storing current credit amount.
@@ -124,14 +118,12 @@ public class StandardUserTest {
 
     /**
      * Test that entering in the known ID of a Sell order on the system is removed.
-     * @throws DuplicationException
-     * @throws NullValueException
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws InvalidValueException value entered is incorrect type.
+     * @throws UnknownDatabaseException value entered is incorrect type.
      */
     @Test
-    public void testRemovingSellOrder() throws DuplicationException, NullValueException,
-            InvalidValueException, UnknownDatabaseException {
+    public void testRemovingSellOrder() throws  NullValueException, InvalidValueException, UnknownDatabaseException {
         StandardUser StandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         StandardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
         Set<TPOrder> organisationsOrders = dataSource.getOrders(false);
@@ -149,8 +141,7 @@ public class StandardUserTest {
      * @throws UnknownDatabaseException
      */
     @Test
-    public void testRemovingBuyOrder() throws DuplicationException, NullValueException,
-            InvalidValueException, UnknownDatabaseException {
+    public void testRemovingBuyOrder() throws  NullValueException, InvalidValueException, UnknownDatabaseException {
         StandardUser StandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         StandardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
         Set<TPOrder> organisationsOrders = dataSource.getOrders(true);
