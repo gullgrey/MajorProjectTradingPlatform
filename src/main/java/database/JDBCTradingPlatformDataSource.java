@@ -64,7 +64,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     // Asset queries
     private static final String GET_ASSETS = "SELECT * FROM asset";
-    private static final String ADD_ASSET  = "INSERT INTO asset VALUES (?,?,?)";
+    private static final String ADD_ASSET  = "INSERT INTO asset VALUES (?,?,greatest(?, 0))";
     private static final String DELETE_ASSET = "DELETE FROM asset WHERE asset_name = ? AND organisation_name = ?";
     private static final String GET_ASSET_AMOUNT = "SELECT amount  FROM asset WHERE organisation_name = ? AND  asset_name = ?";
     private static final String UPDATE_ASSET_AMOUNT = "UPDATE asset SET amount = greatest(amount + ?, 0) WHERE asset_name = ? AND organisation_name = ?";
@@ -73,7 +73,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String GET_CREDITS = "SELECT credits FROM organisation_units WHERE organisation_name=?";
     private static final String UPDATE_CREDITS = "UPDATE organisation_units SET credits = greatest(credits + ?, 0) WHERE organisation_name=?";
     private static final String GET_ORGANISATIONS = "SELECT * FROM organisation_units";
-    private static final String ADD_ORGANISATION  = "INSERT INTO organisation_units VALUES (?,?)";
+    private static final String ADD_ORGANISATION  = "INSERT INTO organisation_units VALUES (?,greatest(?, 0))";
     private static final String DELETE_ORGANISATION = "DELETE FROM organisation_units WHERE organisation_name=?";
 
     // User queries

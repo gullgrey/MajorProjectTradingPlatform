@@ -53,16 +53,12 @@ public class Login {
 
     /**
      * Function is used to check if the user exists in the DB.
-     * @return boolean of whether or not the user existed.
+     * @return boolean of whether or not the user is an IT Administrator.
      */
     public boolean checkSuppliedCredentials() throws NullValueException, UnknownDatabaseException {
         try {
             String hashedPassword = HashPassword.hashedPassword(username, password);
-            String hashedP = HashPassword.hashedPassword(username, password);
             String checkPassword = dataSource.getUserPassword(username);
-            System.out.println(hashedPassword);
-            System.out.println(hashedP);
-            System.out.println(checkPassword);
             String message = "Invalid Username or Password";
             if (checkPassword == null) {
 

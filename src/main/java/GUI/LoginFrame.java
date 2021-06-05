@@ -76,7 +76,7 @@ public class LoginFrame extends JFrame implements ActionListener {
     private JPanel makeLoginPanel() {
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new GridLayout(0, 3));
-        int horizontalStrut = 50;
+        int horizontalStrut = 40;
         loginPanel.add(Box.createHorizontalStrut(horizontalStrut));
         loginPanel.add(loginButton);
         loginPanel.add(Box.createHorizontalStrut(horizontalStrut));
