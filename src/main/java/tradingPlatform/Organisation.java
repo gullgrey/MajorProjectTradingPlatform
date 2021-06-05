@@ -2,6 +2,9 @@ package main.java.tradingPlatform;
 
 import java.io.Serializable;
 
+/**
+ * This class is is responsible for implementing the organisation and its credits.
+ */
 public class Organisation implements Comparable<Organisation>, Serializable {
 
     private String organisation;
