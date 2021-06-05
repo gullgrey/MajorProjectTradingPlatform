@@ -18,16 +18,6 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     private final Set<Transaction> transationList = new HashSet<>();
     private static DataSourceMockup dataSource;
 
-    private String organisation;
-    private String assetName;
-    private String username;
-    private String password;
-    private int creditamount;
-    private int assetAmount;
-    private String type;
-    private int credits;
-    private String orderType;
-    private String propsfile;
     private static ItAdministration adminAccount;
     private String organisationMember;
     private static final String adminUserName = "Admin";
@@ -61,6 +51,18 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public int updateCredits(String organisation, int credits) {
+        //Throws
+        for (Organisation org : organisationsList) {
+            if (org.getOrganisation().equals(organisation)) {
+                int orgCredits = org.getCredits();
+                orgCredits += credits;
+                if (orgCredits <= 0){
+                    orgCredits = 0;
+                }
+                org.setCredits(orgCredits);
+                return 1;
+            }
+        }
         for (Organisation org : organisationsList) {
             if (org.getOrganisation().equals(organisation)) {
                 int orgCredits = org.getCredits();

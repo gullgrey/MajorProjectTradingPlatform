@@ -86,7 +86,7 @@ public class ItAdministration extends TPUser {
      */
     public void removeUser(String userName) throws NullValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.deleteUser(userName);
-        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
+        if (rowsAffected == PlatformGlobals.getForeignKeyFail()) {
             String message = "User doesn't exist.";
             throw new NullValueException(message);
         } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
@@ -131,7 +131,7 @@ public class ItAdministration extends TPUser {
             throw new InvalidValueException(message);
         }
         int rowsAffected = dataSource.deleteOrganisation(organisation);
-        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
+        if (rowsAffected == PlatformGlobals.getForeignKeyFail()) {
             String message = "Organisation doesn't exist.";
             throw new NullValueException(message);
         } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
@@ -148,7 +148,7 @@ public class ItAdministration extends TPUser {
      */
     public void updateCreditAmount(String organisation, int credits) throws InvalidValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.updateCredits(organisation, credits);
-        if (rowsAffected == PlatformGlobals.getNoRowsAffected()){
+        if (rowsAffected == PlatformGlobals.getForeignKeyFail()){
             String message = "This organisation doesn't exist.";
             throw new InvalidValueException(message);
         }
@@ -218,7 +218,7 @@ public class ItAdministration extends TPUser {
      */
     public void removeAsset(String organisation, String asset) throws NullValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.deleteAsset(organisation,asset);
-        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
+        if (rowsAffected == PlatformGlobals.getForeignKeyFail()) {
             String message = "Entered field doesn't exist.";
             throw new NullValueException(message);
         } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
