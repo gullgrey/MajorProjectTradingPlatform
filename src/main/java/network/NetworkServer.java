@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.sql.SQLException;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class NetworkServer {
                 try {
                     final NetworkDataSource.Command command = (NetworkDataSource.Command) inputStream.readObject();
                     handleCommand(inputStream, outputStream, command);
-                } catch (SocketTimeoutException | StreamCorruptedException ignored) {
+                } catch (SocketTimeoutException | SocketException ignored) {
 
                 }
             }

@@ -20,6 +20,7 @@ public class ChangePassword extends LoginFrame{
         loginButton.setText("Change Password");
         setMinimumSize(new Dimension(450, 220));
         setTitle("Change Password");
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     @Override

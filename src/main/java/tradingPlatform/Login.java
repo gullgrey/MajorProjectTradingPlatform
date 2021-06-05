@@ -9,6 +9,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Set;
 
+/**
+ * todo
+ */
 public class Login {
 
     private TradingPlatformDataSource dataSource;
