@@ -106,9 +106,10 @@ public class NetworkServer {
             case ADD_ASSET -> {
                 final String organisation = (String) inputStream.readObject();
                 final String asset = (String) inputStream.readObject();
-                final int amount = inputStream.readInt();
+                final String amount = (String) inputStream.readObject();
+                int newAmount = Integer.parseInt(amount);
                 synchronized (database) {
-                    int rowsAffected = database.addAsset(organisation, asset, amount);
+                    int rowsAffected = database.addAsset(organisation, asset, newAmount);
                     outputStream.writeInt(rowsAffected);
                 }
                 outputStream.flush();
@@ -137,9 +138,10 @@ public class NetworkServer {
             case UPDATE_ASSET_AMOUNT -> {
                 final String organisation = (String) inputStream.readObject();
                 final String asset = (String) inputStream.readObject();
-                final int amount = inputStream.readInt();
+                final String amount = (String) inputStream.readObject();
+                int newAmount = Integer.parseInt(amount);
                 synchronized (database) {
-                    int rowsAffected = database.updateAssetAmount(organisation, asset, amount);
+                    int rowsAffected = database.updateAssetAmount(organisation, asset, newAmount);
                     outputStream.writeInt(rowsAffected);
                 }
                 outputStream.flush();
@@ -156,9 +158,10 @@ public class NetworkServer {
 
             case UPDATE_CREDITS -> {
                 final String organisation = (String) inputStream.readObject();
-                final int credits = inputStream.readInt();
+                final String credits = (String) inputStream.readObject();
+                int newCredits = Integer.parseInt(credits);
                 synchronized (database) {
-                    int rowsAffected = database.updateCredits(organisation, credits);
+                    int rowsAffected = database.updateCredits(organisation, newCredits);
                     outputStream.writeInt(rowsAffected);
                 }
                 outputStream.flush();
@@ -252,9 +255,10 @@ public class NetworkServer {
             }
 
             case GET_ORDER -> {
-                final int idx = inputStream.readInt();
+                final String idx = (String) inputStream.readObject();
+                int newId = Integer.parseInt(idx);
                 synchronized (database) {
-                    TPOrder order = database.getOrder(idx);
+                    TPOrder order = database.getOrder(newId);
                     outputStream.writeObject(order);
                 }
                 outputStream.flush();
@@ -278,9 +282,12 @@ public class NetworkServer {
                 TPOrder order = new TPOrder();
                 order.setOrganisation((String) inputStream.readObject());
                 order.setAsset((String) inputStream.readObject());
-                order.setAmount(inputStream.readInt());
-                order.setCredits(inputStream.readInt());
-                final boolean isBuyOrder = inputStream.readBoolean();
+                int newAmount = Integer.parseInt((String) inputStream.readObject());
+                order.setAmount(newAmount);
+                int newCredits = Integer.parseInt((String) inputStream.readObject());
+                order.setCredits(newCredits);
+                String isBuy = (String) inputStream.readObject();
+                final boolean isBuyOrder = isBuy.equals("true");
                 synchronized (database) {
                     int rowsAffected;
                     if (isBuyOrder) {
@@ -295,7 +302,7 @@ public class NetworkServer {
 
             case DELETE_ORDER -> {
                 NewTransaction newTransaction = new NewTransaction(database);
-                final int orderId = inputStream.readInt();
+                final int orderId = Integer.parseInt((String) inputStream.readObject());
                 synchronized (database) {
                     int rowsAffected = newTransaction.removeOrder(orderId);
                     outputStream.writeInt(rowsAffected);
@@ -307,8 +314,8 @@ public class NetworkServer {
                 final String buyingOrganisation = (String) inputStream.readObject();
                 final String sellingOrganisation = (String) inputStream.readObject();
                 final String asset = (String) inputStream.readObject();
-                final int amount = inputStream.readInt();
-                final int credits = inputStream.readInt();
+                final int amount = Integer.parseInt((String) inputStream.readObject());
+                final int credits = Integer.parseInt((String) inputStream.readObject());
                 synchronized (database) {
                     int rowsAffected = database.addTransaction(buyingOrganisation, sellingOrganisation,
                             asset, amount, credits);

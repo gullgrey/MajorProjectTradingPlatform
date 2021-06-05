@@ -195,11 +195,7 @@ public class ItAdministration extends TPUser {
      */
     public void updateAssetAmount(String organisation, String asset, int amount) throws UnknownDatabaseException, NullValueException, DuplicationException {
         int rowsAffected = dataSource.updateAssetAmount(organisation,asset,amount);
-        if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
-            String message = "Field entered already exists.";
-            throw new DuplicationException(message);
-        }
-        else if (rowsAffected == PlatformGlobals.getForeignKeyFail()) {
+        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
             String message = "Field entered doesn't exist.";
             throw new NullValueException(message);
         }

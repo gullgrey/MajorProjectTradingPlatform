@@ -1,7 +1,6 @@
 package main.java.GUI;
 
 import main.java.tradingPlatform.ItAdministration;
-import main.java.tradingPlatform.TPUser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,13 +13,13 @@ public class MainFrame extends JFrame implements ActionListener {
 
     Container contentPane = getContentPane();
     JPanel bottomPanel = new JPanel();
-    JPanel mainPanel = new JPanel();
+    JTabbedPane mainPane = new JTabbedPane();
 
     JTabbedPane userPane;
     JTabbedPane organisationPane;
-    JTabbedPane assetPane = new JTabbedPane();
-    JTabbedPane marketPane = new JTabbedPane();
-    JTabbedPane historyPane = new JTabbedPane();
+    JTabbedPane assetPane;
+    JTabbedPane marketPane;
+    JTabbedPane historyPane;
 
     JButton changePassword = new JButton("Change Password");
     JButton usersButton = new JButton("Users");
@@ -36,18 +35,15 @@ public class MainFrame extends JFrame implements ActionListener {
 
         setTitle("IT Administration");
         setVisible(true);
-        setMinimumSize(new Dimension(1400, 400));
+        setMinimumSize(new Dimension(1000, 500));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        setResizable(false);
     }
 
     private void setLayoutManager() {
-        contentPane.setLayout(new GridLayout(2, 0));
-        bottomPanel.setLayout(new GridLayout(0, 2));
-        bottomPanel.add(setButtonPanel());
-        bottomPanel.add(setMainPanel());
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.add(setDisplayPanel());
-        contentPane.add(bottomPanel);
+        contentPane.add(setMainPanel());
     }
 
     private JPanel setDisplayPanel() {
@@ -89,9 +85,13 @@ public class MainFrame extends JFrame implements ActionListener {
         return frame;
     }
 
-    private JPanel setMainPanel() {
-        mainPanel.add(organisationPane);
-        return mainPanel;
+    private JTabbedPane setMainPanel() {
+        mainPane.setMinimumSize(new Dimension(600, 300));
+        mainPane.addTab("Users", userPane);
+        mainPane.addTab("Organisations", organisationPane);
+        mainPane.addTab("Assets", assetPane);
+        mainPane.addTab("History", historyPane);
+        return mainPane;
     }
 
     private void setupPanes() {
@@ -100,9 +100,9 @@ public class MainFrame extends JFrame implements ActionListener {
 //            public void run() {
                 userPane = new UserPane(user);
                 organisationPane = new OrganisationPane(user);
-                setAssetPane();
+                assetPane = new AdminAssetPane(user);
                 setMarketPane();
-                setHistoryPane();
+                historyPane = new HistoryPanel(user);
 //            }
 //        });
 

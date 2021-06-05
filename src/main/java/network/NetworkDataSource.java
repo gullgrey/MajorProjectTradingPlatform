@@ -106,7 +106,8 @@ public class NetworkDataSource implements TradingPlatformDataSource {
         try {
             outputStream.writeObject(Command.UPDATE_CREDITS);
             outputStream.writeObject(organisation);
-            outputStream.writeInt(credits);
+            String newCredits = Integer.toString(credits);
+            outputStream.writeObject(newCredits);
             outputStream.flush();
 
             return inputStream.readInt();
@@ -139,7 +140,8 @@ public class NetworkDataSource implements TradingPlatformDataSource {
             outputStream.writeObject(Command.ADD_ASSET);
             outputStream.writeObject(organisation);
             outputStream.writeObject(asset);
-            outputStream.writeInt(amount);
+            String newAmount = Integer.toString(amount);
+            outputStream.writeObject(newAmount);
             outputStream.flush();
 
             return inputStream.readInt();
@@ -183,7 +185,8 @@ public class NetworkDataSource implements TradingPlatformDataSource {
             outputStream.writeObject(Command.UPDATE_ASSET_AMOUNT);
             outputStream.writeObject(organisation);
             outputStream.writeObject(asset);
-            outputStream.writeInt(amount);
+            String newAmount = Integer.toString(amount);
+            outputStream.writeObject(newAmount);
             outputStream.flush();
 
             return inputStream.readInt();
@@ -332,7 +335,8 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     public TPOrder getOrder(int idx) {
         try {
             outputStream.writeObject(Command.GET_ORDER);
-            outputStream.writeInt(idx);
+            String newId = Integer.toString(idx);
+            outputStream.writeObject(newId);
 
             outputStream.flush();
 
@@ -372,9 +376,17 @@ public class NetworkDataSource implements TradingPlatformDataSource {
             outputStream.writeObject(Command.ADD_ORDER);
             outputStream.writeObject(organisation);
             outputStream.writeObject(asset);
-            outputStream.writeInt(amount);
-            outputStream.writeInt(credits);
-            outputStream.writeBoolean(isBuyOrder);
+            String newAmount = Integer.toString(amount);
+            outputStream.writeObject(newAmount);
+            String newCredits = Integer.toString(credits);
+            outputStream.writeObject(newCredits);
+            String newType;
+            if (isBuyOrder) {
+                newType = "true";
+            } else {
+                newType = "false";
+            }
+            outputStream.writeObject(newType);
             outputStream.flush();
 
             return inputStream.readInt();
@@ -388,7 +400,8 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     public int deleteOrder(int idx) {
         try {
             outputStream.writeObject(Command.DELETE_ORDER);
-            outputStream.writeInt(idx);
+            String newId = Integer.toString(idx);
+            outputStream.writeObject(newId);
             outputStream.flush();
 
             return inputStream.readInt();
@@ -407,8 +420,10 @@ public class NetworkDataSource implements TradingPlatformDataSource {
             outputStream.writeObject(buyingOrganisation);
             outputStream.writeObject(sellingOrganisation);
             outputStream.writeObject(asset);
-            outputStream.writeInt(amount);
-            outputStream.writeInt(credits);
+            String newAmount = Integer.toString(amount);
+            outputStream.writeObject(newAmount);
+            String newCredits = Integer.toString(credits);
+            outputStream.writeObject(newCredits);
             outputStream.flush();
 
             return inputStream.readInt();

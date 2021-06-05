@@ -14,40 +14,42 @@ import java.util.Comparator;
 
 import static java.lang.Integer.parseInt;
 
-public class OrganisationPane extends JTabbedPane implements ActionListener {
+public class AdminAssetPane extends JTabbedPane implements ActionListener {
 
     ItAdministration user;
 
-    private String displayName = "Organisations";
+    private String displayName = "Assets";
 
     private JTextField addOrganisation;
     private JTextField removeOrganisation;
     private JTextField updateOrganisation;
-//    private JTextField organisation;
-    private JTextField addCredits;
-    private JTextField updateCredits;
+    private JTextField addAsset;
+    private JTextField removeAsset;
+    private JTextField updateAsset;
+    private JTextField addAmount;
+    private JTextField updateAmount;
 
-    private final JButton addButton = new JButton("Add Organisation");
-    private final JButton removeButton = new JButton("Remove Organisation");
-    private final JButton updateButton = new JButton("Update Credits");
+    private final JButton addButton = new JButton("Add Asset");
+    private final JButton removeButton = new JButton("Remove Asset");
+    private final JButton updateButton = new JButton("Update Asset");
 
-    public OrganisationPane(ItAdministration user) {
+    public AdminAssetPane(ItAdministration user) {
         this.user = user;
-        setOrganisationPane();
+        setUserPane();
         addActionEvent();
     }
 
-    private void setOrganisationPane(){
-        JPanel addOrganisationPanel = addOrganisationPanel();
-        JPanel removeUserPanel = removeOrganisationPanel();
-        JPanel updatePasswordPanel = updateOrganisationPanel();
+    private void setUserPane(){
+        JPanel addUserPanel = addUserPanel();
+        JPanel removeUserPanel = removeUserPanel();
+        JPanel updatePasswordPanel = updateUserPanel();
         //
-        addTab("Add", addOrganisationPanel);
+        addTab("Add", addUserPanel);
         addTab("Remove", removeUserPanel);
-        addTab("Update Credits", updatePasswordPanel);
+        addTab("Update Asset", updatePasswordPanel);
     }
 
-    private JPanel addOrganisationPanel() {
+    private JPanel addUserPanel() {
         JPanel addUser = new JPanel();
         addUser.setLayout(new BoxLayout(addUser, BoxLayout.X_AXIS));
         int horizontalStrut = 20;
@@ -60,7 +62,7 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
         return addUser;
     }
 
-    private JPanel removeOrganisationPanel() {
+    private JPanel removeUserPanel() {
         JPanel removeUser = new JPanel();
         removeUser.setLayout(new BoxLayout(removeUser, BoxLayout.X_AXIS));
         int horizontalStrut = 20;
@@ -73,7 +75,7 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
         return removeUser;
     }
 
-    private JPanel updateOrganisationPanel() {
+    private JPanel updateUserPanel() {
         JPanel updateUser = new JPanel();
         updateUser.setLayout(new BoxLayout(updateUser, BoxLayout.X_AXIS));
         int horizontalStrut = 20;
@@ -94,7 +96,7 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
         title.setFont(new Font("Arial", Font.BOLD, 20));;
         dataDisplay.add(title);
 
-        JTable userList = new JTable(user.getOrganisationList());
+        JTable userList = new JTable(user.getAssetList());
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(userList.getModel());
         sorter.setComparator(0, Comparator.naturalOrder());
@@ -110,6 +112,9 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
                 addOrganisation.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
                 removeOrganisation.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
                 updateOrganisation.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
+                addAsset.setText(userList.getValueAt(userList.getSelectedRow(), 1).toString());
+                removeAsset.setText(userList.getValueAt(userList.getSelectedRow(), 1).toString());
+                updateAsset.setText(userList.getValueAt(userList.getSelectedRow(), 1).toString());
             }
         });
 
@@ -142,10 +147,12 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
         layout.setAutoCreateContainerGaps(true);
 
         JLabel userLabel = new JLabel("Organisation");
-        JLabel passwordLabel = new JLabel("Credits");
+        JLabel organisationLabel = new JLabel("Asset");
+        JLabel passwordLabel = new JLabel("Amount");
 
         addOrganisation = new JTextField(20);
-        addCredits = new JTextField(20);
+        addAsset = new JTextField(20);
+        addAmount = new JTextField(20);
 
         // Create a sequential group for the horizontal axis.
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
@@ -153,9 +160,9 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
         // The sequential group in turn contains two parallel groups.
         // One parallel group contains the labels, the other the text fields.
         hGroup.addGroup(layout.createParallelGroup().addComponent(userLabel)
-                .addComponent(passwordLabel));
+                .addComponent(organisationLabel).addComponent(passwordLabel));
         hGroup.addGroup(layout.createParallelGroup().addComponent(addOrganisation)
-                .addComponent(addCredits));
+                .addComponent(addAsset).addComponent(addAmount));
         layout.setHorizontalGroup(hGroup);
 
         // Create a sequential group for the vertical axis.
@@ -165,7 +172,9 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(userLabel).addComponent(addOrganisation));
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(passwordLabel).addComponent(addCredits));
+                .addComponent(organisationLabel).addComponent(addAsset));
+        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(passwordLabel).addComponent(addAmount));
 
         layout.setVerticalGroup(vGroup);
 
@@ -189,17 +198,19 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
         // the edge of the container and the container.
         layout.setAutoCreateContainerGaps(true);
 
-        JLabel userLabel = new JLabel("Organisation");
+        JLabel organisationLabel = new JLabel("Organisation");
+        JLabel assetLabel = new JLabel("Asset");
 
         removeOrganisation = new JTextField(20);
+        removeAsset = new JTextField(20);
 
         // Create a sequential group for the horizontal axis.
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
 
         // The sequential group in turn contains two parallel groups.
         // One parallel group contains the labels, the other the text fields.
-        hGroup.addGroup(layout.createParallelGroup().addComponent(userLabel));
-        hGroup.addGroup(layout.createParallelGroup().addComponent(removeOrganisation));
+        hGroup.addGroup(layout.createParallelGroup().addComponent(organisationLabel).addComponent(assetLabel));
+        hGroup.addGroup(layout.createParallelGroup().addComponent(removeOrganisation).addComponent(removeAsset));
         layout.setHorizontalGroup(hGroup);
 
         // Create a sequential group for the vertical axis.
@@ -207,7 +218,9 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
 
 
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(userLabel).addComponent(removeOrganisation));
+                .addComponent(organisationLabel).addComponent(removeOrganisation));
+        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(assetLabel).addComponent(removeAsset));
 
         layout.setVerticalGroup(vGroup);
 
@@ -231,21 +244,23 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
         // the edge of the container and the container.
         layout.setAutoCreateContainerGaps(true);
 
-        JLabel userLabel = new JLabel("Organisation");
-        JLabel passwordLabel = new JLabel("Credits");
+        JLabel organisationLabel = new JLabel("Organisation");
+        JLabel assetLabel = new JLabel("Asset");
+        JLabel amountLabel = new JLabel("Amount");
 
         updateOrganisation = new JTextField(20);
-        updateCredits = new JTextField(20);
+        updateAsset = new JTextField(20);
+        updateAmount = new JTextField(20);
 
         // Create a sequential group for the horizontal axis.
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
 
         // The sequential group in turn contains two parallel groups.
         // One parallel group contains the labels, the other the text fields.
-        hGroup.addGroup(layout.createParallelGroup().addComponent(userLabel)
-                .addComponent(passwordLabel));
+        hGroup.addGroup(layout.createParallelGroup().addComponent(organisationLabel)
+                .addComponent(assetLabel).addComponent(amountLabel));
         hGroup.addGroup(layout.createParallelGroup().addComponent(updateOrganisation)
-                .addComponent(updateCredits));
+                .addComponent(updateAsset).addComponent(updateAmount));
         layout.setHorizontalGroup(hGroup);
 
         // Create a sequential group for the vertical axis.
@@ -253,9 +268,11 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
 
 
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(userLabel).addComponent(updateOrganisation));
+                .addComponent(organisationLabel).addComponent(updateOrganisation));
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(passwordLabel).addComponent(updateCredits));
+                .addComponent(assetLabel).addComponent(updateAsset));
+        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(amountLabel).addComponent(updateAmount));
 
         layout.setVerticalGroup(vGroup);
 
@@ -271,7 +288,7 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
         addButton.addActionListener(this);
         removeButton.addActionListener(this);
         updateButton.addActionListener(this);
-        ChangeListener changeListener = changeEvent -> user.refreshOrganisations();
+        ChangeListener changeListener = changeEvent -> user.refreshAssets();
         this.addChangeListener(changeListener);
     }
 
@@ -281,24 +298,26 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
             if (e.getSource() == addButton) {
 
                 try {
-                    int credits = parseInt(addCredits.getText());
-                    user.addOrganisation(addOrganisation.getText(), credits);
+                    int credits = parseInt(addAmount.getText());
+                    user.addAsset(addOrganisation.getText(), addAsset.getText(), credits);
 
                 } catch (NumberFormatException error) {
-                    String message = "Credits must be an integer.";
+                    String message = "Amount must be an integer.";
                     throw new InvalidValueException(message);
                 }
 
             } else if (e.getSource() == removeButton) {
-                user.removeOrganisation(removeOrganisation.getText());
+
+                user.removeAsset(removeOrganisation.getText(), removeAsset.getText());
 
             } else if (e.getSource() == updateButton) {
 
                 try {
-                    int credits = parseInt(updateCredits.getText());
-                    user.updateCreditAmount(updateOrganisation.getText(), credits);
+                    int credits = parseInt(updateAmount.getText());
+                    user.updateAssetAmount(updateOrganisation.getText(), updateAsset.getText(), credits);
+
                 } catch (NumberFormatException error) {
-                    String message = "Credits must be an integer.";
+                    String message = "Amount must be an integer.";
                     throw new InvalidValueException(message);
                 }
 
@@ -307,7 +326,7 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
             JOptionPane.showMessageDialog(this, error.getMessage(),
                     error.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
         }
-        user.refreshOrganisations();
+        user.refreshAssets();
 
 
     }
