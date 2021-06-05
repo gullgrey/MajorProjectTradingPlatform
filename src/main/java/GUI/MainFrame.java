@@ -3,6 +3,7 @@ package main.java.GUI;
 import main.java.tradingPlatform.ItAdministration;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +33,7 @@ public class MainFrame extends JFrame implements ActionListener {
         this.user = user;
         setupPanes();
         setLayoutManager();
+        addActionEvent();
 
         setTitle("IT Administration");
         setVisible(true);
@@ -92,6 +94,7 @@ public class MainFrame extends JFrame implements ActionListener {
         mainPane.addTab("Assets", assetPane);
         mainPane.addTab("Market", marketPane);
         mainPane.addTab("History", historyPane);
+
         return mainPane;
     }
 
@@ -103,7 +106,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 organisationPane = new OrganisationPane(user);
                 assetPane = new AdminAssetPane(user);
                 marketPane = new MarketPane(user);
-                historyPane = new HistoryPanel(user);
+                historyPane = new HistoryPane(user);
 //            }
 //        });
 
@@ -128,6 +131,11 @@ public class MainFrame extends JFrame implements ActionListener {
 
     private void setHistoryPane(){
 
+    }
+
+    private void addActionEvent() {
+        ChangeListener changeListener = changeEvent -> user.refreshAll();
+        mainPane.addChangeListener(changeListener);
     }
 
     @Override

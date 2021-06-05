@@ -248,16 +248,12 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try {
             ResultSet assetData = getAssets.executeQuery();
             while(assetData.next()) {
-
                 Asset asset = new Asset();
-                String org = assetData.getString("organisation_name");
-                System.out.println(org);
-                asset.setOrganisation(org);
+                asset.setOrganisation(assetData.getString("organisation_name"));
                 asset.setAsset(assetData.getString("asset_name"));
                 asset.setAmount(assetData.getInt("amount"));
                 assetSet.add(asset);
             }
-            System.out.println(assetSet.size());
         } catch (SQLException e) {
             return null;
         }

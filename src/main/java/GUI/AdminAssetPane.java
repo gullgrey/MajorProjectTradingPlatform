@@ -92,9 +92,14 @@ public class AdminAssetPane extends JTabbedPane implements ActionListener {
 
         JPanel dataDisplay = new JPanel();
         dataDisplay.setLayout(new BoxLayout(dataDisplay, BoxLayout.Y_AXIS));
+
+        JPanel pad = new JPanel();
+        pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
         JLabel title = new JLabel(displayName);
-        title.setFont(new Font("Arial", Font.BOLD, 20));;
-        dataDisplay.add(title);
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+
+        pad.add(title);
+        dataDisplay.add(pad);
 
         JTable userList = new JTable(user.getAssetList());
 

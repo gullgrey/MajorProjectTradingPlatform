@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class HistoryPanel extends JTabbedPane implements ActionListener {
+public class HistoryPane extends JTabbedPane implements ActionListener {
 
     TPUser user;
 
@@ -25,8 +25,9 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
     private TableRowSorter<TableModel> sorter;
 
     private final JButton filterButton = new JButton("Filter");
+    private final JButton clear = new JButton("Clear");
 
-    public HistoryPanel(TPUser user) {
+    public HistoryPane(TPUser user) {
         this.user = user;
         setUserPane();
         addActionEvent();
@@ -55,9 +56,14 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
 
         JPanel dataDisplay = new JPanel();
         dataDisplay.setLayout(new BoxLayout(dataDisplay, BoxLayout.Y_AXIS));
+
+        JPanel pad = new JPanel();
+        pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
         JLabel title = new JLabel(displayName);
         title.setFont(new Font("Arial", Font.BOLD, 20));
-        dataDisplay.add(title);
+
+        pad.add(title);
+        dataDisplay.add(pad);
 
         JTable userList = new JTable(user.getTransactionList());
 
@@ -140,6 +146,8 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
 
         panel.add(inputPanel);
         panel.add(filterButton);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(clear);
 
         return panel;
     }
@@ -148,8 +156,28 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
 
     private void addActionEvent() {
         filterButton.addActionListener(this);
+        clear.addActionListener(this);
         ChangeListener changeListener = changeEvent -> user.refreshTransactions();
         this.addChangeListener(changeListener);
+    }
+
+    private void filterHistory() {
+        RowFilter<Object, Object> buyOrg;
+        RowFilter<Object, Object> sellOrg;
+        RowFilter<Object, Object> assets;
+        ArrayList<RowFilter<Object,Object>> andFilters = new ArrayList<>();
+        //If current expression doesn't parse, don't update.
+        try {
+            buyOrg = RowFilter.regexFilter(buyOrganisation.getText(),1);
+            sellOrg = RowFilter.regexFilter(sellOrganisation.getText(),2);
+            assets = RowFilter.regexFilter(assetFilter.getText(),3);
+            andFilters.add(buyOrg);
+            andFilters.add(sellOrg);
+            andFilters.add(assets);
+        } catch (java.util.regex.PatternSyntaxException error) {
+            return;
+        }
+        sorter.setRowFilter(RowFilter.andFilter(andFilters));
     }
 
     @Override
@@ -157,23 +185,13 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
 
         if (e.getSource() == filterButton) {
 
-            RowFilter<Object, Object> buyOrg;
-            RowFilter<Object, Object> sellOrg;
-            RowFilter<Object, Object> assets;
-            ArrayList<RowFilter<Object,Object>> andFilters = new ArrayList<>();
-            //If current expression doesn't parse, don't update.
-            try {
-                buyOrg = RowFilter.regexFilter(buyOrganisation.getText(),1);
-                sellOrg = RowFilter.regexFilter(sellOrganisation.getText(),2);
-                assets = RowFilter.regexFilter(assetFilter.getText(),3);
-                andFilters.add(buyOrg);
-                andFilters.add(sellOrg);
-                andFilters.add(assets);
-            } catch (java.util.regex.PatternSyntaxException error) {
-                return;
-            }
-            sorter.setRowFilter(RowFilter.andFilter(andFilters));
+            filterHistory();
+        } if (e.getSource() == clear) {
+           buyOrganisation.setText("");
+           sellOrganisation.setText("");
+           assetFilter.setText("");
 
+           filterHistory();
         }
         user.refreshTransactions();
     }

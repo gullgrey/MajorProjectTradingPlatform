@@ -76,9 +76,14 @@ public class MarketPane extends JTabbedPane implements ActionListener {
 
         JPanel dataDisplay = new JPanel();
         dataDisplay.setLayout(new BoxLayout(dataDisplay, BoxLayout.Y_AXIS));
+
+        JPanel pad = new JPanel();
+        pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
         JLabel title = new JLabel(buyName);
         title.setFont(new Font("Arial", Font.BOLD, 20));
-        dataDisplay.add(title);
+
+        pad.add(title);
+        dataDisplay.add(pad);
 
         JTable userList = new JTable(user.getBuyOrderList());
 
@@ -116,9 +121,14 @@ public class MarketPane extends JTabbedPane implements ActionListener {
 
         JPanel dataDisplay = new JPanel();
         dataDisplay.setLayout(new BoxLayout(dataDisplay, BoxLayout.Y_AXIS));
+
+        JPanel pad = new JPanel();
+        pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
         JLabel title = new JLabel(sellName);
         title.setFont(new Font("Arial", Font.BOLD, 20));
-        dataDisplay.add(title);
+
+        pad.add(title);
+        dataDisplay.add(pad);
 
         JTable userList = new JTable(user.getSellOrderList());
 

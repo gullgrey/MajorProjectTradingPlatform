@@ -87,8 +87,13 @@ public class Asset implements Comparable<Asset>, Serializable {
      */
     @Override
     public int compareTo(Asset asset) {
-        return Comparator.comparing(Asset::getOrganisation)
-                .thenComparing(Asset::getAsset)
-                .compare(this, asset);
+        if (organisation == null) {
+            return this.getAsset().compareTo(asset.getAsset());
+        } else {
+            return Comparator.comparing(Asset::getOrganisation)
+                    .thenComparing(Asset::getAsset)
+                    .compare(this, asset);
+        }
+
     }
 }
