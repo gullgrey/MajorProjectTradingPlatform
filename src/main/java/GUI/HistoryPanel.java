@@ -19,7 +19,7 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
     private String displayName = "History";
 
     private JTextField buyOrganisation;
-    private JTextField addAsset;
+    private JTextField sellOrganisation;
     private JTextField assetFilter;
 
     private TableRowSorter<TableModel> sorter;
@@ -56,7 +56,7 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
         JPanel dataDisplay = new JPanel();
         dataDisplay.setLayout(new BoxLayout(dataDisplay, BoxLayout.Y_AXIS));
         JLabel title = new JLabel(displayName);
-        title.setFont(new Font("Arial", Font.BOLD, 20));;
+        title.setFont(new Font("Arial", Font.BOLD, 20));
         dataDisplay.add(title);
 
         JTable userList = new JTable(user.getTransactionList());
@@ -73,7 +73,7 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
 
             if (!event.getValueIsAdjusting() && userList.getSelectedRow() > -1) {
                 buyOrganisation.setText(userList.getValueAt(userList.getSelectedRow(), 1).toString());
-                addAsset.setText(userList.getValueAt(userList.getSelectedRow(), 2).toString());
+                sellOrganisation.setText(userList.getValueAt(userList.getSelectedRow(), 2).toString());
                 assetFilter.setText(userList.getValueAt(userList.getSelectedRow(), 3).toString());
             }
         });
@@ -111,7 +111,7 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
         JLabel passwordLabel = new JLabel("Asset");
 
         buyOrganisation = new JTextField(20);
-        addAsset = new JTextField(20);
+        sellOrganisation = new JTextField(20);
         assetFilter = new JTextField(20);
 
         // Create a sequential group for the horizontal axis.
@@ -122,7 +122,7 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
         hGroup.addGroup(layout.createParallelGroup().addComponent(buyLabel)
                 .addComponent(sellLabel).addComponent(passwordLabel));
         hGroup.addGroup(layout.createParallelGroup().addComponent(buyOrganisation)
-                .addComponent(addAsset).addComponent(assetFilter));
+                .addComponent(sellOrganisation).addComponent(assetFilter));
         layout.setHorizontalGroup(hGroup);
 
         // Create a sequential group for the vertical axis.
@@ -132,7 +132,7 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(buyLabel).addComponent(buyOrganisation));
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(sellLabel).addComponent(addAsset));
+                .addComponent(sellLabel).addComponent(sellOrganisation));
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(passwordLabel).addComponent(assetFilter));
 
@@ -157,18 +157,24 @@ public class HistoryPanel extends JTabbedPane implements ActionListener {
 
         if (e.getSource() == filterButton) {
 
-            RowFilter<TableModel, Object> rf = null;
+            RowFilter<Object, Object> buyOrg;
+            RowFilter<Object, Object> sellOrg;
+            RowFilter<Object, Object> assets;
+            ArrayList<RowFilter<Object,Object>> andFilters = new ArrayList<>();
             //If current expression doesn't parse, don't update.
             try {
-                rf = RowFilter.regexFilter(assetFilter.getText(),3);
+                buyOrg = RowFilter.regexFilter(buyOrganisation.getText(),1);
+                sellOrg = RowFilter.regexFilter(sellOrganisation.getText(),2);
+                assets = RowFilter.regexFilter(assetFilter.getText(),3);
+                andFilters.add(buyOrg);
+                andFilters.add(sellOrg);
+                andFilters.add(assets);
             } catch (java.util.regex.PatternSyntaxException error) {
                 return;
             }
-            sorter.setRowFilter(rf);
+            sorter.setRowFilter(RowFilter.andFilter(andFilters));
 
         }
         user.refreshTransactions();
-
-
     }
 }

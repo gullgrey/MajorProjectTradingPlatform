@@ -90,6 +90,7 @@ public class MainFrame extends JFrame implements ActionListener {
         mainPane.addTab("Users", userPane);
         mainPane.addTab("Organisations", organisationPane);
         mainPane.addTab("Assets", assetPane);
+        mainPane.addTab("Market", marketPane);
         mainPane.addTab("History", historyPane);
         return mainPane;
     }
@@ -101,7 +102,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 userPane = new UserPane(user);
                 organisationPane = new OrganisationPane(user);
                 assetPane = new AdminAssetPane(user);
-                setMarketPane();
+                marketPane = new MarketPane(user);
                 historyPane = new HistoryPanel(user);
 //            }
 //        });

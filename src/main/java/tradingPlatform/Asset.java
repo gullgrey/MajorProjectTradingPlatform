@@ -1,6 +1,7 @@
 package main.java.tradingPlatform;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Retrieves and sets information associated with assets.
@@ -86,6 +87,8 @@ public class Asset implements Comparable<Asset>, Serializable {
      */
     @Override
     public int compareTo(Asset asset) {
-        return this.getAsset().compareTo(asset.getAsset());
+        return Comparator.comparing(Asset::getOrganisation)
+                .thenComparing(Asset::getAsset)
+                .compare(this, asset);
     }
 }
