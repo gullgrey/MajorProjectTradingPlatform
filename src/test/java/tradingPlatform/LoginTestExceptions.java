@@ -1,8 +1,5 @@
 package test.java.tradingPlatform;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import main.java.database.TradingPlatformDataSource;
 import main.java.network.NetworkDataSource;
 import main.java.tradingPlatform.*;
@@ -11,12 +8,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
-public class LoginTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    private static final String propsFile = "src/test/resources/maria.props";
+public class LoginTestExceptions {
     private static TradingPlatformDataSource dataSource;
     private static final String adminUser = "ADMIN";
     private static final String adminUser1 = "ADMIN1";
@@ -25,7 +21,10 @@ public class LoginTest {
     private static final String setTestPassword = "abc123";
     private static final String setTestOrganisation = "Microsoft";
     private static final int testOrganisationCredits = 1000;
+    private static final String wrongTestName = "Tim";
+    private static final String wrongTestPassword = "zyx987";
 
+    private static final String blankString = "";
 
     @BeforeAll
     public static void setupTestEnvironment() throws DuplicationException, UnknownDatabaseException, NullValueException, InvalidValueException {
@@ -37,29 +36,56 @@ public class LoginTest {
     }
 
     /**
-     * Testing a valid admin user logging in.
+     * Testing Username and password that is not on the database.
      * @throws UnknownDatabaseException
      * @throws NullValueException
      */
     @Test
-    public void TestIsAdminLogginIn() throws UnknownDatabaseException, NullValueException {
-        Login lg = new Login(adminUser, adminPassword, dataSource);
-        boolean IsLoginValid = lg.checkSuppliedCredentials();
-        assertTrue(IsLoginValid);
+    public void testInvalidUser() throws UnknownDatabaseException, NullValueException {
+        assertThrows(NullValueException.class, () -> {
+            Login lg = new Login(wrongTestName, wrongTestPassword, dataSource);
+            lg.checkSuppliedCredentials();
+        });
     }
 
     /**
-     * Testing a valid admin user logging in.
+     * Testing a blank Username.
      * @throws UnknownDatabaseException
      * @throws NullValueException
      */
     @Test
-    public void testIsUserLoggingIn() throws UnknownDatabaseException, NullValueException {
-        Login lg = new Login(setTestName, setTestPassword, dataSource);
-        boolean IsLoginValid = lg.checkSuppliedCredentials();
-        assertFalse(IsLoginValid);
+    public void testblankUsernameOnLoggingIn() throws UnknownDatabaseException, NullValueException {
+        assertThrows(NullValueException.class, () -> {
+            Login lg = new Login(blankString, setTestPassword, dataSource);
+            lg.checkSuppliedCredentials();
+        });
     }
 
+    /**
+     * Testing a blank password.
+     * @throws UnknownDatabaseException
+     * @throws NullValueException
+     */
+    @Test
+    public void testblankPasswordOnLoggingIn() throws UnknownDatabaseException, NullValueException {
+        assertThrows(NullValueException.class, () -> {
+            Login lg = new Login(setTestName, blankString, dataSource);
+            lg.checkSuppliedCredentials();
+        });
+    }
+
+    /**
+     * Testing both blank username and password.
+     * @throws UnknownDatabaseException
+     * @throws NullValueException
+     */
+    @Test
+    public void testblankUsernameAndPasswordOnLoggingIn() throws UnknownDatabaseException, NullValueException {
+        assertThrows(NullValueException.class, () -> {
+            Login lg = new Login(blankString, blankString, dataSource);
+            lg.checkSuppliedCredentials();
+        });
+    }
 
     /**
      * Destroys the database connection after every test.
@@ -77,5 +103,4 @@ public class LoginTest {
     static void resetDatabase(){
         dataSource.deleteAll();
     }
-
 }

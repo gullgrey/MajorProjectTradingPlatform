@@ -164,17 +164,6 @@ public class NewTransactionTest {
         assertTrue(newOrders.isEmpty());
     }
 
-    @Test
-    public void testWhenDealIsPresent() { //todo delete this
-        buyOrder.setAmount(60);
-        buyOrder.setCredits(assetPriceHigh);
-        newTransaction.addBuyOrder(buyOrder);
-
-//        sellOrder.setAmount(40);
-//        newTransaction.addSellOrder(sellOrder);
-    }
-
-
 
     @AfterAll
     static void resetDatabase() {

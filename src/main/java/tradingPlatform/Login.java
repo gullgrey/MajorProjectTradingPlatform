@@ -18,7 +18,6 @@ public class Login {
     private String organisationalUnit;
     private Boolean isAdmin;
 
-
     /**
      * The constructor sets the Username and Password that the current user has provided.
      * Runs methods checkSuppliedCredentials and getUserFromDB.
