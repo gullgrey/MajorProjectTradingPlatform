@@ -51,13 +51,4 @@ public class DBConnection {
         return connection;
     }
 
-//    /**
-//     * Retrieves the connection that is initialised in the constructor.
-//     *
-//     * @return a connection instance of the database.
-//     */
-//    public Connection getConnection() {
-//        return connection;
-//    }
-
 }

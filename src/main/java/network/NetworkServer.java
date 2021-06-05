@@ -7,7 +7,6 @@ import main.java.tradingPlatform.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -18,9 +17,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * todo
+ */
 public class NetworkServer {
 
-    //Todo make from config file
     private static int PORT;
 
     //This is the timeout in between accepting clients, not reading from the socket itself.
@@ -36,6 +37,26 @@ public class NetworkServer {
     public NetworkServer() throws IOException, SQLException {
         initializeConfigFile(); // Read from the config file
         database = new JDBCTradingPlatformDataSource(propsFile);
+    }
+
+    /**
+     * Method used to read the server information from a configuration file.
+     */
+    private void initializeConfigFile(){
+        try{
+            ConfigReader configReader = new ConfigReader();
+            Set<String> configSet = configReader.readServerFile();
+            String[] array = new String[5];
+            array = configSet.toArray(array);
+            SOCKET_ACCEPT_TIMEOUT = parseInt(array[0]);
+            SOCKET_READ_TIMEOUT = parseInt(array[1]);
+            propsFile = array[2];
+            PORT = parseInt(array[3]);
+
+        }catch (IOException e){
+
+            System.out.println("Config File problem.");
+        }
     }
 
     /**
@@ -59,28 +80,8 @@ public class NetworkServer {
             }
         } catch (IOException | ClassCastException | ClassNotFoundException e) {
             e.printStackTrace();
-            //Todo change
+
             System.out.printf("Connection %s closed%n", socket.toString());
-        }
-    }
-
-    /**
-     * Method used to read the server information from a configuration file.
-     */
-    private void initializeConfigFile(){
-        try{
-            ConfigReader configReader = new ConfigReader();
-            Set<String> configSet = configReader.readServerFile();
-            String[] array = new String[5];
-            array = configSet.toArray(array);
-            SOCKET_ACCEPT_TIMEOUT = parseInt(array[0]);
-            SOCKET_READ_TIMEOUT = parseInt(array[1]);
-            propsFile = array[2];
-            PORT = parseInt(array[3]);
-
-        }catch (IOException e){
-            //TODO handle this better
-            System.out.println("Config File problem.");
         }
     }
 
@@ -373,7 +374,7 @@ public class NetworkServer {
                         try {
                             handleConnection(socket);
                         } catch (SQLException throwables) {
-                            //todo change
+
                             throwables.printStackTrace();
                         }
                     });
@@ -382,13 +383,12 @@ public class NetworkServer {
                     // Do nothing. A timeout is normal- we just want the socket to
                     // occasionally timeout so we can check if the networkExercise.server is still running
                 } catch (Exception e) {
-                    //todo change
+
                     e.printStackTrace();
                 }
             }
         } catch (IOException e) {
-            //todo change
-            // If we get an error starting up, show an error dialog then exit
+
             e.printStackTrace();
             System.exit(1);
         }

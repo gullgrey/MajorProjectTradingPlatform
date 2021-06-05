@@ -7,9 +7,13 @@ import main.java.tradingPlatform.UnknownDatabaseException;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 import static java.lang.Integer.parseInt;
 
@@ -86,7 +90,7 @@ public class OrdersPane extends JTabbedPane implements ActionListener {
         addUser.setLayout(new BoxLayout(addUser, BoxLayout.X_AXIS));
         int horizontalStrut = 20;
         addUser.add(Box.createVerticalStrut(horizontalStrut));
-        addUser.add(makeBuyListPane());
+        addUser.add(makeBuyRemoveScroll());
         addUser.add(Box.createVerticalStrut(horizontalStrut));
         addUser.add(makeBuyRemovePanel());
         addUser.add(Box.createVerticalStrut(horizontalStrut));
@@ -99,7 +103,7 @@ public class OrdersPane extends JTabbedPane implements ActionListener {
         addUser.setLayout(new BoxLayout(addUser, BoxLayout.X_AXIS));
         int horizontalStrut = 20;
         addUser.add(Box.createVerticalStrut(horizontalStrut));
-        addUser.add(makeSellListPane());
+        addUser.add(makeSellRemoveScroll());
         addUser.add(Box.createVerticalStrut(horizontalStrut));
         addUser.add(makeSellRemovePanel());
         addUser.add(Box.createVerticalStrut(horizontalStrut));
@@ -125,7 +129,6 @@ public class OrdersPane extends JTabbedPane implements ActionListener {
         userList.getSelectionModel().addListSelectionListener(event -> {
 
             if (!event.getValueIsAdjusting() && userList.getSelectedRow() > -1) {
-                buyIdField.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
                 sellAssetField.setText(userList.getValueAt(userList.getSelectedRow(), 2).toString());
                 sellAmountField.setText(userList.getValueAt(userList.getSelectedRow(), 3).toString());
                 sellCreditsField.setText(userList.getValueAt(userList.getSelectedRow(), 4).toString());
@@ -164,10 +167,99 @@ public class OrdersPane extends JTabbedPane implements ActionListener {
         userList.getSelectionModel().addListSelectionListener(event -> {
 
             if (!event.getValueIsAdjusting() && userList.getSelectedRow() > -1) {
-                sellIdField.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
                 buyAssetField.setText(userList.getValueAt(userList.getSelectedRow(), 2).toString());
                 buyAmountField.setText(userList.getValueAt(userList.getSelectedRow(), 3).toString());
                 buyCreditsField.setText(userList.getValueAt(userList.getSelectedRow(), 4).toString());
+            }
+        });
+
+        JScrollPane scroller = new JScrollPane(userList);
+        scroller.setViewportView(userList);
+        scroller
+                .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroller
+                .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scroller.setMinimumSize(new Dimension(tableWidth, 150));
+        scroller.setPreferredSize(new Dimension(tableWidth, 150));
+        scroller.setMaximumSize(new Dimension(tableWidth, 200));
+
+        dataDisplay.add(scroller);
+        return dataDisplay;
+    }
+
+    private JPanel makeBuyRemoveScroll() {
+
+        JPanel dataDisplay = new JPanel();
+        dataDisplay.setLayout(new BoxLayout(dataDisplay, BoxLayout.Y_AXIS));
+
+        JPanel pad = new JPanel();
+        pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
+        JLabel title = new JLabel(buyName);
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+
+        pad.add(title);
+        dataDisplay.add(pad);
+
+        JTable userList = new JTable(user.getBuyOrderList());
+
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(userList.getModel());
+        sorter.setComparator(0, Comparator.naturalOrder());
+        sorter.setSortsOnUpdates(true);
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        sorter.setSortKeys(sortKeys);
+        userList.setRowSorter(sorter);
+        sorter.setRowFilter(RowFilter.regexFilter(user.getOrganisation(), 1));
+
+        userList.getSelectionModel().addListSelectionListener(event -> {
+
+            if (!event.getValueIsAdjusting() && userList.getSelectedRow() > -1) {
+                buyIdField.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
+            }
+        });
+
+        JScrollPane scroller = new JScrollPane(userList);
+        scroller.setViewportView(userList);
+        scroller
+                .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroller
+                .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scroller.setMinimumSize(new Dimension(tableWidth, 150));
+        scroller.setPreferredSize(new Dimension(tableWidth, 150));
+        scroller.setMaximumSize(new Dimension(tableWidth, 200));
+
+        dataDisplay.add(scroller);
+        return dataDisplay;
+    }
+
+    private JPanel makeSellRemoveScroll() {
+
+        JPanel dataDisplay = new JPanel();
+        dataDisplay.setLayout(new BoxLayout(dataDisplay, BoxLayout.Y_AXIS));
+
+        JPanel pad = new JPanel();
+        pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
+        JLabel title = new JLabel(sellName);
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+
+        pad.add(title);
+        dataDisplay.add(pad);
+
+        JTable userList = new JTable(user.getSellOrderList());
+
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(userList.getModel());
+        sorter.setComparator(0, Comparator.naturalOrder());
+        sorter.setSortsOnUpdates(true);
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        sorter.setSortKeys(sortKeys);
+        userList.setRowSorter(sorter);
+        sorter.setRowFilter(RowFilter.regexFilter(user.getOrganisation(), 1));
+
+        userList.getSelectionModel().addListSelectionListener(event -> {
+
+            if (!event.getValueIsAdjusting() && userList.getSelectedRow() > -1) {
+                sellIdField.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
             }
         });
 
@@ -232,6 +324,13 @@ public class OrdersPane extends JTabbedPane implements ActionListener {
 
         layout.setVerticalGroup(vGroup);
 
+        JLabel title = new JLabel("Add Buy Order");
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+        panel.add(title);
+        panel.add(Box.createVerticalStrut(5));
+        panel.add(new JLabel("Select a Sell order from the list to auto fill or"));
+        panel.add(new JLabel("enter a new buy order manually."));
+
         panel.add(inputPanel);
         panel.add(buyOrderButton);
 
@@ -284,6 +383,13 @@ public class OrdersPane extends JTabbedPane implements ActionListener {
                 .addComponent(creditsLabel).addComponent(sellCreditsField));
 
         layout.setVerticalGroup(vGroup);
+
+        JLabel title = new JLabel("Add Sell Order");
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+        panel.add(title);
+        panel.add(Box.createVerticalStrut(5));
+        panel.add(new JLabel("Select a Buy order from the list to auto fill or"));
+        panel.add(new JLabel("enter a new sell order manually."));
 
         panel.add(inputPanel);
         panel.add(sellOrderButton);

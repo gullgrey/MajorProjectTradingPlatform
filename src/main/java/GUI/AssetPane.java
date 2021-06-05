@@ -58,6 +58,7 @@ public class AssetPane extends JTabbedPane{
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
         userList.setRowSorter(sorter);
+        sorter.setRowFilter(RowFilter.regexFilter(user.getOrganisation(), 0));
 
         JScrollPane scroller = new JScrollPane(userList);
         scroller.setViewportView(userList);
