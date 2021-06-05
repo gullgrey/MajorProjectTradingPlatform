@@ -42,7 +42,7 @@ public class LoginTest {
      * @throws NullValueException
      */
     @Test
-    public void TestIsAdminLogginIn() throws UnknownDatabaseException, NullValueException {
+    public void TestIsAdminLogginIn() throws UnknownDatabaseException, WrongCredentialException, NetworkException {
         Login lg = new Login(adminUser, adminPassword, dataSource);
         boolean IsLoginValid = lg.checkSuppliedCredentials();
         assertTrue(IsLoginValid);
@@ -54,7 +54,7 @@ public class LoginTest {
      * @throws NullValueException
      */
     @Test
-    public void testIsUserLoggingIn() throws UnknownDatabaseException, NullValueException {
+    public void testIsUserLoggingIn() throws UnknownDatabaseException, WrongCredentialException, NetworkException {
         Login lg = new Login(setTestName, setTestPassword, dataSource);
         boolean IsLoginValid = lg.checkSuppliedCredentials();
         assertFalse(IsLoginValid);

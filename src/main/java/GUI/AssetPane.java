@@ -13,6 +13,7 @@ public class AssetPane extends JTabbedPane{
     StandardUser user;
 
     private final String displayName = "Assets";
+    private final int tableWidth = 600;
 
     public AssetPane(StandardUser user) {
         this.user = user;
@@ -64,9 +65,9 @@ public class AssetPane extends JTabbedPane{
                 .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroller
                 .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scroller.setMinimumSize(new Dimension(200, 150));
-        scroller.setPreferredSize(new Dimension(250, 150));
-        scroller.setMaximumSize(new Dimension(250, 200));
+        scroller.setMinimumSize(new Dimension(tableWidth, 150));
+        scroller.setPreferredSize(new Dimension(tableWidth, 150));
+        scroller.setMaximumSize(new Dimension(tableWidth, 200));
 
         dataDisplay.add(scroller);
         return dataDisplay;

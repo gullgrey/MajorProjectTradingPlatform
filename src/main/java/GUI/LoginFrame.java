@@ -108,7 +108,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                 }
                 setVisible(false);
                 dispose();
-            } catch (NullValueException | UnknownDatabaseException error) {
+            } catch (UnknownDatabaseException | WrongCredentialException | NetworkException error) {
                 JOptionPane.showMessageDialog(this, error.getMessage(),
                         error.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
             }

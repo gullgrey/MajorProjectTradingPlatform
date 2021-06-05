@@ -53,27 +53,31 @@ public class Login {
     /**
      * Function is used to check if the user exists in the DB.
      * @return boolean of whether or not the user is an IT Administrator.
-     * @throws NullValueException specified field does not exist in the database.
      * @throws UnknownDatabaseException update to the database was unsuccessful.
+     * @throws WrongCredentialException
+     * @throws NetworkException
      */
-    public boolean checkSuppliedCredentials() throws NullValueException, UnknownDatabaseException {
+    public boolean checkSuppliedCredentials() throws UnknownDatabaseException, WrongCredentialException, NetworkException {
         try {
             String hashedPassword = HashPassword.hashedPassword(username, password);
             String checkPassword = dataSource.getUserPassword(username);
             String message = "Invalid Username or Password";
             if (checkPassword == null) {
 
-                throw new NullValueException(message);
+                throw new WrongCredentialException(message);
             }
             if (hashedPassword.equals(checkPassword)) {
                 getUserFromDB();
                 return isAdmin;
             } else {
-                throw new NullValueException(message);
+                throw new WrongCredentialException(message);
             }
 
         } catch (NoSuchAlgorithmException e) {
             throw new UnknownDatabaseException(PlatformGlobals.getUnknownSQLMessage());
+        } catch (NullPointerException e) {
+            String message = "Failed to connect to Server.";
+            throw new NetworkException(message);
         }
     }
 

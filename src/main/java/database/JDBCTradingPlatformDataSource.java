@@ -500,6 +500,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
             order.setId(order_data.getInt("order_id"));
             order.setOrganisation(order_data.getString("organisation_name"));
             order.setAsset(order_data.getString("asset_name"));
+            order.setCredits(order_data.getInt("credits"));
             order.setAmount(order_data.getInt("amount"));
             order.setDateTime(order_data.getString("date"));
             order.setType(order_data.getString("type"));

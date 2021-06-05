@@ -15,7 +15,6 @@ import java.util.Set;
  */
 public class NetworkDataSource implements TradingPlatformDataSource {
 
-    //TODO Make these an initialised input using config file.
     private static String HOSTNAME;
     private static int PORT;
 
@@ -65,8 +64,7 @@ public class NetworkDataSource implements TradingPlatformDataSource {
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
-            //TODO handle this better
-            System.out.println("Failed to connect to networkExercise.server");
+            System.out.println("Failed to connect to server");
         }
     }
 
@@ -82,8 +80,7 @@ public class NetworkDataSource implements TradingPlatformDataSource {
             HOSTNAME = array[1];
             PORT = Integer.parseInt(array[0]);
         }catch (IOException e){
-            //TODO handle this better
-            System.out.println("Config FIle problem.");
+            System.out.println("Config File problem.");
         }
     }
 

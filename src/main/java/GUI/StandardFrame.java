@@ -1,6 +1,5 @@
 package main.java.GUI;
 
-import main.java.tradingPlatform.ItAdministration;
 import main.java.tradingPlatform.StandardUser;
 import main.java.tradingPlatform.UnknownDatabaseException;
 
@@ -31,7 +30,7 @@ public class StandardFrame extends MainFrame{
 
     }
 
-    private void setCredits() {
+    protected void setCredits() {
         try {
             credits.setText(Integer.toString(user.getCredits()));
         } catch (UnknownDatabaseException error) {
@@ -43,7 +42,7 @@ public class StandardFrame extends MainFrame{
     @Override
     JTabbedPane setMainPanel() {
         mainPane.setMinimumSize(new Dimension(600, 300));
-        mainPane.addTab("Organisations", ordersPane);
+        mainPane.addTab("Orders", ordersPane);
         mainPane.addTab("Assets", assetPane);
         mainPane.addTab("Market", marketPane);
         mainPane.addTab("History", historyPane);
@@ -53,8 +52,8 @@ public class StandardFrame extends MainFrame{
 
     @Override
     void setupPanes() {
-        ordersPane = new JTabbedPane();//todo
-        assetPane = new AssetPane(user);//todo
+        ordersPane = new OrdersPane(user, this);
+        assetPane = new AssetPane(user);
         marketPane = new MarketPane(user);
         historyPane = new HistoryPane(user);
     }

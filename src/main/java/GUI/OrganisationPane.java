@@ -19,6 +19,7 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
     ItAdministration user;
 
     private String displayName = "Organisations";
+    private final int tableWidth = 600;
 
     private JTextField addOrganisation;
     private JTextField removeOrganisation;
@@ -124,9 +125,9 @@ public class OrganisationPane extends JTabbedPane implements ActionListener {
                 .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroller
                 .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scroller.setMinimumSize(new Dimension(200, 150));
-        scroller.setPreferredSize(new Dimension(250, 150));
-        scroller.setMaximumSize(new Dimension(250, 200));
+        scroller.setMinimumSize(new Dimension(tableWidth, 150));
+        scroller.setPreferredSize(new Dimension(tableWidth, 150));
+        scroller.setMaximumSize(new Dimension(tableWidth, 200));
 
         dataDisplay.add(scroller);
         return dataDisplay;

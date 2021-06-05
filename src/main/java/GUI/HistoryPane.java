@@ -17,6 +17,7 @@ public class HistoryPane extends JTabbedPane implements ActionListener {
     TPUser user;
 
     private String displayName = "History";
+    private final int tableWidth = 600;
 
     private JTextField buyOrganisation;
     private JTextField sellOrganisation;
@@ -90,9 +91,8 @@ public class HistoryPane extends JTabbedPane implements ActionListener {
                 .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroller
                 .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scroller.setMinimumSize(new Dimension(600, 150));
-        scroller.setPreferredSize(new Dimension(600, 150));
-        scroller.setMaximumSize(new Dimension(600, 200));
+        scroller.setMinimumSize(new Dimension(tableWidth, 150));
+        scroller.setPreferredSize(new Dimension(tableWidth, 150));
 
         dataDisplay.add(scroller);
         return dataDisplay;
