@@ -1,5 +1,9 @@
 package test.java.mockups;
 
+/**
+ * This class is used in the database mockup to store the users details so they can be
+ * accessed similarly to a database.
+ */
 public class UserMockup{
 
     private final String username;
@@ -10,7 +14,6 @@ public class UserMockup{
     private int assetAmount;
     private String isType;
     private int credits;
-
 
     public String getAsset() {
         return asset;
@@ -79,7 +82,6 @@ public class UserMockup{
         this.assetAmount = assetAmount;
         this.credits = credits;
         this.isType = isType;
-
     }
 
 

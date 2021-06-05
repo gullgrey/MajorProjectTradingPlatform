@@ -5,7 +5,11 @@ import main.java.tradingPlatform.*;
 
 import java.util.*;
 
-
+/**
+ * This class is responsible for mocking the database. It carries out similar functions and
+ * stores all the values associated with the database and database queries, except with mock
+ * Objects.
+ */
 public class DataSourceMockup implements TradingPlatformDataSource {
 
 
@@ -29,16 +33,21 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
 
     public DataSourceMockup() {
-        initiateDatabase();
-
+        initiateDatabase(); // Build the initial values for the database
     }
 
+    /**
+     * This method initializes the database and adds the default values into the data sets.
+     */
     public void initiateDatabase() {
         userMock.add(aUser);
         userOrganisationList.add(initialUser);
         organisationsList.add(org);
     }
 
+    /**
+     * @see TradingPlatformDataSource#getCredits(String)
+     */
     @Override
     public int getCredits(String organisation) {
         for (Organisation org : organisationsList) {
@@ -49,8 +58,12 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return 1;
     }
 
+    /**
+     * @see TradingPlatformDataSource#updateCredits(String, int)
+     */
     @Override
     public int updateCredits(String organisation, int credits) {
+
         boolean exists = false;
         //Check to see if the organisation exists (Foreign key constraint)
         for (Organisation org : organisationsList) {
@@ -77,6 +90,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return PlatformGlobals.getPrimaryKeyFail();
     }
 
+    /**
+     * @see TradingPlatformDataSource#getAssets()
+     */
     @Override
     public Set<Asset> getAssets() {
         Set<Asset> newSet = new TreeSet<>();
@@ -89,7 +105,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return newSet;
     }
 
-
+    /**
+     * @see TradingPlatformDataSource#addAsset(String, String, int)
+     */
     @Override
     public int addAsset(String organisation, String asset, int amount) {
 
@@ -119,6 +137,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return 1;
     }
 
+    /**
+     * @see TradingPlatformDataSource#getAssetAmount(String, String)
+     */
     @Override
     public int getAssetAmount(String organisation, String asset) {
 
@@ -155,6 +176,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return amount;
     }
 
+    /**
+     * @see TradingPlatformDataSource#deleteAsset(String, String)
+     */
     @Override
     public int deleteAsset(String organisation, String asset) {
 
@@ -192,6 +216,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return PlatformGlobals.getGeneralSQLFail();
     }
 
+    /**
+     * @see TradingPlatformDataSource#updateAssetAmount(String, String, int)
+     */
     @Override
     public int updateAssetAmount(String organisation, String asset, int amount) {
 
@@ -235,11 +262,17 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return PlatformGlobals.getGeneralSQLFail();
     }
 
+    /**
+     * @see TradingPlatformDataSource#getOrganisations()
+     */
     @Override
     public Set<Organisation> getOrganisations() {
         return organisationsList;
     }
 
+    /**
+     * @see TradingPlatformDataSource#getUserOrganisation(String)
+     */
     @Override
     public String getUserOrganisation(String username) {
         for (UserOrganisation aUser : userOrganisationList) {
@@ -250,6 +283,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return null;
     }
 
+    /**
+     * @see TradingPlatformDataSource#addOrganisation(String, int)
+     */
     @Override
     public int addOrganisation(String organisation, int credits) {
 
@@ -263,7 +299,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
                 break;
             }
         }
-
+        // Checks to see if the organisation exists (Primary key constraint)
         if (exists) {
             return PlatformGlobals.getPrimaryKeyFail();
         }
@@ -271,7 +307,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return 1;
     }
 
-
+    /**
+     * @see TradingPlatformDataSource#deleteOrganisation(String)
+     */
     @Override
     public int deleteOrganisation(String organisation) {
 
@@ -292,12 +330,17 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return 1;
     }
 
-
+    /**
+     * @see TradingPlatformDataSource#getUsers()
+     */
     @Override
     public Set<UserOrganisation> getUsers() {
         return userOrganisationList;
     }
 
+    /**
+     * @see TradingPlatformDataSource#getUserPassword(String)
+     */
     @Override
     public String getUserPassword(String username) {
 
@@ -310,7 +353,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return null;
     }
 
-
+    /**
+     * @see TradingPlatformDataSource#addUser(String, String, String, String)
+     */
     @Override
     public int addUser(String username, String password, String type, String organisation) {
 
@@ -346,6 +391,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return PlatformGlobals.getGeneralSQLFail();
     }
 
+    /**
+     * @see TradingPlatformDataSource#deleteUser(String)
+     */
     @Override
     public int deleteUser(String username) {
 
@@ -365,6 +413,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return PlatformGlobals.getForeignKeyFail();
     }
 
+    /**
+     * @see TradingPlatformDataSource#updatePassword(String, String)
+     */
     @Override
     public int updatePassword(String username, String password) {
 
@@ -390,17 +441,26 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return PlatformGlobals.getGeneralSQLFail();
     }
 
+    /**
+     * @see TradingPlatformDataSource#getOrder(int)
+     */
     @Override
     public TPOrder getOrder(int idx) {
         return new TPOrder();
     }
 
+    /**
+     * @see TradingPlatformDataSource#getOrders(boolean)
+     */
     @Override
     public Set<TPOrder> getOrders(boolean isBuyOrder) {
         //add a set
         return new TreeSet<TPOrder>();
     }
 
+    /**
+     * @see TradingPlatformDataSource#addOrder(String, String, int, int, boolean)
+     */
     @Override
     public int addOrder(String organisation, String asset, int amount, int credits, boolean isBuyOrder) {
         String isType;
@@ -414,24 +474,35 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return 1;
     }
 
-
+    /**
+     * @see TradingPlatformDataSource#deleteOrder(int)
+     * @return
+     */
     @Override
     public int deleteOrder(int idx) {
         return 0;
     }
 
+    /**
+     * @see TradingPlatformDataSource#addTransaction(String, String, String, int, int)
+     */
     @Override
     public int addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
                               int credits) {
         return 0;
     }
 
+    /**
+     * @see TradingPlatformDataSource#getOrderHistory()
+     */
     @Override
     public Set<Transaction> getOrderHistory() {
         return new TreeSet<>();
     }
 
-
+    /**
+     * @see TradingPlatformDataSource#deleteAll()
+     */
     @Override
     public int deleteAll() {
         userMock = new HashSet<>();
