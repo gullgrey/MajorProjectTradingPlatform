@@ -1,35 +1,25 @@
 package test.java.tradingPlatform;
 
-import main.java.database.JDBCTradingPlatformDataSource;
-import main.java.database.TradingPlatformDataSource;
-import main.java.network.NetworkDataSource;
 import main.java.tradingPlatform.*;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
 import org.junit.jupiter.api.*;
 import test.java.mockups.DataSourceMockup;
 
-
+/**
+ * This class is responsible for testing the blackbox test cases involved with the
+ * ItAdministrationTest class.
+ */
 public class ItAdministrationTest {
 
     private static final String propsFile = "src/test/resources/maria.props";
     //private static TradingPlatformDataSource dataSource;
     private static final String adminUserName = "Admin";
-    private static final int adminUserIncorrect = 1234;
     private static final String userNameCorrect = "User1";
-    private static final int userNameIncorrect = 1234;
     private static final String correctPassword = "12345";
     private static ItAdministration adminAccount;
     private static final String standardOrganisation = "Microsoft";
-    private static final String standardOrganisation2 = "Samsung";
     private static final int standardOrganisationCredits = 40;
     private static final String standardAsset = "Computer";
     private static final String aNewAsset = "ThisAsset";
@@ -45,9 +35,9 @@ public class ItAdministrationTest {
     /**
      * Initializes the database for testing.
      *
-     * @throws DuplicationException
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
+     * @throws DuplicationException the specified field already exists.
+     * @throws InvalidValueException value entered is incorrect type.
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @BeforeAll
       static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
@@ -66,9 +56,9 @@ public class ItAdministrationTest {
     /**
      * Clears the database after each test to prevent discrepancies.
      *
-     * @throws DuplicationException
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
+     * @throws DuplicationException the specified field already exists.
+     * @throws InvalidValueException value entered is incorrect type.
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @AfterEach
     public void clearDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
@@ -101,7 +91,8 @@ public class ItAdministrationTest {
 
     /**
      * Test to confirm configuration file formatting.
-     * @throws IOException
+     *
+     * @throws IOException error reading the file.
      */
     @Test
     public void testReadFileClient() throws IOException {
@@ -112,7 +103,8 @@ public class ItAdministrationTest {
 
     /**
      * Test to confirm configuration file formatting.
-     * @throws IOException
+     *
+     * @throws IOException error reading the file.
      */
     @Test
     public void testReadFileServer() throws IOException {
@@ -139,7 +131,7 @@ public class ItAdministrationTest {
      * Test to remove a user from the system.
      *
      * @throws NullValueException specified field does not exist in the database.
-     * @throws UnknownDatabaseException
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      * @throws DuplicationException the specified field already exists.
      */
     @Test
@@ -158,7 +150,7 @@ public class ItAdministrationTest {
      * @throws InvalidValueException value entered is incorrect type.
      */
     @Test
-    public void testAddOrganisation() throws DuplicationException, InvalidValueException,  UnknownDatabaseException {
+    public void testAddOrganisation() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         adminAccount.addOrganisation(organisation,standardOrganisationCredits);
         Set<Organisation> organisationCheck = dataSource.getOrganisations();
         assertEquals(3, organisationCheck.size());
@@ -168,8 +160,8 @@ public class ItAdministrationTest {
      * Test to remove an organisation if it exists.
      *
      * @throws NullValueException specified field does not exist in the database.
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
+     * @throws InvalidValueException value entered is incorrect type.
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
     public void testRemoveOrganisation() throws NullValueException, UnknownDatabaseException, InvalidValueException {
@@ -182,7 +174,7 @@ public class ItAdministrationTest {
      * Test to increase the credits of an existing organisation.
      *
      * @throws InvalidValueException value entered is incorrect type.
-     * @throws UnknownDatabaseException
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
     public void testIncreaseCredits() throws InvalidValueException, UnknownDatabaseException {
@@ -196,7 +188,7 @@ public class ItAdministrationTest {
      * Test to reduce the credits of an existing organisation.
      *
      * @throws InvalidValueException value entered is incorrect type.
-     * @throws UnknownDatabaseException
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
     public void testReduceCredits() throws InvalidValueException, UnknownDatabaseException {
@@ -212,7 +204,6 @@ public class ItAdministrationTest {
      * @throws DuplicationException the specified field already exists.
      * @throws NullValueException specified field does not exist in the database.
      * @throws InvalidValueException value entered is incorrect type.
-     * @throws SQLException
      */
     @Test
     public void testAddAsset() throws DuplicationException, UnknownDatabaseException, NullValueException, InvalidValueException {
@@ -227,8 +218,8 @@ public class ItAdministrationTest {
      *
      * @throws DuplicationException the specified field already exists.
      * @throws NullValueException specified field does not exist in the database.
-     * @throws UnknownDatabaseException value entered is incorrect type.
-     * @throws InvalidValueException
+     * @throws UnknownDatabaseException specified field does not exist in the database.
+     * @throws InvalidValueException value entered is incorrect type.
      */
     @Test
     public void testAddAssetAmount() throws DuplicationException, NullValueException, UnknownDatabaseException, InvalidValueException {
@@ -241,13 +232,12 @@ public class ItAdministrationTest {
     /**
      * Test to remove and asset from a specified organisation.
      *
-     * @throws DuplicationException
-     * @throws NullValueException
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
+     * @throws DuplicationException the specified field already exists.
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
-    public void testRemoveAsset() throws DuplicationException, NullValueException, InvalidValueException,
+    public void testRemoveAsset() throws DuplicationException, NullValueException,
             UnknownDatabaseException {
         adminAccount.addAsset(standardOrganisation, aNewAsset, aNewAssetAmount);
         Set<Asset> allAssets = dataSource.getAssets();
@@ -260,14 +250,12 @@ public class ItAdministrationTest {
     /**
      * Test to increase an asset by a specified amount.
      *
-     * @throws DuplicationException
-     * @throws NullValueException
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
+     * @throws DuplicationException specified field does not exist in the database.
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
-    public void testUpdateAssetIncrease() throws DuplicationException, NullValueException, InvalidValueException,
-            UnknownDatabaseException {
+    public void testUpdateAssetIncrease() throws DuplicationException, NullValueException,UnknownDatabaseException {
         adminAccount.addAsset(standardOrganisation, standardAsset, aNewAssetAmount);
         adminAccount.updateAssetAmount(standardOrganisation, standardAsset, aNewAssetAmount);
         int assetAmount = dataSource.getAssetAmount(standardOrganisation, standardAsset);
@@ -275,12 +263,12 @@ public class ItAdministrationTest {
     }
 
     /**
-     * Test to decrese and asset by as specified amount.
+     * Test to decrease an asset by as specified amount.
      *
-     * @throws DuplicationException
-     * @throws NullValueException
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
+     * @throws DuplicationException specified field does not exist in the database.
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws InvalidValueException value entered is incorrect type.
+     * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
     public void testUpdateAssetDecrease() throws DuplicationException, NullValueException, InvalidValueException,

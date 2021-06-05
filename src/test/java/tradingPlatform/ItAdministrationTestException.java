@@ -1,23 +1,16 @@
 package test.java.tradingPlatform;
 
-import main.java.database.JDBCTradingPlatformDataSource;
-import main.java.database.TradingPlatformDataSource;
-import main.java.network.NetworkDataSource;
 import main.java.tradingPlatform.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import javax.xml.namespace.QName;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Set;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
 
+/**
+ * This class is responsible for testing the exceptions of the ItAdministration class.
+ */
 public class ItAdministrationTestException {
 
     private static final String propsFile = "src/test/resources/maria.props";
@@ -26,24 +19,18 @@ public class ItAdministrationTestException {
     //private static NetworkDataSource dataSource;
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
-    private static final String aNewUserType = "USER";
-    private static final String aITUserType = "ADMIN";
-    private static final String STANDARD = "STANDARD";
     private static final String organisation1 = "Apple";
     private static final String organisation2 = "NotReal";
-    private static final String asset1 = "AppleWatch5.0";
-    private static final int asset1Amount = 2;
     private static final int addOrderCreditAmount = 40;
-    private static final String falseVariable = "DoesNotExist";
-    private static  ItAdministration adminUser;
     private static final String reserved = "ADMIN";
-    private static DataSourceMockup dataSource;
+    private static DataSourceMockup dataSource; //This is for Mockup
 
     /**
      * Initializes the database for testing.
      *
-     * @throws IOException
-     * @throws SQLException
+     * @throws DuplicationException the specified field already exists.
+     * @throws InvalidValueException the field doesn't exist.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     @BeforeAll
     static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
@@ -53,15 +40,25 @@ public class ItAdministrationTestException {
         adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
     }
 
-
+    /**
+     * After each test clear the database and add the standard organisation.
+     *
+     * @throws DuplicationException the specified field already exists.
+     * @throws InvalidValueException the field doesn't exist.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
+     */
     @AfterEach
     public void clearDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         dataSource.deleteAll();
         adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
 
     }
+
+    /**
+     * Clear the database after tests.
+     */
     @AfterAll
-    static void clearDatabase2() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
+    static void clearDatabase2() {
         dataSource.deleteAll();
     }
 

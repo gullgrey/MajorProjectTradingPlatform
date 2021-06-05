@@ -14,11 +14,9 @@ public class ItAdministration extends TPUser {
 
     private final String errorMessage = "Encountered an error, please refresh.";
 
-
     public ItAdministration(TradingPlatformDataSource dataSource, String adminName){
         super(dataSource, adminName, PlatformGlobals.getAdminOrganisation());
     }
-
 
     /**
      * Creates a new standard user account if the user doesn't already exist.
