@@ -15,12 +15,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.*;
+import test.java.mockups.DataSourceMockup;
 
 
 public class ItAdministrationTest {
 
     private static final String propsFile = "src/test/resources/maria.props";
-    private static TradingPlatformDataSource dataSource;
+    //private static TradingPlatformDataSource dataSource;
     private static final String adminUserName = "Admin";
     private static final int adminUserIncorrect = 1234;
     private static final String userNameCorrect = "User1";
@@ -29,14 +30,15 @@ public class ItAdministrationTest {
     private static ItAdministration adminAccount;
     private static final String standardOrganisation = "Microsoft";
     private static final String standardOrganisation2 = "Samsung";
-    private static int standardOrganisationCredits = 40;
+    private static final int standardOrganisationCredits = 40;
     private static final String standardAsset = "Computer";
     private static final String aNewAsset = "ThisAsset";
     private static final int aNewAssetAmount = 100;
     private static final int aNewAssetAmountReduce = -30;
     private static final String organisation = "Apple";
-    private static ConfigReader fileReader = new ConfigReader();
-
+    private static final ConfigReader fileReader = new ConfigReader();
+    private static DataSourceMockup dataSource;
+    private static final int usersExpected = 2;
 
     /**
      * Initializes the database for testing.
@@ -47,15 +49,16 @@ public class ItAdministrationTest {
      */
     @BeforeAll
       static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
-        dataSource = new NetworkDataSource();
+        ///////dataSource = new NetworkDataSource();
+        dataSource = new DataSourceMockup();
         adminAccount = new ItAdministration(dataSource, adminUserName);
-        dataSource.getUsers();
-        dataSource.getAssets();
-        dataSource.getOrganisations();
-        Set<TPOrder> order1 = dataSource.getOrders(true);
-        Set<TPOrder> order2 = dataSource.getOrders(false);
-        dataSource.getOrderHistory();
-        //adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
+        //dataSource.getUsers();
+        //dataSource.getAssets();
+        //dataSource.getOrganisations();
+        //Set<TPOrder> order1 = dataSource.getOrders(true);
+        //Set<TPOrder> order2 = dataSource.getOrders(false);
+        //dataSource.getOrderHistory();
+        adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
     }
 
     /**
@@ -89,11 +92,9 @@ public class ItAdministrationTest {
      */
     @Test
     public void testAddStandardUser() throws DuplicationException, NullValueException,  UnknownDatabaseException {
-
         adminAccount.addStandardUser(userNameCorrect,correctPassword, standardOrganisation);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
-        UserOrganisation user = userCheck.iterator().next();
-        assertEquals(userNameCorrect, user.getUser());
+        assertEquals(usersExpected, userCheck.size());
     }
 
     /**
@@ -103,7 +104,6 @@ public class ItAdministrationTest {
     @Test
     public void testReadFileClient() throws IOException {
         Set<String> newSet = fileReader.readClientFile();
-        System.out.println(newSet);
         String array[] = new String[5];
         array = newSet.toArray(array);
     }
@@ -115,7 +115,6 @@ public class ItAdministrationTest {
     @Test
     public void testReadFileServer() throws IOException {
         Set<String> newSet = fileReader.readServerFile();
-        System.out.println(newSet);
         String array[] = new String[5];
         array = newSet.toArray(array);
     }
@@ -131,8 +130,7 @@ public class ItAdministrationTest {
     public void testAddItUser() throws DuplicationException, UnknownDatabaseException {
         adminAccount.addItUser(userNameCorrect,correctPassword);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
-        UserOrganisation user = userCheck.iterator().next();
-        assertEquals(userNameCorrect, user.getUser());
+        assertEquals(userCheck.size(), usersExpected);
     }
 
     /**
@@ -147,7 +145,8 @@ public class ItAdministrationTest {
         adminAccount.addStandardUser(userNameCorrect,correctPassword, standardOrganisation);
         adminAccount.removeUser(userNameCorrect);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
-        assertEquals(userCheck.size(), PlatformGlobals.getNoRowsAffected());
+        System.out.println(userCheck.size());
+        assertEquals(userCheck.size(), usersExpected);
     }
 
     /**

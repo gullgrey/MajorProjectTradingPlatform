@@ -2,26 +2,21 @@ package test.java.mockups;
 
 import main.java.database.TradingPlatformDataSource;
 import main.java.tradingPlatform.*;
-import org.junit.jupiter.api.Order;
 
-import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.util.*;
 
 
 public class DataSourceMockup implements TradingPlatformDataSource {
 
 
-
-    private final Set<DataSourceMockup> UserMock = new HashSet<>();
-    private final Set<UserOrganisation> UserOrganisationObjectSet = new HashSet<>();
-    //private Set<DataSourceMockup> organisationList = new HashSet<>();
-    private final Set<Organisation> organisations = new HashSet<>();
-    private final Set<Asset> assetsList = new HashSet<>();
-    private final Set<TPOrder> buyOrderList = new HashSet<>();
-    private final Set<TPOrder> sellOrderList = new HashSet<>();
+    private Set<UserMockup> userMock = new HashSet<>();
+    private Set<UserOrganisation> userOrganisationObjectSet = new HashSet<>();
+    private Set<Organisation> organisationsList = new HashSet<>();
+    private Set<Asset> assetsList = new HashSet<>();
+    private final Set<UserMockup> orderList = new HashSet<>();
+    private final Set<UserMockup> sellOrderList = new HashSet<>();
     private final Set<Transaction> transationList = new HashSet<>();
-
+    private static DataSourceMockup dataSource;
 
     private String organisation;
     private String assetName;
@@ -31,22 +26,32 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     private int assetAmount;
     private String type;
     private int credits;
+    private String orderType;
+    private String propsfile;
+    private static ItAdministration adminAccount;
+    private String organisationMember;
+    private static final String adminUserName = "Admin";
+    private int count = 0;
+    private String admin = PlatformGlobals.getAdminOrganisation();
+    private Organisation org = new Organisation(admin, 0);
+    private UserMockup aUser = new UserMockup(admin, admin, admin, admin);
+    private UserOrganisation initialUser = new UserOrganisation(admin, admin);
 
-    public DataSourceMockup(String organisation, int credits) {
+
+    public DataSourceMockup() {
+        initiateDatabase();
 
     }
 
-    // User
-    public DataSourceMockup(String username, String password, String type, String organisation) {
-        this.organisation = username;
-        this.organisation = password;
-        this.type = type;
-        this.organisation = organisation;
+    public void initiateDatabase() {
+        userMock.add(aUser);
+        userOrganisationObjectSet.add(initialUser);
+        organisationsList.add(org);
     }
 
     @Override
     public int getCredits(String organisation) {
-        for (Organisation org : organisations) {
+        for (Organisation org : organisationsList) {
             if (org.getOrganisation().equals(organisation)) {
                 return org.getCredits();
             }
@@ -56,10 +61,13 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public int updateCredits(String organisation, int credits) {
-        for(Organisation org : organisations){
-            if(org.getOrganisation().equals(organisation)){
+        for (Organisation org : organisationsList) {
+            if (org.getOrganisation().equals(organisation)) {
                 int orgCredits = org.getCredits();
                 orgCredits += credits;
+                if (orgCredits <= 0){
+                    orgCredits = 0;
+                }
                 org.setCredits(orgCredits);
                 return 1;
             }
@@ -99,8 +107,8 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public int deleteAsset(String organisation, String asset) {
-        for(Asset anAsset : assetsList){
-            if (anAsset.getOrganisation().equals(organisation) & anAsset.getAsset().equals(asset)){
+        for (Asset anAsset : assetsList) {
+            if (anAsset.getOrganisation().equals(organisation) & anAsset.getAsset().equals(asset)) {
                 assetsList.remove(anAsset);
                 return 1;
             }
@@ -111,11 +119,16 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     @Override
     public int updateAssetAmount(String organisation, String asset, int amount) {
         int increaseAsset;
-        for(Asset aAsset : assetsList){
-            if (aAsset.getAsset().equals(asset) & aAsset.getOrganisation().equals(organisation)){
+        for (Asset aAsset : assetsList) {
+            if (aAsset.getAsset().equals(asset) & aAsset.getOrganisation().equals(organisation)) {
+
                 increaseAsset = aAsset.getAmount();
                 increaseAsset += amount;
-                return increaseAsset;
+                if (increaseAsset <= 0){
+                    increaseAsset = 0;
+                }
+                aAsset.setAmount(increaseAsset);
+                return 1;
             }
         }
         return -1;
@@ -123,13 +136,13 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public Set<Organisation> getOrganisations() {
-        return organisations;
+        return organisationsList;
     }
 
     @Override
     public String getUserOrganisation(String username) {
-        for(UserOrganisation aUser : UserOrganisationObjectSet) {
-            if(aUser.getUser().equals(username)){
+        for (UserOrganisation aUser : userOrganisationObjectSet) {
+            if (aUser.getUser().equals(username)) {
                 return aUser.getOrganisation();
             }
         }
@@ -141,15 +154,15 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         Organisation anOrg = new Organisation();
         anOrg.setOrganisation(organisation);
         anOrg.setCredits(credits);
-        organisations.add(anOrg);
+        organisationsList.add(anOrg);
         return 1;
     }
 
     @Override
     public int deleteOrganisation(String organisation) {
-        for(Organisation aOrg : organisations){
-            if(aOrg.getOrganisation().equals(organisation)){
-                organisations.remove(aOrg);
+        for (Organisation aOrg : organisationsList) {
+            if (aOrg.getOrganisation().equals(organisation)) {
+                organisationsList.remove(aOrg);
                 return 1;
             }
         }
@@ -158,15 +171,15 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public Set<UserOrganisation> getUsers() {
-        return UserOrganisationObjectSet;
+        return userOrganisationObjectSet;
     }
 
     @Override
     public String getUserPassword(String username) {
         String password = null;
-        for (DataSourceMockup user : UserMock) {
-            if (user.username.equals(username)) {
-                password = user.password;
+        for (UserMockup user : userMock) {
+            if (user.getUsername().equals(username)) {
+                password = user.getPassword();
             }
         }
         return password;
@@ -176,33 +189,35 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     @Override
     public int addUser(String username, String password, String type, String organisation) {
         try {
-            DataSourceMockup newuser = new DataSourceMockup(username, password, type, organisation);
+            UserMockup aNewUser = new UserMockup(username, password, type, organisation);
+            UserOrganisation sameUser = new UserOrganisation(username, organisation);
             boolean exists = false;
-            boolean running = true;
-            while(running){
-                for(Organisation orgs : organisations){
-                    if(orgs.getOrganisation().equals(organisation)){
-                        running = false;
-                        exists = true;
-                        break;
-                    }
+
+            //Foreign Key failure, organisation doesn't exist
+            for (Organisation orgs : organisationsList) {
+                if (orgs.getOrganisation().equals(organisation)) {
+                    exists = true;
+                    break;
                 }
             }
-            if(exists){
+
+            if (!exists) {
                 return -2; // Organisation doesn't exist.
             }
 
-            for (DataSourceMockup user : UserMock) {
-                if (user.username.equals(newuser.username)) {
+            // Primary key failure, user already exists.
+            for (UserMockup user : userMock) {
+
+                if (user.getUsername().equals(username)) {
                     return -1;
 
                 } else {
-
-                    UserOrganisation aNewUser = new UserOrganisation(username, organisation);
-                    UserOrganisationObjectSet.add(aNewUser);
+                    userMock.add(aNewUser);
+                    userOrganisationObjectSet.add(sameUser);
                     return 1;
                 }
             }
+
         } catch (Exception e) {
             return -3;
         }
@@ -211,10 +226,15 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public int deleteUser(String username) {
-        for (DataSourceMockup aUser : UserMock){
-            if (aUser.username.equals(username)){
-                UserMock.remove(aUser);
+        for (UserMockup aUser : userMock) {
+            if (aUser.getUsername().equals(username)) {
+                userMock.remove(aUser);
                 return 1;
+            }
+        }
+        for(UserOrganisation sameUser : userOrganisationObjectSet){
+            if(sameUser.getUser().equals(username)){
+                userOrganisationObjectSet.remove(sameUser);
             }
         }
         return -1;
@@ -222,9 +242,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public int updatePassword(String username, String password) {
-        for(DataSourceMockup aUser : UserMock){
-            if(aUser.username.equals(username)){
-                aUser.password = password;
+        for (UserMockup aUser : userMock) {
+            if (aUser.getUsername().equals(username)) {
+                aUser.setPassword(password);
                 return 1;
             }
         }
@@ -243,15 +263,16 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public int addOrder(String organisation, String asset, int amount, int credits, boolean isBuyOrder) {
-        //TPOrder aTPOrder = new TPOrder(organisation, asset, amount, credits );
-       // if (isBuyOrder) {
-           // buyOrderList.add(aTPOrder);
-        //} else
-        //    sellOrderList.add(aTPOrder);
+        String isType;
+        if (isBuyOrder) {
+            isType = "BUY";
+        } else {
+            isType = "SELL";
+        }
+        UserMockup aOrder = new UserMockup(organisation, asset, amount, credits, isType);
+        orderList.add(aOrder);
         return 1;
     }
-
-
 
 
     @Override
@@ -272,6 +293,11 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public int deleteAll() {
-        return 0;
+        userMock = new HashSet<>();
+        organisationsList = new HashSet<>();
+        assetsList = new HashSet<>();
+        userOrganisationObjectSet = new HashSet<>();
+        initiateDatabase();
+        return 1;
     }
 }

@@ -3,8 +3,7 @@ package test.java.database;
 import main.java.database.JDBCTradingPlatformDataSource;
 import main.java.database.TradingPlatformDataSource;
 import main.java.network.NetworkDataSource;
-import main.java.tradingPlatform.Asset;
-import main.java.tradingPlatform.TPOrder;
+import main.java.tradingPlatform.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,11 +17,12 @@ import java.util.Set;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import test.java.mockups.DataSourceMockup;
 
 public class JDBCDataSourceTest {
 
     private static final String propsFile = "src/test/resources/maria.props";
-    private static TradingPlatformDataSource dataSource;
+    //private static TradingPlatformDataSource dataSource;
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
     private static final String aNewUserSecondPassword = "Password123";
@@ -39,14 +39,15 @@ public class JDBCDataSourceTest {
     private static final int  addOrderAssetAmount = 5;
     private static final int addOrderCreditAmount = 40;
     private static final Asset compareAsset = new Asset(organisationApple, asset1, asset1Amount);
-
+    private static  DataSourceMockup dataSource;
 
     /**
      * Prepare the database
      */
     @BeforeAll
-    static void setupDatabase() throws IOException, SQLException {
-        dataSource = new NetworkDataSource();
+    static void setupDatabase() throws IOException, SQLException, DuplicationException, InvalidValueException, UnknownDatabaseException {
+        dataSource = new DataSourceMockup();
+        //dataSource = new NetworkDataSource();
         dataSource.addOrganisation(organisationApple, organisationAppleCredits);
     }
 
