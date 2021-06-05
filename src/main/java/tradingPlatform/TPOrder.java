@@ -4,7 +4,8 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * TODO
+ * This class is responsible for handling the buy and sell order variables
+ * and interactions.
  */
 public class TPOrder implements Comparable<TPOrder>, Serializable {
 

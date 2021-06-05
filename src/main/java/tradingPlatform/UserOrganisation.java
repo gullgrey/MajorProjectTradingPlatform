@@ -3,7 +3,9 @@ package main.java.tradingPlatform;
 import java.io.Serializable;
 
 /**
- * todo
+ * This class is responsible for handling all the variables associated with
+ * the organisation and user relationship. It holds the variables of the object and
+ * the navigation.
  */
 public class UserOrganisation implements Comparable<UserOrganisation>, Serializable {
     private String user;

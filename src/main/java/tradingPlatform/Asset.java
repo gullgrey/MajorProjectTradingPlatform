@@ -94,6 +94,5 @@ public class Asset implements Comparable<Asset>, Serializable {
                     .thenComparing(Asset::getAsset)
                     .compare(this, asset);
         }
-
     }
 }

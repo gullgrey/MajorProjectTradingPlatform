@@ -1,5 +1,9 @@
 package main.java.tradingPlatform;
 
+/**
+ * This class is used to handle the invalid exception thrown when
+ * an incorrect input was initialized.
+ */
 public class InvalidValueException extends Exception {
 
     private final String message;

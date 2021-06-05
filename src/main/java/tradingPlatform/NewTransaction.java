@@ -9,7 +9,8 @@ import java.util.TreeSet;
 import static java.lang.Math.abs;
 
 /**
- * todo
+ * This class is responsible for handling all the buy and sell orders which are
+ * performed on the system. These include buy, sell and removing trade orders.
  */
 public class NewTransaction {
 
@@ -20,10 +21,12 @@ public class NewTransaction {
     }
 
     /**
+     * This method is responsible for adding a buy order transaction to the market
+     * place and database.
      *
-     * @param buyOrder
-     * @return int - The number of assets that were immediately bought, OR
-     *      PlatformGlobals.getGeneralSQLFail() if buyOrder did not go through.
+     * @param buyOrder the order being processed.
+     * @return int - The number of assets that were placed up to buy, OR
+     * PlatformGlobals.getGeneralSQLFail() if sellOrder did not go through.
      */
     public int addBuyOrder(TPOrder buyOrder) {
 
@@ -98,10 +101,11 @@ public class NewTransaction {
     }
 
     /**
+     * This method is responsible for placing a sell order onto the market.
      *
-     * @param sellOrder
-     * @return int - The number of assets that were immediately sold, OR
-     *      PlatformGlobals.getGeneralSQLFail() if sellOrder did not go through.
+     * @param sellOrder the asset order being sold.
+     * @return the number of assets that were immediately sold, OR
+     * PlatformGlobals.getGeneralSQLFail() if sellOrder did not go through.
      */
     public int addSellOrder(TPOrder sellOrder) {
 
@@ -176,9 +180,10 @@ public class NewTransaction {
     }
 
     /**
-     *
-     * @param id
-     * @return
+     * This method is responsible for removing an order placed by the user.
+     * @param id the identification number of the order.
+     * @return int - the number of rows affected from the query, OR
+     * PlatformGlobals.getGeneralSQLFail() if sellOrder did not go through.
      */
     public int removeOrder(int id) {
        TPOrder order = dataSource.getOrder(id);
@@ -201,7 +206,6 @@ public class NewTransaction {
                 dataSource.updateAssetAmount(organisation, asset, amount);
            }
        }
-
        return rowsAffected;
     }
 }

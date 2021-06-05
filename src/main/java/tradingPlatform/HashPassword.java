@@ -1,12 +1,24 @@
 package main.java.tradingPlatform;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
+/**
+ * This class is responsible for handling the hashing of the users password
+ * associated with the database and login.
+ */
 public class HashPassword {
 
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+    /**
+     * This method is used to has the user's password.
+     *
+     * @param username the username of the user.
+     * @param password the password of the user.
+     * @return hashed password of the user.
+     * @throws NoSuchAlgorithmException thrown when the algorithm does not exist.
+     */
     public static String hashedPassword(String username, String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256"); // Encryption method being used
         md.reset();
@@ -15,8 +27,11 @@ public class HashPassword {
         return bytesToStringHex(hash);
     }
 
-    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
-
+    /**
+     * This method is used to encode the hash required for the password.
+     * @param bytes the encoding length.
+     * @return encoding for hashing the password.
+     */
     private static String bytesToStringHex(byte[] bytes){
         char[] hexChars = new char[bytes.length * 2];
         for (int j=0; j < bytes.length; j++){
@@ -26,5 +41,4 @@ public class HashPassword {
         }
         return new String(hexChars);
     }
-
 }

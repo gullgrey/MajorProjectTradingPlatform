@@ -1,21 +1,17 @@
 package main.java.tradingPlatform;
 
 import main.java.database.TradingPlatformDataSource;
-import main.java.network.NetworkDataSource;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Set;
 
 /**
- * todo
+ * This class is responsible is responsible for handling the hashing of the
+ * users login password and for determining if the user is allowed to access
+ * the system.
  */
 public class Login {
 
     private TradingPlatformDataSource dataSource;
-
     private String username;
     private String password;
     private String organisationalUnit;
@@ -24,8 +20,9 @@ public class Login {
     /**
      * The constructor sets the Username and Password that the current user has provided.
      * Runs methods checkSuppliedCredentials and getUserFromDB.
-     * @param userName
-     * @param password
+     * @param userName the username of the user logging in.
+     * @param password the password of the user logging in.
+     * @param dataSource the database object needed to manage querying the database.
      */
     public Login(String  userName, String password, TradingPlatformDataSource dataSource){
         this.username = userName;
@@ -56,6 +53,8 @@ public class Login {
     /**
      * Function is used to check if the user exists in the DB.
      * @return boolean of whether or not the user is an IT Administrator.
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public boolean checkSuppliedCredentials() throws NullValueException, UnknownDatabaseException {
         try {
@@ -80,7 +79,8 @@ public class Login {
 
     /**
      * Grabs all the information for a specific user from the database.
-     *  specific to the logging in user.
+     * specific to the logging in user.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     private void getUserFromDB() throws UnknownDatabaseException {
         Set<UserOrganisation> users = dataSource.getUsers();

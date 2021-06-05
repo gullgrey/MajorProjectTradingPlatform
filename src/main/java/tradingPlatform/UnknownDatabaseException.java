@@ -1,7 +1,8 @@
 package main.java.tradingPlatform;
 
 /**
- * todo
+ * This class is used to handle the Unknown database exception thrown when
+ * an update to the database was unsuccessful.
  */
 public class UnknownDatabaseException extends Exception {
 

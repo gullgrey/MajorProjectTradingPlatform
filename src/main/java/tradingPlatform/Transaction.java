@@ -3,7 +3,8 @@ package main.java.tradingPlatform;
 import java.io.Serializable;
 
 /**
- * TODO
+ * This class is responsible for handling the transactions variables and
+ * interaction on the system.
  */
 public class Transaction implements Comparable<Transaction>, Serializable {
 

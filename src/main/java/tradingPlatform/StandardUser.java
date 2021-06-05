@@ -1,12 +1,12 @@
 package main.java.tradingPlatform;
 
 import main.java.database.TradingPlatformDataSource;
-
 import java.sql.SQLException;
 import java.util.Set;
 
 /**
- * TODO
+ * This class is responsible for handling all the commands that a standard user
+ * may wish to perform.
  */
 public class StandardUser extends TPUser {
 
@@ -52,7 +52,7 @@ public class StandardUser extends TPUser {
      * @param asset asset they would like to sell.
      * @param amount amount of the asset they are selling.
      * @param credits amount per assert.
-     * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
+     * @throws InvalidValueException catches any SQL exceptions that are thrown if there are any issues.
      * @return number of assets immediately sold
      */
     public int sellAsset(String asset, int amount, int credits) throws InvalidValueException,
@@ -76,7 +76,9 @@ public class StandardUser extends TPUser {
     /**
      * Removed a request buy or sell order of the users organisation.
      * @param orderId id of the order that is being removed
-     * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
+     * @throws InvalidValueException catches any SQL exceptions that are thrown if there are any issues.
+     * @throws NullValueException specified field does not exist in the database.
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void removeOrder(int orderId) throws InvalidValueException, NullValueException, UnknownDatabaseException {
         if(orderId < 0){
@@ -102,7 +104,7 @@ public class StandardUser extends TPUser {
     /**
      * Method is used to get all the assets of the users organisation.
      * @return a set containing all the assets that relate to the organisation.
-     * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
+     * @throws UnknownDatabaseException catches any SQL exceptions that are thrown if there are any issues.
      */
     public Set<Asset> getAssets() throws UnknownDatabaseException {
         Set<Asset> Asset = dataSource.getAssets();
@@ -117,7 +119,7 @@ public class StandardUser extends TPUser {
      * If they don't contact the asset 0 will be returned.
      * @param asset name of the asset.
      * @return the amount of the asset for that organisation.
-     * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
+     * @throws UnknownDatabaseException catches any SQL exceptions that are thrown if there are any issues.
      */
     public int getAssetAmount(String asset) throws UnknownDatabaseException {
         int amount = dataSource.getAssetAmount(organisation, asset);
@@ -130,7 +132,7 @@ public class StandardUser extends TPUser {
     /**
      * Gets the amount of credits the users organisation has.
      * @return value of the organisations credits.
-     * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
+     * @throws UnknownDatabaseException catches any SQL exceptions that are thrown if there are any issues.
      */
     public int getCredits() throws UnknownDatabaseException {
         int credits = dataSource.getCredits(organisation);
@@ -139,6 +141,4 @@ public class StandardUser extends TPUser {
         }
         return credits;
     }
-
-
 }

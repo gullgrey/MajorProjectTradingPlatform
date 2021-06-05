@@ -1,15 +1,13 @@
 package main.java.tradingPlatform;
 
 import main.java.database.TradingPlatformDataSource;
-import main.java.network.NetworkDataSource;
-
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 
 /**
- * TODO
+ * This class is responsible for handling the integration of the users buy
+ * and sell orders. It also maintains the updating of the GUI marketplace layout.
  */
 public abstract class TPUser {
 
@@ -26,13 +24,11 @@ public abstract class TPUser {
     DefaultTableModel sellOrderList;
     DefaultTableModel transactionList;
 
-
     public TPUser(TradingPlatformDataSource dataSource, String username, String organisation) {
         this.dataSource = dataSource;
         this.username = username;
         this.organisation = organisation;
         createTableModels();
-
     }
 
     public DefaultTableModel getOrganisationList() {
@@ -72,6 +68,7 @@ public abstract class TPUser {
      * FROM ADMINS PERSPECTIVE : Allows them to update a given users password.
      * @param userName the user whose password is to be changed.
      * @param password new password to set for the user
+     * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void changeUserPassword(String userName, String password) throws UnknownDatabaseException,
             NullValueException {
@@ -90,6 +87,9 @@ public abstract class TPUser {
         }
     }
 
+    /**
+     * This method creates creates the GUI marketplace buy and sell order displays.
+     */
     private void createTableModels() {
 
         organisationList = new DefaultTableModel(){
@@ -163,6 +163,9 @@ public abstract class TPUser {
         refreshAll();
     }
 
+    /**
+     * This method refreshes the organisation's in the GUI layout.
+     */
     public void refreshOrganisations() {
         organisationList.setRowCount(0);
         for (Organisation organisation : this.dataSource.getOrganisations()) {
@@ -171,6 +174,9 @@ public abstract class TPUser {
         }
     }
 
+    /**
+     * This method refreshes the User's in the GUI layout.
+     */
     public void refreshUsers() {
         try {
             userList.setRowCount(0);
@@ -211,6 +217,9 @@ public abstract class TPUser {
         }
     }
 
+    /**
+     * This method refreshes the Asset's in the GUI layout.
+     */
     public void refreshAssets() {
         assetList.setRowCount(0);
         for (Asset asset : this.dataSource.getAssets()) {
@@ -219,6 +228,9 @@ public abstract class TPUser {
         }
     }
 
+    /**
+     * This method refreshes the Buy Order's in the GUI layout.
+     */
     public void refreshBuyOrders() {
 
         buyOrderList.setRowCount(0);
@@ -235,6 +247,9 @@ public abstract class TPUser {
 //        dataSource = new NetworkDataSource();
     }
 
+    /**
+     * This method refreshes the Sell Order's in the GUI layout.
+     */
     public void refreshSellOrders() {
 
         sellOrderList.setRowCount(0);
@@ -249,6 +264,9 @@ public abstract class TPUser {
 
     }
 
+    /**
+     * This method refreshes the Transactions in the GUI layout.
+     */
     public void refreshTransactions() {
         transactionList.setRowCount(0);
         for (Transaction transaction : dataSource.getOrderHistory()) {
@@ -261,6 +279,10 @@ public abstract class TPUser {
         }
     }
 
+    /**
+     * This method is a command used to refresh all the corresponding methods at
+     * once.
+     */
     public void refreshAll() {
 
         refreshOrganisations();
@@ -271,6 +293,9 @@ public abstract class TPUser {
         refreshTransactions();
     }
 
+    /**
+     * This method refreshes the Order's in the GUI layout.
+     */
     public void refreshOrders() {
         refreshBuyOrders();
         refreshSellOrders();

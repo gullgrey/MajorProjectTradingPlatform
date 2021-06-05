@@ -1,5 +1,9 @@
 package main.java.tradingPlatform;
 
+/**
+ * This class is responsible for handling commonly used variables
+ * and exception parameters.
+ */
 public class PlatformGlobals {
     private static final int noRowsAffected = 0;
     private static final int primaryKeyFail = -1;
@@ -10,7 +14,6 @@ public class PlatformGlobals {
     private static final String standardOrganisation = "STANDARD";
     private static final String buyOrder = "BUY";
     private static final String sellOrder = "SELL";
-
 
     public static int getNoRowsAffected() {
         return noRowsAffected;
