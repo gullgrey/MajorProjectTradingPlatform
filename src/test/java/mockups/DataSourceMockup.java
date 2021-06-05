@@ -10,7 +10,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
 
     private Set<UserMockup> userMock = new HashSet<>();
-    private Set<UserOrganisation> userOrganisationObjectSet = new HashSet<>();
+    private Set<UserOrganisation> userOrganisationList = new HashSet<>();
     private Set<Organisation> organisationsList = new HashSet<>();
     private Set<Asset> assetsList = new HashSet<>();
     private final Set<UserMockup> orderList = new HashSet<>();
@@ -35,7 +35,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     public void initiateDatabase() {
         userMock.add(aUser);
-        userOrganisationObjectSet.add(initialUser);
+        userOrganisationList.add(initialUser);
         organisationsList.add(org);
     }
 
@@ -51,30 +51,30 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public int updateCredits(String organisation, int credits) {
-        //Throws
+        boolean exists = false;
+        //Check to see if the organisation exists (Foreign key constraint)
+        for (Organisation org : organisationsList) {
+            if (org.getOrganisation().equals(organisation)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail();
+        }
+        //If the organisation exists update credits
         for (Organisation org : organisationsList) {
             if (org.getOrganisation().equals(organisation)) {
                 int orgCredits = org.getCredits();
                 orgCredits += credits;
-                if (orgCredits <= 0){
+                if (orgCredits <= 0) {
                     orgCredits = 0;
                 }
                 org.setCredits(orgCredits);
                 return 1;
             }
         }
-        for (Organisation org : organisationsList) {
-            if (org.getOrganisation().equals(organisation)) {
-                int orgCredits = org.getCredits();
-                orgCredits += credits;
-                if (orgCredits <= 0){
-                    orgCredits = 0;
-                }
-                org.setCredits(orgCredits);
-                return 1;
-            }
-        }
-        return -1;
+        return PlatformGlobals.getPrimaryKeyFail();
     }
 
     @Override
@@ -89,16 +89,64 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         return newSet;
     }
 
+
     @Override
     public int addAsset(String organisation, String asset, int amount) {
+
+        boolean exists = false;
         Asset aNewAsset = new Asset(organisation, asset, amount);
+
+        // Check to see if that organisation already has that asset (Primary key constraint)
+        for (Asset anAsset : assetsList) {
+            if (anAsset.getOrganisation().equals(organisation) && anAsset.getAsset().equals(asset)) {
+                exists = true;
+            }
+        }
+        if (exists) {
+            return PlatformGlobals.getPrimaryKeyFail();
+        }
+
+        // Check to see if that organisation does exist (Foreign key constraint)
+        for (Organisation org : organisationsList) {
+            if (aNewAsset.getOrganisation().equals(org.getOrganisation())) {
+                exists = true;
+            }
+        }
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail();
+        }
         assetsList.add(aNewAsset);
         return 1;
     }
 
     @Override
     public int getAssetAmount(String organisation, String asset) {
-        int amount = -1;
+
+        boolean exists = false;
+
+        // Check to see if that organisation exists (Foreign key constraint)
+        for (Organisation anOrg : organisationsList) {
+            if (anOrg.getOrganisation().equals(organisation)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail();
+        }
+
+        // Check to see if that asset exists (Foreign key constraint)
+        for (Asset anAsset : assetsList) {
+            if (anAsset.getAsset().equals(asset)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail();
+        }
+
+        int amount = PlatformGlobals.getGeneralSQLFail();
         for (Asset aAsset : assetsList) {
             if (aAsset.getOrganisation().equals(organisation) && aAsset.getAsset().equals(asset)) {
                 amount = aAsset.getAmount();
@@ -109,31 +157,82 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public int deleteAsset(String organisation, String asset) {
+
+        boolean exists = false;
+
+        // Check to see if that organisation exists (Foreign key constraint)
+        for (Organisation anOrg : organisationsList) {
+            if (anOrg.getOrganisation().equals(organisation)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail();
+        }
+
+        // Check to see if that asset exists (Foreign key constraint)
         for (Asset anAsset : assetsList) {
-            if (anAsset.getOrganisation().equals(organisation) & anAsset.getAsset().equals(asset)) {
+            if (anAsset.getAsset().equals(asset)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail();
+        }
+
+        // Remove the asset
+        for (Asset anAsset : assetsList) {
+            if (anAsset.getOrganisation().equals(organisation) && anAsset.getAsset().equals(asset)) {
                 assetsList.remove(anAsset);
                 return 1;
             }
         }
-        return -1;
+        return PlatformGlobals.getGeneralSQLFail();
     }
 
     @Override
     public int updateAssetAmount(String organisation, String asset, int amount) {
+
+        boolean exists = false;
+
+        // Check to see if that organisation exists (Foreign key constraint)
+        for (Organisation anOrg : organisationsList) {
+            if (anOrg.getOrganisation().equals(organisation)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail();
+        }
+
+        // Check to see if that asset exists (Foreign key constraint)
+        for (Asset anAsset : assetsList) {
+            if (anAsset.getAsset().equals(asset)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail();
+        }
+
         int increaseAsset;
         for (Asset aAsset : assetsList) {
             if (aAsset.getAsset().equals(asset) & aAsset.getOrganisation().equals(organisation)) {
 
                 increaseAsset = aAsset.getAmount();
                 increaseAsset += amount;
-                if (increaseAsset <= 0){
+                if (increaseAsset <= 0) {
                     increaseAsset = 0;
                 }
                 aAsset.setAmount(increaseAsset);
                 return 1;
             }
         }
-        return -1;
+        return PlatformGlobals.getGeneralSQLFail();
     }
 
     @Override
@@ -143,124 +242,163 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public String getUserOrganisation(String username) {
-        for (UserOrganisation aUser : userOrganisationObjectSet) {
+        for (UserOrganisation aUser : userOrganisationList) {
             if (aUser.getUser().equals(username)) {
                 return aUser.getOrganisation();
             }
         }
-        return "";
+        return null;
     }
 
     @Override
     public int addOrganisation(String organisation, int credits) {
-        Organisation anOrg = new Organisation();
-        anOrg.setOrganisation(organisation);
-        anOrg.setCredits(credits);
-        organisationsList.add(anOrg);
+
+        boolean exists = false;
+        Organisation anOrganisation = new Organisation(organisation, credits);
+
+        // Check to see if that organisation already exists (Primary key constraint)
+        for (Organisation anOrg : organisationsList) {
+            if (anOrg.getOrganisation().equals(organisation)) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (exists) {
+            return PlatformGlobals.getPrimaryKeyFail();
+        }
+        organisationsList.add(anOrganisation);
         return 1;
     }
 
+
     @Override
     public int deleteOrganisation(String organisation) {
-        for (Organisation aOrg : organisationsList) {
-            if (aOrg.getOrganisation().equals(organisation)) {
-                organisationsList.remove(aOrg);
-                return 1;
+
+        boolean exists = false;
+
+        for (Organisation anOrg : organisationsList) {
+            if (anOrg.getOrganisation().equals(organisation)) {
+                exists = true;
+                break;
             }
         }
-        return -2;
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail();
+        }
+        organisationsList.removeIf(aOrg -> aOrg.getOrganisation().equals(organisation));
+        userOrganisationList.removeIf(aUserOrg -> aUserOrg.getOrganisation().equals(organisation));
+        assetsList.removeIf(orgAsset -> orgAsset.getOrganisation().equals(organisation));
+        return 1;
     }
+
 
     @Override
     public Set<UserOrganisation> getUsers() {
-        return userOrganisationObjectSet;
+        return userOrganisationList;
     }
 
     @Override
     public String getUserPassword(String username) {
-        String password = null;
+
         for (UserMockup user : userMock) {
             if (user.getUsername().equals(username)) {
-                password = user.getPassword();
+                String password = user.getPassword();
+                return password;
             }
         }
-        return password;
+        return null;
     }
 
 
     @Override
     public int addUser(String username, String password, String type, String organisation) {
-        try {
-            UserMockup aNewUser = new UserMockup(username, password, type, organisation);
-            UserOrganisation sameUser = new UserOrganisation(username, organisation);
-            boolean exists = false;
 
-            //Foreign Key failure, organisation doesn't exist
-            for (Organisation orgs : organisationsList) {
-                if (orgs.getOrganisation().equals(organisation)) {
-                    exists = true;
-                    break;
-                }
+        UserMockup aNewUser = new UserMockup(username, password, type, organisation);
+        UserOrganisation sameUser = new UserOrganisation(username, organisation);
+        boolean exists = false;
+        //TODO Sort the Type
+
+        // Check to see if the organisation exists (Foreign key constraint)
+        for (Organisation orgs : organisationsList) {
+            if (orgs.getOrganisation().equals(organisation)) {
+                exists = true;
+                break;
             }
-
-            if (!exists) {
-                return -2; // Organisation doesn't exist.
-            }
-
-            // Primary key failure, user already exists.
-            for (UserMockup user : userMock) {
-
-                if (user.getUsername().equals(username)) {
-                    return -1;
-
-                } else {
-                    userMock.add(aNewUser);
-                    userOrganisationObjectSet.add(sameUser);
-                    return 1;
-                }
-            }
-
-        } catch (Exception e) {
-            return -3;
         }
-        return -3;
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail(); // Organisation doesn't exist.
+        }
+
+        // Primary key failure, user already exists.
+        for (UserMockup user : userMock) {
+
+            if (user.getUsername().equals(username)) {
+                return PlatformGlobals.getPrimaryKeyFail();
+
+            } else {
+                userMock.add(aNewUser);
+                userOrganisationList.add(sameUser);
+                return 1;
+            }
+        }
+
+        return PlatformGlobals.getGeneralSQLFail();
     }
 
     @Override
     public int deleteUser(String username) {
+
         for (UserMockup aUser : userMock) {
             if (aUser.getUsername().equals(username)) {
                 userMock.remove(aUser);
+                break;
+            }
+        }
+
+        for (UserOrganisation sameUser : userOrganisationList) {
+            if (sameUser.getUser().equals(username)) {
+                userOrganisationList.remove(sameUser);
                 return 1;
             }
         }
-        for(UserOrganisation sameUser : userOrganisationObjectSet){
-            if(sameUser.getUser().equals(username)){
-                userOrganisationObjectSet.remove(sameUser);
-            }
-        }
-        return -1;
+        return PlatformGlobals.getForeignKeyFail();
     }
 
     @Override
     public int updatePassword(String username, String password) {
+
+        boolean exists = false;
+
+        // Checks to see if the user exists (Foreign Key constraint)
+        for (UserMockup aUser : userMock) {
+            if (aUser.getUsername().equals(username)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            return PlatformGlobals.getForeignKeyFail(); // Organisation doesn't exist.
+        }
+
         for (UserMockup aUser : userMock) {
             if (aUser.getUsername().equals(username)) {
                 aUser.setPassword(password);
                 return 1;
             }
         }
-        return -1;
+        return PlatformGlobals.getGeneralSQLFail();
     }
 
     @Override
     public TPOrder getOrder(int idx) {
-        return null;
+        return new TPOrder();
     }
 
     @Override
     public Set<TPOrder> getOrders(boolean isBuyOrder) {
-        return null;
+        //add a set
+        return new TreeSet<TPOrder>();
     }
 
     @Override
@@ -290,15 +428,16 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     @Override
     public Set<Transaction> getOrderHistory() {
-        return null;
+        return new TreeSet<>();
     }
+
 
     @Override
     public int deleteAll() {
         userMock = new HashSet<>();
         organisationsList = new HashSet<>();
         assetsList = new HashSet<>();
-        userOrganisationObjectSet = new HashSet<>();
+        userOrganisationList = new HashSet<>();
         initiateDatabase();
         return 1;
     }

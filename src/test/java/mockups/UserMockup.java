@@ -44,9 +44,6 @@ public class UserMockup{
         this.credits = credits;
     }
 
-
-
-
     public String getPassword() {
         return password;
     }
@@ -54,7 +51,6 @@ public class UserMockup{
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public String getUsername() {
         return username;

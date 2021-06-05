@@ -38,7 +38,9 @@ public class ItAdministrationTest {
     private static final String organisation = "Apple";
     private static final ConfigReader fileReader = new ConfigReader();
     private static DataSourceMockup dataSource;
-    private static final int usersExpected = 2;
+    private static final int usersExpected1 = 1;
+    private static final int usersExpected2 = 2;
+
 
     /**
      * Initializes the database for testing.
@@ -94,7 +96,7 @@ public class ItAdministrationTest {
     public void testAddStandardUser() throws DuplicationException, NullValueException,  UnknownDatabaseException {
         adminAccount.addStandardUser(userNameCorrect,correctPassword, standardOrganisation);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
-        assertEquals(usersExpected, userCheck.size());
+        assertEquals(usersExpected2, userCheck.size());
     }
 
     /**
@@ -130,7 +132,7 @@ public class ItAdministrationTest {
     public void testAddItUser() throws DuplicationException, UnknownDatabaseException {
         adminAccount.addItUser(userNameCorrect,correctPassword);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
-        assertEquals(userCheck.size(), usersExpected);
+        assertEquals(userCheck.size(), usersExpected2);
     }
 
     /**
@@ -142,11 +144,10 @@ public class ItAdministrationTest {
      */
     @Test
     public void testRemoveUser() throws NullValueException, UnknownDatabaseException, DuplicationException {
-        adminAccount.addStandardUser(userNameCorrect,correctPassword, standardOrganisation);
+        adminAccount.addStandardUser(userNameCorrect, "password", standardOrganisation);
         adminAccount.removeUser(userNameCorrect);
         Set<UserOrganisation> userCheck = dataSource.getUsers();
-        System.out.println(userCheck.size());
-        assertEquals(userCheck.size(), usersExpected);
+        assertEquals(userCheck.size(), usersExpected1);
     }
 
     /**
