@@ -17,7 +17,7 @@ public class MainFrame extends JFrame implements ActionListener {
     JPanel mainPanel = new JPanel();
 
     JTabbedPane userPane;
-    JTabbedPane organisationPane = new JTabbedPane();
+    JTabbedPane organisationPane;
     JTabbedPane assetPane = new JTabbedPane();
     JTabbedPane marketPane = new JTabbedPane();
     JTabbedPane historyPane = new JTabbedPane();
@@ -90,16 +90,25 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     private JPanel setMainPanel() {
-        mainPanel.add(userPane);
+        mainPanel.add(organisationPane);
         return mainPanel;
     }
 
     private void setupPanes() {
-        userPane = new UserPane(user);
-        setOrganisationPane();
-        setAssetPane();
-        setMarketPane();
-        setHistoryPane();
+
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+                userPane = new UserPane(user);
+                organisationPane = new OrganisationPane(user);
+                setAssetPane();
+                setMarketPane();
+                setHistoryPane();
+//            }
+//        });
+
+
+
+
     }
 
 

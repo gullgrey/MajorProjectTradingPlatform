@@ -228,7 +228,8 @@ public class NetworkDataSource implements TradingPlatformDataSource {
         try {
             outputStream.writeObject(Command.ADD_ORGANISATION);
             outputStream.writeObject(organisation);
-            outputStream.writeInt(credits);
+            String newCredits = Integer.toString(credits);
+            outputStream.writeObject(newCredits);
             outputStream.flush();
 
             return inputStream.readInt();
@@ -346,13 +347,13 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     public Set<TPOrder> getOrders(boolean isBuyOrder) {
         try {
             outputStream.writeObject(Command.GET_ORDERS);
-            int out;
+            String out;
             if (isBuyOrder) {
-                out = 1;
+                out = "true";
             } else {
-                out = 0;
+                out = "false";
             }
-            outputStream.writeInt(out);
+            outputStream.writeObject(out);
             outputStream.flush();
 
             @SuppressWarnings("unchecked")

@@ -185,18 +185,10 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         try {
             String admin = PlatformGlobals.getAdminOrganisation();
             addOrganisation(admin, 0);
-//            addOrganisation.setString(1,admin);
-//            addOrganisation.setInt(2, 0);
-//            addOrganisation.executeUpdate();
 
             String password = HashPassword.hashedPassword(admin, admin);
 
             addUser(admin, password, admin, admin);
-//            addUser.setString(1, admin);
-//            addUser.setString(2, admin);
-//            addUser.setString(3, admin);
-//            addUser.setString(4, password);
-//            addUser.executeUpdate();
         } catch (NoSuchAlgorithmException ignored) {
 
         }

@@ -12,40 +12,42 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class UserPane extends JTabbedPane implements ActionListener {
+import static java.lang.Integer.parseInt;
+
+public class OrganisationPane extends JTabbedPane implements ActionListener {
 
     ItAdministration user;
 
-    private String displayName = "Users";
+    private String displayName = "Organisations";
 
-    private JTextField addUsername;
-    private JTextField removeUsername;
-    private JTextField updateUsername;
-    private JTextField organisation;
-    private JTextField addPassword;
-    private JTextField updatePassword;
+    private JTextField addOrganisation;
+    private JTextField removeOrganisation;
+    private JTextField updateOrganisation;
+//    private JTextField organisation;
+    private JTextField addCredits;
+    private JTextField updateCredits;
 
-    private final JButton addButton = new JButton("Add User");
-    private final JButton removeButton = new JButton("Remove User");
-    private final JButton updateButton = new JButton("Update Password");
+    private final JButton addButton = new JButton("Add Organisation");
+    private final JButton removeButton = new JButton("Remove Organisation");
+    private final JButton updateButton = new JButton("Update Credits");
 
-    public UserPane(ItAdministration user) {
+    public OrganisationPane(ItAdministration user) {
         this.user = user;
-        setUserPane();
+        setOrganisationPane();
         addActionEvent();
     }
 
-    private void setUserPane(){
-        JPanel addUserPanel = addUserPanel();
-        JPanel removeUserPanel = removeUserPanel();
-        JPanel updatePasswordPanel = updateUserPanel();
+    private void setOrganisationPane(){
+        JPanel addOrganisationPanel = addOrganisationPanel();
+        JPanel removeUserPanel = removeOrganisationPanel();
+        JPanel updatePasswordPanel = updateOrganisationPanel();
         //
-        addTab("Add", addUserPanel);
+        addTab("Add", addOrganisationPanel);
         addTab("Remove", removeUserPanel);
-        addTab("Update Password", updatePasswordPanel);
+        addTab("Update Credits", updatePasswordPanel);
     }
 
-    private JPanel addUserPanel() {
+    private JPanel addOrganisationPanel() {
         JPanel addUser = new JPanel();
         addUser.setLayout(new BoxLayout(addUser, BoxLayout.X_AXIS));
         int horizontalStrut = 20;
@@ -58,7 +60,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
         return addUser;
     }
 
-    private JPanel removeUserPanel() {
+    private JPanel removeOrganisationPanel() {
         JPanel removeUser = new JPanel();
         removeUser.setLayout(new BoxLayout(removeUser, BoxLayout.X_AXIS));
         int horizontalStrut = 20;
@@ -71,7 +73,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
         return removeUser;
     }
 
-    private JPanel updateUserPanel() {
+    private JPanel updateOrganisationPanel() {
         JPanel updateUser = new JPanel();
         updateUser.setLayout(new BoxLayout(updateUser, BoxLayout.X_AXIS));
         int horizontalStrut = 20;
@@ -92,7 +94,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
         title.setFont(new Font("Arial", Font.BOLD, 20));;
         dataDisplay.add(title);
 
-        JTable userList = new JTable(user.getUserList());
+        JTable userList = new JTable(user.getOrganisationList());
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(userList.getModel());
         sorter.setComparator(0, Comparator.naturalOrder());
@@ -105,10 +107,9 @@ public class UserPane extends JTabbedPane implements ActionListener {
         userList.getSelectionModel().addListSelectionListener(event -> {
 
             if (!event.getValueIsAdjusting() && userList.getSelectedRow() > -1) {
-                addUsername.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
-                removeUsername.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
-                updateUsername.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
-                organisation.setText(userList.getValueAt(userList.getSelectedRow(), 1).toString());
+                addOrganisation.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
+                removeOrganisation.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
+                updateOrganisation.setText(userList.getValueAt(userList.getSelectedRow(), 0).toString());
             }
         });
 
@@ -141,12 +142,10 @@ public class UserPane extends JTabbedPane implements ActionListener {
         layout.setAutoCreateContainerGaps(true);
 
         JLabel userLabel = new JLabel("Username");
-        JLabel organisationLabel = new JLabel("Organisation");
         JLabel passwordLabel = new JLabel("Password");
 
-        addUsername = new JTextField(20);
-        organisation = new JTextField(20);
-        addPassword = new JTextField(20);
+        addOrganisation = new JTextField(20);
+        addCredits = new JTextField(20);
 
         // Create a sequential group for the horizontal axis.
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
@@ -154,9 +153,9 @@ public class UserPane extends JTabbedPane implements ActionListener {
         // The sequential group in turn contains two parallel groups.
         // One parallel group contains the labels, the other the text fields.
         hGroup.addGroup(layout.createParallelGroup().addComponent(userLabel)
-                .addComponent(organisationLabel).addComponent(passwordLabel));
-        hGroup.addGroup(layout.createParallelGroup().addComponent(addUsername)
-                .addComponent(organisation).addComponent(addPassword));
+                .addComponent(passwordLabel));
+        hGroup.addGroup(layout.createParallelGroup().addComponent(addOrganisation)
+                .addComponent(addCredits));
         layout.setHorizontalGroup(hGroup);
 
         // Create a sequential group for the vertical axis.
@@ -164,11 +163,9 @@ public class UserPane extends JTabbedPane implements ActionListener {
 
 
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(userLabel).addComponent(addUsername));
+                .addComponent(userLabel).addComponent(addOrganisation));
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(organisationLabel).addComponent(organisation));
-        vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(passwordLabel).addComponent(addPassword));
+                .addComponent(passwordLabel).addComponent(addCredits));
 
         layout.setVerticalGroup(vGroup);
 
@@ -194,7 +191,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
 
         JLabel userLabel = new JLabel("Username");
 
-        removeUsername = new JTextField(20);
+        removeOrganisation = new JTextField(20);
 
         // Create a sequential group for the horizontal axis.
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
@@ -202,7 +199,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
         // The sequential group in turn contains two parallel groups.
         // One parallel group contains the labels, the other the text fields.
         hGroup.addGroup(layout.createParallelGroup().addComponent(userLabel));
-        hGroup.addGroup(layout.createParallelGroup().addComponent(removeUsername));
+        hGroup.addGroup(layout.createParallelGroup().addComponent(removeOrganisation));
         layout.setHorizontalGroup(hGroup);
 
         // Create a sequential group for the vertical axis.
@@ -210,7 +207,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
 
 
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(userLabel).addComponent(removeUsername));
+                .addComponent(userLabel).addComponent(removeOrganisation));
 
         layout.setVerticalGroup(vGroup);
 
@@ -237,8 +234,8 @@ public class UserPane extends JTabbedPane implements ActionListener {
         JLabel userLabel = new JLabel("Username");
         JLabel passwordLabel = new JLabel("Password");
 
-        updateUsername = new JTextField(20);
-        updatePassword = new JTextField(20);
+        updateOrganisation = new JTextField(20);
+        updateCredits = new JTextField(20);
 
         // Create a sequential group for the horizontal axis.
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
@@ -247,8 +244,8 @@ public class UserPane extends JTabbedPane implements ActionListener {
         // One parallel group contains the labels, the other the text fields.
         hGroup.addGroup(layout.createParallelGroup().addComponent(userLabel)
                 .addComponent(passwordLabel));
-        hGroup.addGroup(layout.createParallelGroup().addComponent(updateUsername)
-                .addComponent(updatePassword));
+        hGroup.addGroup(layout.createParallelGroup().addComponent(updateOrganisation)
+                .addComponent(updateCredits));
         layout.setHorizontalGroup(hGroup);
 
         // Create a sequential group for the vertical axis.
@@ -256,9 +253,9 @@ public class UserPane extends JTabbedPane implements ActionListener {
 
 
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(userLabel).addComponent(updateUsername));
+                .addComponent(userLabel).addComponent(updateOrganisation));
         vGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(passwordLabel).addComponent(updatePassword));
+                .addComponent(passwordLabel).addComponent(updateCredits));
 
         layout.setVerticalGroup(vGroup);
 
@@ -274,7 +271,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
         addButton.addActionListener(this);
         removeButton.addActionListener(this);
         updateButton.addActionListener(this);
-        ChangeListener changeListener = changeEvent -> user.refreshUsers();
+        ChangeListener changeListener = changeEvent -> user.refreshOrganisations();
         this.addChangeListener(changeListener);
     }
 
@@ -282,23 +279,36 @@ public class UserPane extends JTabbedPane implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == addButton) {
-                if (organisation.getText().equals(PlatformGlobals.getAdminOrganisation())){
-                    user.addItUser(addUsername.getText(), addPassword.getText());
-                } else {
-                    user.addStandardUser(addUsername.getText(), addPassword.getText(), organisation.getText());
+
+                try {
+                    int credits = parseInt(addCredits.getText());
+                    System.out.println(credits);
+                    user.addOrganisation(addOrganisation.getText(), credits);
+
+                } catch (NumberFormatException error) {
+                    String message = "Credits must be an integer.";
+                    throw new InvalidValueException(message);
                 }
 
             } else if (e.getSource() == removeButton) {
-                user.removeUser(removeUsername.getText());
+                user.removeOrganisation(removeOrganisation.getText());
 
             } else if (e.getSource() == updateButton) {
-                user.changeUserPassword(updateUsername.getText(), updatePassword.getText());
+
+                try {
+                    int credits = parseInt(addCredits.getText());
+                    user.updateCreditAmount(addOrganisation.getText(), credits);
+                } catch (NumberFormatException error) {
+                    String message = "Credits must be an integer.";
+                    throw new InvalidValueException(message);
+                }
+
             }
-        } catch (DuplicationException | UnknownDatabaseException | NullValueException error) {
+        } catch (DuplicationException | UnknownDatabaseException | NullValueException | InvalidValueException error) {
             JOptionPane.showMessageDialog(this, error.getMessage(),
                     error.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
         }
-        user.refreshUsers();
+        user.refreshOrganisations();
 
 
     }

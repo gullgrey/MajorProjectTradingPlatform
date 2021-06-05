@@ -1,11 +1,15 @@
 package main.java.tradingPlatform;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
  * TODO
  */
 public class TPOrder implements Comparable<TPOrder>, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6743567631108323096L;
 
     private int id;
     private String organisation;

@@ -7,12 +7,15 @@ import main.java.tradingPlatform.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.lang.Integer.parseInt;
 
 public class NetworkServer {
 
@@ -49,7 +52,7 @@ public class NetworkServer {
                 try {
                     final NetworkDataSource.Command command = (NetworkDataSource.Command) inputStream.readObject();
                     handleCommand(inputStream, outputStream, command);
-                } catch (SocketTimeoutException ignored) {
+                } catch (SocketTimeoutException | StreamCorruptedException ignored) {
 
                 }
             }
@@ -69,10 +72,10 @@ public class NetworkServer {
             Set<String> configSet = configReader.readServerFile();
             String[] array = new String[5];
             array = configSet.toArray(array);
-            SOCKET_ACCEPT_TIMEOUT = Integer.parseInt(array[0]);
-            SOCKET_READ_TIMEOUT = Integer.parseInt(array[1]);
+            SOCKET_ACCEPT_TIMEOUT = parseInt(array[0]);
+            SOCKET_READ_TIMEOUT = parseInt(array[1]);
             propsFile = array[2];
-            PORT = Integer.parseInt(array[3]);
+            PORT = parseInt(array[3]);
 
         }catch (IOException e){
             //TODO handle this better
@@ -171,9 +174,12 @@ public class NetworkServer {
 
             case ADD_ORGANISATION -> {
                 final String organisation = (String) inputStream.readObject();
-                final int credits = inputStream.readInt();
+                final String credits = (String) inputStream.readObject();
+                int newCredits = parseInt(credits);
+                System.out.println(organisation);
+                System.out.println(credits);
                 synchronized (database) {
-                    int rowsAffected = database.addOrganisation(organisation, credits);
+                    int rowsAffected = database.addOrganisation(organisation, newCredits);
                     outputStream.writeInt(rowsAffected);
                 }
                 outputStream.flush();
@@ -255,9 +261,9 @@ public class NetworkServer {
             }
 
             case GET_ORDERS -> {
-                final int in = inputStream.readInt();
+                final String in = (String) inputStream.readObject();
                 boolean isBuyOrder = true;
-                if (in == 0){
+                if (in.equals("false")){
                     isBuyOrder = false;
                 }
                 synchronized (database) {
