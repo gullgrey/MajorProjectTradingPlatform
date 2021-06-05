@@ -72,6 +72,10 @@ public class NewTransactionTest {
         sellOrder.setCredits(assetPriceLow);
     }
 
+    /**
+     * Test adding a buy order sets the Organisation, Asset name, Amount and price per each when a Buy order
+     * is added
+     */
     @Test
     public void testAddBuyOrder() {
         newTransaction.addBuyOrder(buyOrder);
@@ -84,6 +88,10 @@ public class NewTransactionTest {
         );
     }
 
+    /**
+     * Test adding a buy order sets the Organisation, Asset name, Amount and price per each when a sell order
+     * is added
+     */
     @Test
     public void testAddSellOrder() {
         newTransaction.addSellOrder(sellOrder);
@@ -96,6 +104,9 @@ public class NewTransactionTest {
         );
     }
 
+    /**
+     * Test when adding a buy order the credits for organisation making the request drop by this amount.
+     */
     @Test
     public void testBuyOrderCredits() {
         newTransaction.addBuyOrder(buyOrder);
@@ -103,6 +114,10 @@ public class NewTransactionTest {
         assertEquals(finalCredits, dataSource.getCredits(buyOrganisation));
     }
 
+    /**
+     * Test when adding a sell order the Asset Amount for organisation making the request drop by the number
+     * of assets they are selling.
+     */
     @Test
     public void testSellOrderAssets() {
         newTransaction.addSellOrder(sellOrder);
@@ -110,6 +125,10 @@ public class NewTransactionTest {
         assertEquals(finalAmount, dataSource.getAssetAmount(sellOrganisation, standardAsset));
     }
 
+    /**
+     * Test when a sell order matches a buy order it will automatically complete the transaction and update
+     * the buying organisations assets amount.
+     */
     @Test
     public void testTransactionGainedAsset() {
         newTransaction.addSellOrder(sellOrder);
@@ -118,6 +137,10 @@ public class NewTransactionTest {
                 dataSource.getAssetAmount(buyOrganisation, standardAsset));
     }
 
+    /**
+     * Test when a sell order matches a buy order it will automatically complete the transaction and update
+     * the selling organisations credits.
+     */
     @Test
     public void testTransactionGainedCredits() {
         newTransaction.addSellOrder(sellOrder);
@@ -127,6 +150,9 @@ public class NewTransactionTest {
                 dataSource.getCredits(sellOrganisation));
     }
 
+    /**
+     * Test when a buy order can be removed off the trading platform.
+     */
     @Test
     public void testRemoveOrder() {
         newTransaction.addBuyOrder(buyOrder);
@@ -139,7 +165,7 @@ public class NewTransactionTest {
     }
 
     @Test
-    public void deleteThis() { //todo delete this
+    public void testWhenDealIsPresent() { //todo delete this
         buyOrder.setAmount(60);
         buyOrder.setCredits(assetPriceHigh);
         newTransaction.addBuyOrder(buyOrder);

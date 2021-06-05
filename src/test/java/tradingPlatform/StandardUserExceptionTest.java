@@ -39,6 +39,10 @@ public class StandardUserExceptionTest {
         dataSource.addAsset(bNewUserOrganisation, assetName, fullAssetAmount);
     }
 
+    /**
+     * Testing that when an invalid asset amount for a Buy Asset is attempted an
+     * InvalidValueException is thrown.
+     */
     @Test
     public void testbuyAssetInvalidAssetValueException() {
         assertThrows(InvalidValueException.class, () -> {
@@ -47,6 +51,10 @@ public class StandardUserExceptionTest {
         } );
     }
 
+    /**
+     * Testing that when an invalid PricePer Asset is attempted for a Buy Asset
+     * request an invalid an InvalidValueException is thrown.
+     */
     @Test
     public void testbuyAssetInvalidCreditPriceValueException() {
         assertThrows(InvalidValueException.class, () -> {
@@ -55,6 +63,10 @@ public class StandardUserExceptionTest {
         } );
     }
 
+    /**
+     * Testing that when both the PricePer Asset and Asset Amount for a Buy Asset
+     * request are invalid an InvalidValueException is thrown.
+     */
     @Test
     public void testbuyAssetBothAssetAmountCreditPriceValueException() {
         assertThrows(InvalidValueException.class, () -> {
@@ -62,7 +74,10 @@ public class StandardUserExceptionTest {
             standardUser.buyAsset(assetName, invalidInt, invalidInt);
         } );
     }
-
+    /**
+     * Testing that when an invalid asset Amount is attempted for a sell order an
+     * InvalidValueException is thrown.
+     */
     @Test
     public void testSellAssetInvalidAssetValueException() {
         assertThrows(InvalidValueException.class, () -> {
@@ -71,6 +86,10 @@ public class StandardUserExceptionTest {
         } );
     }
 
+    /**
+     * Testing that when an invalid PricePer Asset is attempted for a sell Asset
+     * request an invalid an InvalidValueException is thrown.
+     */
     @Test
     public void testSellAssetInvalidCreditPriceValueException() {
         assertThrows(InvalidValueException.class, () -> {
@@ -78,7 +97,10 @@ public class StandardUserExceptionTest {
             standardUser.sellAsset(assetName, assetAmount, invalidInt);
         } );
     }
-
+    /**
+     * Testing that when both the PricePer Asset and Asset Amount for a sell Asset
+     * request are invalid an InvalidValueException is thrown.
+     */
     @Test
     public void testSellAssetBothAssetAmountCreditPriceValueException() {
         assertThrows(InvalidValueException.class, () -> {
@@ -88,7 +110,8 @@ public class StandardUserExceptionTest {
     }
 
     /**
-     * Test removing an order when there are no orders on the trading platform.
+     * Test removing an order when there are no orders on the trading platform throws
+     * a NullValueException.
      */
     @Test
     public void testRemoveOrderNullValueException() {
@@ -98,6 +121,9 @@ public class StandardUserExceptionTest {
         } );
     }
 
+    /**
+     * Test removing an ID that will never be valid throws an InvalidValueException
+     */
     @Test
     public void testRemoveOrderInvalidValueException() {
         assertThrows(InvalidValueException.class, () -> {

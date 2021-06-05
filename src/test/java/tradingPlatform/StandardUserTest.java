@@ -105,7 +105,7 @@ public class StandardUserTest {
     }
 
     /**
-     * Checking that when an buy and sell order match it will update the selling users credits.
+     * Checking that when a buy and sell order match it will update the selling users credits.
      * @throws InvalidValueException
      * @throws NullValueException
      * @throws DuplicationException
@@ -122,12 +122,38 @@ public class StandardUserTest {
         assertTrue(newSellerCredits == sellerCredits + (assetAmount * creditPricePerAsset));
     }
 
+    /**
+     * Test that entering in the known ID of a Sell order on the system is removed.
+     * @throws DuplicationException
+     * @throws NullValueException
+     * @throws InvalidValueException
+     * @throws UnknownDatabaseException
+     */
     @Test
-    public void testRemovingOrder() throws DuplicationException, NullValueException,
+    public void testRemovingSellOrder() throws DuplicationException, NullValueException,
             InvalidValueException, UnknownDatabaseException {
         StandardUser StandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         StandardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
         Set<TPOrder> organisationsOrders = dataSource.getOrders(false);
+        TPOrder order = organisationsOrders.iterator().next();
+        int Id = order.getId();
+        StandardTest.removeOrder(Id);
+        assertEquals(0, dataSource.getOrders(false).size());
+    }
+
+    /**
+     * Test that entering in the known ID of a Buy order on the system is removed.
+     * @throws DuplicationException
+     * @throws NullValueException
+     * @throws InvalidValueException
+     * @throws UnknownDatabaseException
+     */
+    @Test
+    public void testRemovingBuyOrder() throws DuplicationException, NullValueException,
+            InvalidValueException, UnknownDatabaseException {
+        StandardUser StandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
+        StandardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
+        Set<TPOrder> organisationsOrders = dataSource.getOrders(true);
         TPOrder order = organisationsOrders.iterator().next();
         int Id = order.getId();
         StandardTest.removeOrder(Id);
@@ -188,6 +214,10 @@ public class StandardUserTest {
         assertEquals(startingCredits - (assetAmount * creditPricePerAsset), currentCredits);
     }
 
+    /**
+     * Destroys the database connection after every test.
+     * @throws SQLException
+     */
     @AfterEach
     public void resetDatabaseAftereach(){
         dataSource.deleteAll();
