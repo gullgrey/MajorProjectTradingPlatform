@@ -100,10 +100,11 @@ public class LoginFrame extends JFrame implements ActionListener {
             try {
                 if (login.checkSuppliedCredentials()) {
                     ItAdministration user = login.getItAdministration();
-                    SwingUtilities.invokeLater(() -> new MainFrame(user));
+                    SwingUtilities.invokeLater(() -> new AdminFrame(user));
 
                 } else {
-                    //todo
+                    StandardUser user = login.getStandardUser();
+                    SwingUtilities.invokeLater(() -> new StandardFrame(user));
                 }
                 setVisible(false);
                 dispose();

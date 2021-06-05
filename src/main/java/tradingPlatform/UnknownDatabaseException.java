@@ -1,5 +1,8 @@
 package main.java.tradingPlatform;
 
+/**
+ * todo
+ */
 public class UnknownDatabaseException extends Exception {
 
     private final String message;

@@ -1,6 +1,7 @@
 package main.java.GUI;
 
 import main.java.tradingPlatform.ItAdministration;
+import main.java.tradingPlatform.TPUser;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -8,15 +9,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainFrame extends JFrame implements ActionListener {
-
-    ItAdministration user;
+public abstract class MainFrame extends JFrame implements ActionListener {
 
     Container contentPane = getContentPane();
     JTabbedPane mainPane = new JTabbedPane();
 
-    JTabbedPane userPane;
-    JTabbedPane organisationPane;
+    JLabel organisationName = new JLabel();
+    JLabel username = new JLabel();
+    JLabel creditsTitle = new JLabel();
+    JLabel credits = new JLabel();
+
     JTabbedPane assetPane;
     JTabbedPane marketPane;
     JTabbedPane historyPane;
@@ -24,13 +26,10 @@ public class MainFrame extends JFrame implements ActionListener {
     JButton changePassword = new JButton("Change Password");
     JButton refresh = new JButton("Refresh");
 
-    public MainFrame(ItAdministration user) {
-        this.user = user;
-        setupPanes();
-        setLayoutManager();
-        addActionEvent();
+    public MainFrame() {
+//        this.user = user;
 
-        setTitle("IT Administration");
+        setLayoutManager();
         setVisible(true);
         setMinimumSize(new Dimension(1000, 400));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,16 +38,15 @@ public class MainFrame extends JFrame implements ActionListener {
     private void setLayoutManager() {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.add(setDisplayPanel());
-        contentPane.add(setMainPanel());
     }
 
     private JPanel setDisplayPanel() {
 
         Font displayFont = new Font("Arial", Font.BOLD, 16);
-        JLabel organisationName = new JLabel(user.getOrganisation());
-        JLabel username = new JLabel(user.getUsername());
         organisationName.setFont(displayFont);
         username.setFont(displayFont);
+        creditsTitle.setFont(displayFont);
+        credits.setFont(displayFont);
 
         JPanel displayPanel = new JPanel();
         displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.X_AXIS));
@@ -78,7 +76,8 @@ public class MainFrame extends JFrame implements ActionListener {
         leftPanel.add(orgPanel);
 
         //Credits
-        addCredits(creditsPanel);
+        creditsPanel.add(creditsTitle);
+        creditsPanel.add(credits);
         leftPanel.add(creditsPanel);
         displayPanel.add(leftPanel);
 
@@ -104,43 +103,9 @@ public class MainFrame extends JFrame implements ActionListener {
         return displayPanel;
     }
 
-    private void addCredits(JPanel panel) {
-        panel.add(new JLabel(""));
-    }
+    abstract JTabbedPane setMainPanel();
 
-    private JTabbedPane setMainPanel() {
-        mainPane.setMinimumSize(new Dimension(600, 300));
-        mainPane.addTab("Users", userPane);
-        mainPane.addTab("Organisations", organisationPane);
-        mainPane.addTab("Assets", assetPane);
-        mainPane.addTab("Market", marketPane);
-        mainPane.addTab("History", historyPane);
+    abstract void setupPanes();
 
-        return mainPane;
-    }
-
-    private void setupPanes() {
-
-        userPane = new UserPane(user);
-        organisationPane = new OrganisationPane(user);
-        assetPane = new AdminAssetPane(user);
-        marketPane = new MarketPane(user);
-        historyPane = new HistoryPane(user);
-    }
-
-    private void addActionEvent() {
-        changePassword.addActionListener(this);
-        refresh.addActionListener(this);
-        ChangeListener changeListener = changeEvent -> user.refreshAll();
-        mainPane.addChangeListener(changeListener);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == changePassword) {
-            new ChangePassword(null, user);
-        } else if (e.getSource() == refresh) {
-            user.refreshAll();
-        }
-    }
+    abstract void addActionEvent();
 }
