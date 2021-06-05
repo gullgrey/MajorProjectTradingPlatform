@@ -172,7 +172,7 @@ public abstract class TPUser {
     }
 
     public void refreshSellOrders() {
-        dataSource = new NetworkDataSource();
+//        dataSource = new NetworkDataSource();
         sellOrderList.removeAllElements();
         Set<TPOrder> orders = dataSource.getOrders(false);
         if (orders != null) {
