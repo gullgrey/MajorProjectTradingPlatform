@@ -5,6 +5,7 @@ import main.java.network.NetworkDataSource;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Vector;
@@ -34,7 +35,12 @@ public abstract class TPUser {
         this.organisation = organisation;
 
         organisationList = new DefaultListModel<>();
-        userList = new DefaultTableModel();
+        userList = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         userList.addColumn("Username");
         userList.addColumn("Organisation");
         assetList = new DefaultListModel<>();
@@ -79,11 +85,24 @@ public abstract class TPUser {
     /**
      * FROM USER PERSPECTIVE: Allows them to change their password.
      * FROM ADMINS PERSPECTIVE : Allows them to update a given users password.
-     * @param username the user whose password is to be changed.
+     * @param userName the user whose password is to be changed.
      * @param password new password to set for the user
      */
-    public void changeUserPassword(String username, String password) {
-
+    public void changeUserPassword(String userName, String password) throws UnknownDatabaseException,
+            NullValueException {
+        String hashedPassword;
+        try {
+            hashedPassword = HashPassword.hashedPassword(userName, password);
+        } catch (NoSuchAlgorithmException e) {
+            throw new UnknownDatabaseException(generalMessage);
+        }
+        int rowsAffected = dataSource.updatePassword(userName, hashedPassword);
+        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
+            String message = "User does not exist.";
+            throw new NullValueException(message);
+        } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {
+            throw new UnknownDatabaseException(generalMessage);
+        }
     }
 
     public void refreshOrganisations() {
@@ -94,44 +113,43 @@ public abstract class TPUser {
     }
 
     public void refreshUsers() {
-//        try {
-////            userList.addRow(new String[]{"", ""});
-//        userList.setRowCount(0);
-        Set<UserOrganisation> actualUsers = dataSource.getUsers();
-        ArrayList<String> actualNames = new ArrayList<>();
-        for (UserOrganisation user : actualUsers) {
-            actualNames.add(user.getUser());
-            System.out.println(user.getUser());
-        }
+        try {
+//            SwingUtilities.invokeLater(() -> userList.setRowCount(0));
 
-        ArrayList<Integer> deleteValues = new ArrayList<>();
-        ArrayList<String> checkUsernames = new ArrayList<>();
-        for (int row = 0; row < userList.getRowCount(); row++) {
-            String username = userList.getValueAt(row, 0).toString();
-            checkUsernames.add(username);
-            if (!actualNames.contains(username)) {
-                deleteValues.add(row);
-
-            }
-        }
-
-        int indexShift = 0;
-        for (int deleteIndex : deleteValues) {
-
-            userList.removeRow(deleteIndex - indexShift);
-            indexShift--;
-        }
-
-        for (UserOrganisation user : actualUsers) {
-            if (!checkUsernames.contains(user.getUser())){
-                userList.addRow(new String[]{user.getUser(), user.getOrganisation()});
+            Set<UserOrganisation> actualUsers = dataSource.getUsers();
+            ArrayList<String> actualNames = new ArrayList<>();
+            for (UserOrganisation user : actualUsers) {
+                actualNames.add(user.getUser());
             }
 
+            ArrayList<Integer> deleteValues = new ArrayList<>();
+            ArrayList<String> checkUsernames = new ArrayList<>();
+            for (int row = 0; row < userList.getRowCount(); row++) {
+                String username = userList.getValueAt(row, 0).toString();
+                checkUsernames.add(username);
+                if (!actualNames.contains(username)) {
+                    deleteValues.add(row);
+
+                }
+            }
+
+            int indexShift = 0;
+            for (int deleteIndex : deleteValues) {
+
+                userList.removeRow(deleteIndex - indexShift);
+                indexShift--;
+            }
+
+            for (UserOrganisation user : actualUsers) {
+                if (!checkUsernames.contains(user.getUser())){
+//                SwingUtilities.invokeLater(() -> userList.addRow(new String[]{user.getUser(), user.getOrganisation()}));
+                    userList.addRow(new String[]{user.getUser(), user.getOrganisation()});
+                }
+
+            }
+        } catch (ArrayIndexOutOfBoundsException ignore) {
+
         }
-//        dataSource = new NetworkDataSource();
-//        } catch (ArrayIndexOutOfBoundsException ignore) {
-//
-//        }
     }
 
     public void refreshAssets() {
@@ -150,7 +168,7 @@ public abstract class TPUser {
                 buyOrderList.addElement(order);
             }
         }
-        dataSource = new NetworkDataSource();
+//        dataSource = new NetworkDataSource();
     }
 
     public void refreshSellOrders() {
@@ -162,7 +180,7 @@ public abstract class TPUser {
                 sellOrderList.addElement(order);
             }
         }
-        dataSource = new NetworkDataSource();
+//        dataSource = new NetworkDataSource();
 
     }
 

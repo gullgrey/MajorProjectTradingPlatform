@@ -1,7 +1,8 @@
 package main.java.tradingPlatform;
 
 public class WrongCredentialException extends Exception{
-    String message;
+
+    private final String message;
 
     public WrongCredentialException(String message) {
         this.message = message;

@@ -2,7 +2,7 @@ package main.java.tradingPlatform;
 
 public class UnknownDatabaseException extends Exception {
 
-    String message;
+    private final String message;
 
     public UnknownDatabaseException(String message) {
         this.message = message;
