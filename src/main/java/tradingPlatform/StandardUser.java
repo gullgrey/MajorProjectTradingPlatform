@@ -79,6 +79,9 @@ public class StandardUser extends TPUser {
      * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
      */
     public void removeOrder(int orderId) throws InvalidValueException, NullValueException, UnknownDatabaseException {
+        if(orderId < 0){
+            throw  new InvalidValueException("OrderID provided is not valid");
+        }
         TPOrder order = dataSource.getOrder(orderId);
         if (order == null) {
             String message = "Order with that ID does not exist.";

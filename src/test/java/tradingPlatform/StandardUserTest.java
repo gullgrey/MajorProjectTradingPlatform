@@ -121,6 +121,7 @@ public class StandardUserTest {
         int newSellerCredits = otherStandardTest.getCredits(); // Storing updated credit amount.
         assertTrue(newSellerCredits == sellerCredits + (assetAmount * creditPricePerAsset));
     }
+
     @Test
     public void testRemovingOrder() throws DuplicationException, NullValueException,
             InvalidValueException, UnknownDatabaseException {
