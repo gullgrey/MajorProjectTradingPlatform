@@ -16,11 +16,12 @@ import java.util.Set;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import test.java.mockups.DataSourceMockup;
 
 public class ItAdministrationTestException {
 
     private static final String propsFile = "src/test/resources/maria.props";
-    private static TradingPlatformDataSource dataSource;
+    //private static TradingPlatformDataSource dataSource;
     private static ItAdministration adminAccount;
     //private static NetworkDataSource dataSource;
     private static final String aNewUser = "User666";
@@ -36,6 +37,7 @@ public class ItAdministrationTestException {
     private static final String falseVariable = "DoesNotExist";
     private static  ItAdministration adminUser;
     private static final String reserved = "ADMIN";
+    private static DataSourceMockup dataSource;
 
     /**
      * Initializes the database for testing.
@@ -45,7 +47,8 @@ public class ItAdministrationTestException {
      */
     @BeforeAll
     static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
-        dataSource = new NetworkDataSource();
+        dataSource = new DataSourceMockup();
+        //dataSource = new NetworkDataSource();
         adminAccount = new ItAdministration(dataSource, aNewUser);
         adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
     }
@@ -90,6 +93,7 @@ public class ItAdministrationTestException {
     @Test
     public void addStandardUserThrowsDuplicate() {
         assertThrows(DuplicationException.class , () -> {
+            adminAccount.addOrganisation(organisation1,0);
             adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
             adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
         });
