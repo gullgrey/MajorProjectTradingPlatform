@@ -100,7 +100,8 @@ public class LoginFrame extends JFrame implements ActionListener {
             try {
                 if (login.checkSuppliedCredentials()) {
                     ItAdministration user = login.getItAdministration();
-                    new MainFrame(user);
+                    SwingUtilities.invokeLater(() -> new MainFrame(user));
+
                 } else {
                     //todo
                 }
@@ -108,7 +109,7 @@ public class LoginFrame extends JFrame implements ActionListener {
                 dispose();
             } catch (NullValueException | UnknownDatabaseException error) {
                 JOptionPane.showMessageDialog(this, error.getMessage(),
-                        error.getClass().toString(), JOptionPane.ERROR_MESSAGE);
+                        error.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
             }
 
         }

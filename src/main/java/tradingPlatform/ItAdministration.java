@@ -2,6 +2,8 @@ package main.java.tradingPlatform;
 
 import main.java.database.TradingPlatformDataSource;
 
+import java.security.NoSuchAlgorithmException;
+
 
 /**
  * This class handles the administration applications sides of the system such as creating
@@ -29,7 +31,13 @@ public class ItAdministration extends TPUser {
      * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void addStandardUser(String userName, String password, String organisation) throws DuplicationException, NullValueException, UnknownDatabaseException {
-        int rowsAffected = dataSource.addUser(userName, password, PlatformGlobals.getStandardOrganisation(), organisation);
+        String hashedPassword;
+        try {
+            hashedPassword = HashPassword.hashedPassword(userName, password);
+        } catch (NoSuchAlgorithmException e) {
+            throw new UnknownDatabaseException(errorMessage);
+        }
+        int rowsAffected = dataSource.addUser(userName, hashedPassword, PlatformGlobals.getStandardOrganisation(), organisation);
         if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
             String message = "User already exists.";
             throw new DuplicationException(message);
@@ -52,9 +60,14 @@ public class ItAdministration extends TPUser {
      * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
     public void addItUser(String userName, String password) throws DuplicationException, UnknownDatabaseException {
-        int rowsAffected = dataSource.addUser(userName, password, PlatformGlobals.getAdminOrganisation(),
+        String hashedPassword;
+        try {
+            hashedPassword = HashPassword.hashedPassword(userName, password);
+        } catch (NoSuchAlgorithmException e) {
+            throw new UnknownDatabaseException(errorMessage);
+        }
+        int rowsAffected = dataSource.addUser(userName, hashedPassword, PlatformGlobals.getAdminOrganisation(),
                 PlatformGlobals.getAdminOrganisation());
-        System.out.println(rowsAffected);
         if (rowsAffected == PlatformGlobals.getPrimaryKeyFail()) {
             String message = "Admin user already exists.";
             throw new DuplicationException(message);
