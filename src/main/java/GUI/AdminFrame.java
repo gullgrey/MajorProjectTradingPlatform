@@ -1,12 +1,16 @@
 package main.java.GUI;
 
 import main.java.tradingPlatform.ItAdministration;
-import main.java.tradingPlatform.TPUser;
-
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+
+/**
+ * This class implements methods in MainFrame specific to what an Admin can see
+ * and is responsible for setting up the main display GUI that all methods
+ * that implement it use.
+ */
 
 public class AdminFrame extends MainFrame{
 

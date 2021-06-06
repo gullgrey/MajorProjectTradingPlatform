@@ -12,6 +12,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * This class is responsible for the "History" tab in the Admin or Members GUI and
+ * how the data is displayed.
+ */
+
 public class HistoryPane extends JTabbedPane implements ActionListener {
 
     TPUser user;
@@ -36,7 +41,6 @@ public class HistoryPane extends JTabbedPane implements ActionListener {
 
     private void setUserPane(){
         JPanel addUserPanel = addUserPanel();
-        //
         addTab("History", addUserPanel);
     }
 

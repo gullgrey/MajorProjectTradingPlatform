@@ -2,11 +2,15 @@ package main.java.GUI;
 
 import main.java.database.TradingPlatformDataSource;
 import main.java.tradingPlatform.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+/**
+ * This class handles the display of the Login GUI that both Admin and Members
+ * user inorder to access the trading Platform.
+ */
 
 public class LoginFrame extends JFrame implements ActionListener {
 

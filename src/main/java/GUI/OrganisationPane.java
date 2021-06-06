@@ -14,6 +14,11 @@ import java.util.Comparator;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * This class is handles the Admin tab "Organisations" and how the data
+ * is displayed and can be modified.
+ */
+
 public class OrganisationPane extends JTabbedPane implements ActionListener {
 
     ItAdministration user;

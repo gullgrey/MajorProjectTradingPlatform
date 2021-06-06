@@ -12,7 +12,7 @@ public class HashPassword {
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
     /**
-     * This method is used to has the user's password.
+     * This method is used to hash the user's password.
      *
      * @param username the username of the user.
      * @param password the password of the user.
@@ -28,9 +28,9 @@ public class HashPassword {
     }
 
     /**
-     * This method is used to encode the hash required for the password.
-     * @param bytes the encoding length.
-     * @return encoding for hashing the password.
+     * This method is used to convert the Byte array the Hash is in to a Hex representations.
+     * @param bytes the encoding password in byte form.
+     * @return String of hashed password in Hex form.
      */
     private static String bytesToStringHex(byte[] bytes){
         char[] hexChars = new char[bytes.length * 2];

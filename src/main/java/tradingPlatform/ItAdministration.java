@@ -1,7 +1,6 @@
 package main.java.tradingPlatform;
 
 import main.java.database.TradingPlatformDataSource;
-
 import java.security.NoSuchAlgorithmException;
 
 

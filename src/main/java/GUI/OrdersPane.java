@@ -17,6 +17,10 @@ import java.util.Comparator;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * This Class is responsible for the GUI display for a Members "Orders"
+ * tab.
+ */
 public class OrdersPane extends JTabbedPane implements ActionListener {
     StandardUser user;
     StandardFrame frame;

@@ -9,6 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * This class is responsible for generating a new Frame to either an Admin
+ * or Member when they wish to modify their current password.
+ */
+
 public class ChangePassword extends LoginFrame{
 
     TPUser user;

@@ -12,6 +12,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * This class is responsible for the GUI setup and layout looks like for the
+ * Admin's in the "Users" tab option.
+ */
 public class UserPane extends JTabbedPane implements ActionListener {
 
     ItAdministration user;

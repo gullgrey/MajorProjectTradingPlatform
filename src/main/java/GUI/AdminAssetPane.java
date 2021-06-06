@@ -14,6 +14,10 @@ import java.util.Comparator;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * This class handles the GUI layout for an Admin "Asset" tab. Provides additional
+ * widgets that allow and Admin to add assets to an specific Organisation.
+ */
 public class AdminAssetPane extends JTabbedPane implements ActionListener {
 
     ItAdministration user;

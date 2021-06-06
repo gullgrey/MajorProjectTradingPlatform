@@ -2,7 +2,6 @@ package main.java.tradingPlatform;
 
 import main.java.database.TradingPlatformDataSource;
 
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 

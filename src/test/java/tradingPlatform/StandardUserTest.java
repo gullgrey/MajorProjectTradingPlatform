@@ -97,7 +97,8 @@ public class StandardUserTest {
         standardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
         otherStandardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
         int newBuyerCredits = standardTest.getCredits(); // Storing updated credit amount.
-        assertTrue(newBuyerCredits == buyerCredits - (assetAmount * creditPricePerAsset));
+        System.out.printf("Hell");
+        assertEquals(newBuyerCredits, buyerCredits - (assetAmount * creditPricePerAsset));
     }
 
     /**
@@ -115,7 +116,7 @@ public class StandardUserTest {
         standardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
         otherStandardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
         int newSellerCredits = otherStandardTest.getCredits(); // Storing updated credit amount.
-        assertTrue(newSellerCredits == sellerCredits + (assetAmount * creditPricePerAsset));
+        assertEquals(newSellerCredits, sellerCredits + (assetAmount * creditPricePerAsset));
     }
 
     /**

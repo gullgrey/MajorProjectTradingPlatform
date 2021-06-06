@@ -1,13 +1,13 @@
 package main.java.GUI;
 
-import main.java.tradingPlatform.ItAdministration;
-import main.java.tradingPlatform.TPUser;
-
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+/**
+ * This class is responsible for generating the key GUI methods that are both Admin and
+ * Members Share.
+ */
 
 public abstract class MainFrame extends JFrame implements ActionListener {
 

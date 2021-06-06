@@ -9,6 +9,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * This class handles the GUI layout for a Members "Asset" tab allowing them
+ * to see all the assets held by the members organisation.
+ */
 public class AssetPane extends JTabbedPane{
     StandardUser user;
 

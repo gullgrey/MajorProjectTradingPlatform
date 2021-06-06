@@ -18,7 +18,7 @@ public class TestHashFunctions {
     @Test
     public void testHash() throws NoSuchAlgorithmException {
         String HashedPassword = HashPassword.hashedPassword("UsernameAndPassword", "UsernameAndPassword");
-        assertEquals( "F9761DA33A82C72A80159A9EA4900241B1539B686B49EB9D3C28BC99D70B3497",HashedPassword);
+        assertEquals( "3183140D24B23B1DDC8C2E3718E4E4BA365C2FD3E0B8877ECC75A6CCF68DBFEC",HashedPassword);
     }
 
     /**

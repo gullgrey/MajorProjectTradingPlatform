@@ -12,6 +12,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * This class handles the displayed for all current trades in the "Market"
+ * tab for both Admin and Members.
+ */
 public class MarketPane extends JTabbedPane implements ActionListener {
 
     TPUser user;

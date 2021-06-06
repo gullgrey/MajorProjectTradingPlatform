@@ -8,6 +8,12 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * This class implements methods in MainFrame specific to what a Member can see
+ * and is responsible for setting up the main display GUI that all methods
+ * implement it use.
+ */
+
 public class StandardFrame extends MainFrame{
 
     StandardUser user;
