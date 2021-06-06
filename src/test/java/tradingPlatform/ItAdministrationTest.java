@@ -49,6 +49,7 @@ public class ItAdministrationTest {
         //Set<TPOrder> order1 = dataSource.getOrders(true);
         //Set<TPOrder> order2 = dataSource.getOrders(false);
         //dataSource.getOrderHistory();
+        //TODO kill this if needed
         adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
     }
 
