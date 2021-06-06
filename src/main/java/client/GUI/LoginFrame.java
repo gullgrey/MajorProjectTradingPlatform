@@ -95,7 +95,6 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         if (e.getSource() == loginButton) {
 
-            //todo login logic
             String userText;
             String passwordText;
             userText = userTextField.getText();
