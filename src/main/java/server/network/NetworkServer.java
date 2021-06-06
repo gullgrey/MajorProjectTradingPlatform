@@ -19,7 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Integer.parseInt;
 
 /**
- * todo
+ * This class is responsible for handling the communication with the database and process's
+ * the inputs to the queries using the input and output stream.
  */
 public class NetworkServer {
 
