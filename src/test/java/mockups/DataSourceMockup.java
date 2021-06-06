@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class DataSourceMockup implements TradingPlatformDataSource {
 
-    private DatabaseMockup database;
+    DatabaseMockup database;
 //    private Set<UserMockup> userMock = new HashSet<>();
 //    private Set<UserOrganisation> userOrganisationList = new HashSet<>();
 //    private Set<Organisation> organisationsList = new HashSet<>();
@@ -409,7 +409,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
                 return 1;
             }
         }
-        return PlatformGlobals.getForeignKeyFail();
+        return PlatformGlobals.getNoRowsAffected();
     }
 
     /**
@@ -445,7 +445,13 @@ public class DataSourceMockup implements TradingPlatformDataSource {
      */
     @Override
     public TPOrder getOrder(int idx) {
-        return new TPOrder();
+
+        for (TPOrder order : database.orderList) {
+            if (order.getId() == idx) {
+                return order;
+            }
+        }
+        return null;
     }
 
     /**
@@ -454,7 +460,22 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     @Override
     public Set<TPOrder> getOrders(boolean isBuyOrder) {
         //add a set
-        return new TreeSet<TPOrder>();
+        Set<TPOrder> buyOrders = new HashSet<>();
+        Set<TPOrder> sellOrders = new HashSet<>();
+
+        for (TPOrder order : database.orderList) {
+            if (order.getType().equals(PlatformGlobals.getBuyOrder())) {
+                buyOrders.add(order);
+            } else {
+                sellOrders.add(order);
+            }
+        }
+
+        if (isBuyOrder) {
+            return buyOrders;
+        } else {
+            return sellOrders;
+        }
     }
 
     /**
@@ -464,13 +485,23 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     public int addOrder(String organisation, String asset, int amount, int credits, boolean isBuyOrder) {
         String isType;
         if (isBuyOrder) {
-            isType = "BUY";
+            isType = PlatformGlobals.getBuyOrder();
         } else {
-            isType = "SELL";
+            isType = PlatformGlobals.getSellOrder();
         }
-        UserMockup aOrder = new UserMockup(organisation, asset, amount, credits, isType);
-        database.orderList.add(aOrder);
-        return 1;
+        TPOrder order = new TPOrder();
+        order.setOrganisation(organisation);
+        order.setAsset(asset);
+        order.setAmount(amount);
+        order.setCredits(credits);
+        order.setType(isType);
+
+        NewTransaction transaction = new NewTransaction(new NewTransactionDataSourceMockup(database));
+        if (isBuyOrder) {
+            return transaction.addBuyOrder(order);
+        } else {
+            return transaction.addSellOrder(order);
+        }
     }
 
     /**
@@ -479,7 +510,10 @@ public class DataSourceMockup implements TradingPlatformDataSource {
      */
     @Override
     public int deleteOrder(int idx) {
-        return 0;
+
+        NewTransactionDataSourceMockup data = new NewTransactionDataSourceMockup(database);
+        NewTransaction transaction = new NewTransaction(data);
+        return transaction.removeOrder(idx);
     }
 
     /**
@@ -488,7 +522,20 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     @Override
     public int addTransaction(String buyingOrganisation, String sellingOrganisation, String asset, int amount,
                               int credits) {
-        return 0;
+
+        Transaction transaction = new Transaction();
+        transaction.setId(database.historyCount);
+        transaction.setBuyingOrganisation(buyingOrganisation);
+        transaction.setSellingOrganisation(sellingOrganisation);
+        transaction.setAsset(asset);
+        transaction.setAmount(amount);
+        transaction.setCredits(credits);
+        transaction.setDateTime("");
+
+        database.transactionList.add(transaction);
+
+        database.historyCount++;
+        return 1;
     }
 
     /**
@@ -496,7 +543,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
      */
     @Override
     public Set<Transaction> getOrderHistory() {
-        return new TreeSet<>();
+        return database.transactionList;
     }
 
     /**

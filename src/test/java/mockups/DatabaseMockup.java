@@ -11,14 +11,11 @@ public class DatabaseMockup {
     Set<UserOrganisation> userOrganisationList = new HashSet<>();
     Set<Organisation> organisationsList = new HashSet<>();
     Set<Asset> assetsList = new HashSet<>();
-    final Set<UserMockup> orderList = new HashSet<>();
-    final Set<UserMockup> sellOrderList = new HashSet<>();
-    final Set<Transaction> transationList = new HashSet<>();
-    static DataSourceMockup dataSource;
+    final Set<TPOrder> orderList = new HashSet<>();
+    final Set<Transaction> transactionList = new HashSet<>();
 
-    String organisationMember;
-    static final String adminUserName = "Admin";
-    int count = 0;
+    int orderCount = 0;
+    int historyCount = 0;
     String admin = PlatformGlobals.getAdminOrganisation();
     Organisation org = new Organisation(admin, 0);
     UserMockup aUser = new UserMockup(admin, admin, admin, admin);

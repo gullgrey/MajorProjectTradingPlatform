@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
+import test.java.mockups.NewTransactionDataSourceMockup;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -41,7 +42,7 @@ public class NewTransactionTest {
      */
     @BeforeAll
     static void setupDatabase() throws IOException, SQLException {
-        dataSource = new DataSourceMockup(new DatabaseMockup());
+        dataSource = new NewTransactionDataSourceMockup(new DatabaseMockup());
         newTransaction = new NewTransaction(dataSource);
         dataSource.addOrganisation(buyOrganisation, standardOrganisationCredits);
         dataSource.addOrganisation(sellOrganisation, standardOrganisationCredits);
