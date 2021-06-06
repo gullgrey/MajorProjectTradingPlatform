@@ -6,7 +6,8 @@ import java.sql.SQLException;
 import java.util.Set;
 
 /**
- * TODO
+ * This interface is responsible for handling all the database implementations and queries. This class
+ * sets the precedence for both the database and the database mockup classes.
  */
 public interface TradingPlatformDataSource {
 
@@ -14,7 +15,7 @@ public interface TradingPlatformDataSource {
      * Gets the number of credits an organisation has.
      *
      * @param organisation The name of the organisational unit.
-     * @return the number of credits an organisation has.
+     * @return the number of credits an organisation has or an integer -3 for generalSQLFail.
      */
     int getCredits(String organisation);
 
@@ -23,14 +24,14 @@ public interface TradingPlatformDataSource {
      *
      * @param organisation The name of the organisational unit.
      * @param credits The amount the organisation's credits change by. Can be positive or negative.
-     * @return
+     * @return returns an integer 0 for fail or integer 1 for success.
      */
     int updateCredits(String organisation, int credits);
 
     /**
      * Retrieves a set of assets and their organisations and amounts.
      *
-     * @return A set of all of the assets that belong to an organisational unit
+     * @return A set of all of the assets that belong to an organisational unit or null.
      */
     Set<Asset> getAssets();
 
@@ -40,7 +41,8 @@ public interface TradingPlatformDataSource {
      * @param organisation The name of the organisational unit.
      * @param asset The name of the asset to be added.
      * @param amount The amount of the asset to be added.
-     * @returns
+     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addAsset(String organisation, String asset, int amount);
 
@@ -49,7 +51,7 @@ public interface TradingPlatformDataSource {
      *
      * @param organisation The name of the organisational unit.
      * @param asset  The name of the asset.
-     * @return the integer value of the amount of the asset from the organisation.
+     * @return the number of credits an organisation has or an integer -3 for generalSQLFail.
      */
     int getAssetAmount(String organisation, String asset);
 
@@ -58,7 +60,7 @@ public interface TradingPlatformDataSource {
      *
      * @param organisation The name of the organisational unit.
      * @param asset The name of the asset to be removed.
-     * @return
+     * @return returns an integer 0 for fail or integer 1 for success.
      */
     int deleteAsset(String organisation, String asset);
 
@@ -68,14 +70,14 @@ public interface TradingPlatformDataSource {
      * @param organisation The name of the organisational unit.
      * @param asset The name of the asset to be updated.
      * @param amount The amount the asset is changed by. Can be positive or negative.
-     * @return
+     * @return returns an integer 0 for fail or integer 1 for success.
      */
     int updateAssetAmount(String organisation, String asset, int amount);
 
     /**
      *  Retrieves the names of all of the organisations in the database
      *
-     * @return a set of all the organisation names.
+     * @return A set of all of the organisations or null.
      */
     Set<Organisation> getOrganisations();
 
@@ -83,7 +85,7 @@ public interface TradingPlatformDataSource {
      * Retrieves the name of the organisational unit for the inputted user.
      *
      * @param username The username of a user.
-     * @return the organisational unit of the inputted user.
+     * @return the organisational unit of the inputted user or null.
      */
     String getUserOrganisation(String username);
 
@@ -92,21 +94,22 @@ public interface TradingPlatformDataSource {
      *
      * @param organisation The name of the new organisation.
      * @param credits The amount of credits the new organisation starts with.
-     * @returns
+     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addOrganisation(String organisation, int credits);
 
     /**
      * Deletes an organisation from the database.
      * @param organisation The name of the organisational unit.
-     * @return
+     * @return returns an integer 0 for fail or integer 1 for success.
      */
     int deleteOrganisation(String organisation);
 
     /**
      * Retrieves the set of usernames with access to the trading platform.
      *
-     * @return a set of usernames.
+     * @return a set of usernames and organisations or null.
      */
     Set<UserOrganisation> getUsers();
 
@@ -114,7 +117,7 @@ public interface TradingPlatformDataSource {
      * Returns the hashed password of the user with the inputted username.
      *
      * @param username The username of a user.
-     * @return a hashed password.
+     * @return a hashed password or null.
      */
     String getUserPassword(String username);
 
@@ -126,7 +129,8 @@ public interface TradingPlatformDataSource {
      * @param password A hashed password.
      * @param type The type of user being created (STANDARD / ADMIN)
      * @param organisation The name of the organisational unit. Null if the new user is IT admin.
-     * @returns
+     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addUser(String username, String password, String type, String organisation);
 
@@ -134,7 +138,7 @@ public interface TradingPlatformDataSource {
      * Deletes a user from the database.
      *
      * @param username The username of a user.
-     * @return
+     * @return returns an integer 0 for fail or integer 1 for success.
      */
     int deleteUser(String username);
 
@@ -143,7 +147,7 @@ public interface TradingPlatformDataSource {
      *
      * @param username The username of a user.
      * @param password A hashed password.
-     * @return
+     * @return returns an integer 0 for fail or integer 1 for success.
      */
     int updatePassword(String username, String password);
 
@@ -152,7 +156,7 @@ public interface TradingPlatformDataSource {
      * object contains the id, organisation, asset, amount, credits, date-time and type of order.
      *
      * @param idx the integer id of a buy or sell order
-     * @return an order object that contains all of the order information
+     * @return an order object that contains all of the order information or null.
      */
     TPOrder getOrder(int idx);
 
@@ -161,7 +165,7 @@ public interface TradingPlatformDataSource {
      * The order information is retrieved from the database.
      *
      * @param isBuyOrder True if the orders are buy orders. False if they're sell orders.
-     * @return a set of TPOrder objects with all the order information.
+     * @return a set of TPOrder objects with all the order information or null.
      */
     Set<TPOrder> getOrders(boolean isBuyOrder);
 
@@ -173,7 +177,8 @@ public interface TradingPlatformDataSource {
      * @param amount The amount of the asset.
      * @param credits The number of credits the asset is listed for.
      * @param isBuyOrder True if the order is a buy order. False if its a sell order.
-     * @returns
+     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addOrder(String organisation, String asset, int amount,
                   int credits, boolean isBuyOrder);
@@ -182,7 +187,7 @@ public interface TradingPlatformDataSource {
      * Removes a buy or sell order from the database that corresponds to the inputted id.
      *
      * @param idx the integer id of a buy or sell order.
-     * @return
+     * @return returns an integer 0 for fail or integer 1 for success.
      */
     int deleteOrder(int idx);
 
@@ -194,7 +199,8 @@ public interface TradingPlatformDataSource {
      * @param asset The name of the asset that was sold.
      * @param amount The amount of the asset that was sold.
      * @param credits The number of credits the asset was sold for.
-     * @returns
+     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addTransaction(String buyingOrganisation, String sellingOrganisation,
                          String asset, int amount, int credits);
@@ -202,14 +208,14 @@ public interface TradingPlatformDataSource {
     /**
      * Creates a set of Transaction objects. The order information is retrieved from the database.
      *
-     * @return a set of Transaction objects with all the transaction information.
+     * @return a set of Transaction objects with all the transaction information or null.
      */
     Set<Transaction> getOrderHistory();
 
     /**
      * Deletes all rows from every table in the database, except for the organisation
      * with the name "ADMIN".
-     * @returns
+     * @returns returns an integer 0 for fail or integer 1 for success.
      */
     int deleteAll();
 
