@@ -85,7 +85,7 @@ public class ItAdministration extends TPUser {
      */
     public void removeUser(String userName) throws NullValueException, UnknownDatabaseException {
         int rowsAffected = dataSource.deleteUser(userName);
-        if (rowsAffected == PlatformGlobals.getForeignKeyFail()) {
+        if (rowsAffected == PlatformGlobals.getNoRowsAffected()) {
             String message = "User doesn't exist.";
             throw new NullValueException(message);
         } else if (rowsAffected == PlatformGlobals.getGeneralSQLFail()) {

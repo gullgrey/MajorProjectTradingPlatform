@@ -22,8 +22,10 @@ public class HashFunctionTest {
      */
     @Test
     public void testHashIsTheSameTwoItterationsTime() throws NoSuchAlgorithmException {
-        String HashedPassword = HashPassword.hashedPassword("UsernameAndPassword", "UsernameAndPassword");
-        String HashedPassword2 = HashPassword.hashedPassword("UsernameAndPassword", "UsernameAndPassword");
+        String HashedPassword = HashPassword.hashedPassword("UsernameAndPassword",
+                "UsernameAndPassword");
+        String HashedPassword2 = HashPassword.hashedPassword(
+                "UsernameAndPassword", "UsernameAndPassword");
         assertEquals(HashedPassword, HashedPassword2);
     }
 
@@ -32,10 +34,12 @@ public class HashFunctionTest {
      */
     @Test
     public void testHashIsTheSameTenItterationsTime() throws NoSuchAlgorithmException {
-        String FirstHashedPassword = HashPassword.hashedPassword("UsernameAndPassword", "UsernameAndPassword");
+        String FirstHashedPassword = HashPassword.hashedPassword("UsernameAndPassword",
+                "UsernameAndPassword");
         String HashedPassword = "";
         for(int i = 0; i < 10; i++){
-            HashedPassword = HashPassword.hashedPassword("UsernameAndPassword", "UsernameAndPassword");
+            HashedPassword = HashPassword.hashedPassword("UsernameAndPassword",
+                    "UsernameAndPassword");
         }
         assertEquals(FirstHashedPassword, HashedPassword);
     }
@@ -45,7 +49,8 @@ public class HashFunctionTest {
      */
     @Test
     public void testHashUsersWithAlmostIdenticalCredentials() throws NoSuchAlgorithmException {
-        String HashedPassword = HashPassword.hashedPassword("UsernameAndPassword", "UsernameAndPassword");
+        String HashedPassword = HashPassword.hashedPassword("UsernameAndPassword",
+                "UsernameAndPassword");
         String HashedPassword2 = HashPassword.hashedPassword("ADMIN2", "UsernameAndPassword");
         assertNotSame(HashedPassword, HashedPassword2);
     }

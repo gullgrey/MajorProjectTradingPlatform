@@ -4,10 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import main.java.client.tradingPlatform.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
 
@@ -37,7 +34,7 @@ public class LoginTest {
      */
     @Test
     public void TestIsAdminLogginIn() throws UnknownDatabaseException, WrongCredentialException, NetworkException {
-        Login lg = new Login(adminUser, adminPassword, dataSource);
+        Login lg = new Login(adminUser1, adminPassword, dataSource);
         boolean IsLoginValid = lg.checkSuppliedCredentials();
         assertTrue(IsLoginValid);
     }
@@ -57,8 +54,12 @@ public class LoginTest {
      * Destroys the database connection after every test.
      */
     @AfterEach
-    public void resetDatabaseAftereach(){
+    public void resetDatabaseAftereach() throws DuplicationException, UnknownDatabaseException, InvalidValueException, NullValueException {
         dataSource.deleteAll();
+        ItAdministration administrator = new ItAdministration(dataSource, adminUser);
+        administrator.addItUser(adminUser1, adminPassword);
+        administrator.addOrganisation(setTestOrganisation, testOrganisationCredits);
+        administrator.addStandardUser(setTestName, setTestPassword, setTestOrganisation);
     }
     /**
      * Destroys the database connection that was made for testing.

@@ -44,7 +44,7 @@ public class ItAdministrationExceptionTest {
      * @throws InvalidValueException the field doesn't exist.
      * @throws UnknownDatabaseException update to the database was unsuccessful.
      */
-    @AfterEach
+    @BeforeEach
     public void clearDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         dataSource.deleteAll();
         adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
@@ -86,6 +86,7 @@ public class ItAdministrationExceptionTest {
             adminAccount.addOrganisation(organisation1,0);
             adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
             adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
+
         });
     }
 
@@ -103,8 +104,8 @@ public class ItAdministrationExceptionTest {
     @Test
     public void addItUserThrowsDuplicate() {
         assertThrows(DuplicationException.class , () -> {
-            adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
-            adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation1);
+            adminAccount.addItUser(aNewUser,aNewUserInitialPassword);
+            adminAccount.addItUser(aNewUser,aNewUserInitialPassword);
         });
     }
 

@@ -357,14 +357,13 @@ public class DataSourceMockup implements TradingPlatformDataSource {
             if (user.getUsername().equals(username)) {
                 return PlatformGlobals.getPrimaryKeyFail();
 
-            } else {
-                database.userMock.add(aNewUser);
-                database.userOrganisationList.add(sameUser);
-                return 1;
             }
-        }
 
-        return PlatformGlobals.getGeneralSQLFail();
+
+        }
+        database.userMock.add(aNewUser);
+        database.userOrganisationList.add(sameUser);
+        return 1;
     }
 
     /**
