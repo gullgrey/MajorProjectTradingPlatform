@@ -40,7 +40,7 @@ public interface TradingPlatformDataSource {
      * @param organisation The name of the organisational unit.
      * @param asset The name of the asset to be added.
      * @param amount The amount of the asset to be added.
-     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * @return returns an integer representing the state 1 for success, -1 for primaryKeyFail,
      * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addAsset(String organisation, String asset, int amount);
@@ -93,7 +93,7 @@ public interface TradingPlatformDataSource {
      *
      * @param organisation The name of the new organisation.
      * @param credits The amount of credits the new organisation starts with.
-     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * @return returns an integer representing the state 1 for success, -1 for primaryKeyFail,
      * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addOrganisation(String organisation, int credits);
@@ -128,7 +128,7 @@ public interface TradingPlatformDataSource {
      * @param password A hashed password.
      * @param type The type of user being created (STANDARD / ADMIN)
      * @param organisation The name of the organisational unit. Null if the new user is IT admin.
-     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * @return returns an integer representing the state 1 for success, -1 for primaryKeyFail,
      * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addUser(String username, String password, String type, String organisation);
@@ -176,7 +176,7 @@ public interface TradingPlatformDataSource {
      * @param amount The amount of the asset.
      * @param credits The number of credits the asset is listed for.
      * @param isBuyOrder True if the order is a buy order. False if its a sell order.
-     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * @return returns an integer representing the state 1 for success, -1 for primaryKeyFail,
      * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addOrder(String organisation, String asset, int amount,
@@ -198,7 +198,7 @@ public interface TradingPlatformDataSource {
      * @param asset The name of the asset that was sold.
      * @param amount The amount of the asset that was sold.
      * @param credits The number of credits the asset was sold for.
-     * @returns returns an integer representing the state 1 for success, -1 for primaryKeyFail,
+     * @return returns an integer representing the state 1 for success, -1 for primaryKeyFail,
      * -2 for foreignKeyFail and -3 for generalSQLFail.
      */
     int addTransaction(String buyingOrganisation, String sellingOrganisation,
@@ -214,7 +214,7 @@ public interface TradingPlatformDataSource {
     /**
      * Deletes all rows from every table in the database, except for the organisation
      * with the name "ADMIN".
-     * @returns returns an integer 0 for fail or integer 1 for success.
+     * @return returns an integer 0 for fail or integer 1 for success.
      */
     int deleteAll();
 

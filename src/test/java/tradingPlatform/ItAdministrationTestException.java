@@ -14,7 +14,6 @@ import test.java.mockups.DatabaseMockup;
  */
 public class ItAdministrationTestException {
 
-    private static final String propsFile = "src/test/resources/maria.props";
     private static ItAdministration adminAccount;
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
@@ -66,9 +65,7 @@ public class ItAdministrationTestException {
      */
     @Test
     public void testAddingAdminOrganisationFails()  {
-        assertThrows(InvalidValueException.class , () -> {
-        adminAccount.addOrganisation(reserved, addOrderCreditAmount);
-        });
+        assertThrows(InvalidValueException.class , () -> adminAccount.addOrganisation(reserved, addOrderCreditAmount));
     }
 
     /**
@@ -77,9 +74,7 @@ public class ItAdministrationTestException {
      */
     @Test
     public void testRemoveAdminOrganisationFails()  {
-        assertThrows(InvalidValueException.class , () -> {
-            adminAccount.removeOrganisation(reserved);
-        });
+        assertThrows(InvalidValueException.class , () -> adminAccount.removeOrganisation(reserved));
     }
 
     /**
@@ -99,9 +94,7 @@ public class ItAdministrationTestException {
      */
     @Test
     public void addStandardUserThrowsNoOrganisation() {
-        assertThrows(NullValueException.class , () -> {
-            adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation2);
-        });
+        assertThrows(NullValueException.class , () -> adminAccount.addStandardUser(aNewUser,aNewUserInitialPassword, organisation2));
     }
 
     /**
@@ -157,8 +150,6 @@ public class ItAdministrationTestException {
      */
     @Test
     public void removeOrganisationThrows() {
-        assertThrows(NullValueException.class , () -> {
-            adminAccount.removeOrganisation(organisation2);
-        });
+        assertThrows(NullValueException.class , () -> adminAccount.removeOrganisation(organisation2));
     }
 }

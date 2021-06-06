@@ -25,8 +25,8 @@ public class OrdersPane extends JTabbedPane implements ActionListener {
     StandardUser user;
     StandardFrame frame;
 
-    private String buyName = "Buy Orders";
-    private String sellName = "Sell Orders";
+    private final String buyName = "Buy Orders";
+    private final String sellName = "Sell Orders";
     private final int tableWidth = 600;
 
     private JTextField buyIdField;

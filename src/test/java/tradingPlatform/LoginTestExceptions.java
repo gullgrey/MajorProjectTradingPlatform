@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
 
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LoginTestExceptions {
@@ -36,11 +34,9 @@ public class LoginTestExceptions {
 
     /**
      * Testing Username and password that is not on the database.
-     * @throws UnknownDatabaseException
-     * @throws NullValueException
      */
     @Test
-    public void testInvalidUser() throws UnknownDatabaseException, NullValueException {
+    public void testInvalidUser() {
         assertThrows(WrongCredentialException.class, () -> {
             Login lg = new Login(wrongTestName, wrongTestPassword, dataSource);
             lg.checkSuppliedCredentials();
@@ -49,11 +45,9 @@ public class LoginTestExceptions {
 
     /**
      * Testing a blank Username.
-     * @throws UnknownDatabaseException
-     * @throws NullValueException
      */
     @Test
-    public void testblankUsernameOnLoggingIn() throws UnknownDatabaseException, NullValueException {
+    public void testBlankUsernameOnLoggingIn() {
         assertThrows(WrongCredentialException.class, () -> {
             Login lg = new Login(blankString, setTestPassword, dataSource);
             lg.checkSuppliedCredentials();
@@ -62,11 +56,9 @@ public class LoginTestExceptions {
 
     /**
      * Testing a blank password.
-     * @throws UnknownDatabaseException
-     * @throws NullValueException
      */
     @Test
-    public void testblankPasswordOnLoggingIn() throws UnknownDatabaseException, NullValueException {
+    public void testBlankPasswordOnLoggingIn() {
         assertThrows(WrongCredentialException.class, () -> {
             Login lg = new Login(setTestName, blankString, dataSource);
             lg.checkSuppliedCredentials();
@@ -75,11 +67,9 @@ public class LoginTestExceptions {
 
     /**
      * Testing both blank username and password.
-     * @throws UnknownDatabaseException
-     * @throws NullValueException
      */
     @Test
-    public void testblankUsernameAndPasswordOnLoggingIn() throws UnknownDatabaseException, NullValueException {
+    public void testBlankUsernameAndPasswordOnLoggingIn() {
         assertThrows(WrongCredentialException.class, () -> {
             Login lg = new Login(blankString, blankString, dataSource);
             lg.checkSuppliedCredentials();
@@ -88,15 +78,13 @@ public class LoginTestExceptions {
 
     /**
      * Destroys the database connection after every test.
-     * @throws SQLException
      */
     @AfterEach
-    public void resetDatabaseAftereach(){
+    public void resetDatabaseAfterEach(){
         dataSource.deleteAll();
     }
     /**
      * Destroys the database connection that was made for testing.
-     * @throws SQLException
      */
     @AfterAll
     static void resetDatabase(){

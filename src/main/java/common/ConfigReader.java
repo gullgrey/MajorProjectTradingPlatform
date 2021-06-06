@@ -24,21 +24,20 @@ public class ConfigReader {
      */
     public Set<String> readClientFile() throws IOException {
 
-            Set<String> mySet = new HashSet<String>();
+            Set<String> mySet = new HashSet<>();
             File fileName = new File("src/main/resources/clientconfig.txt");
             FileReader fileReader = new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             Scanner scanner = new Scanner(bufferedReader);
 
-            for (; ; ) {
-                if (!scanner.hasNext()) break;
-                String token = scanner.next();
-                String port1 = scanner.next();
-                mySet.add(port1);
-                String token2 = scanner.next();
-                String port2 = scanner.next();
-                mySet.add(port2);
-            }
+        while (scanner.hasNext()) {
+            scanner.next();
+            String port1 = scanner.next();
+            mySet.add(port1);
+            scanner.next();
+            String port2 = scanner.next();
+            mySet.add(port2);
+        }
             bufferedReader.close();
             scanner.close();
             return mySet;
@@ -52,24 +51,23 @@ public class ConfigReader {
      */
     public Set<String> readServerFile() throws IOException {
 
-        Set<String> mySet = new HashSet<String>();
+        Set<String> mySet = new HashSet<>();
         File fileName = new File("src/main/resources/serverconfig.txt");
         FileReader fileReader = new FileReader(fileName);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         Scanner scanner = new Scanner(bufferedReader);
 
-        for (; ; ) {
-            if (!scanner.hasNext()) break;
-            String token = scanner.next();
+        while (scanner.hasNext()) {
+            scanner.next();
             String port1 = scanner.next();
             mySet.add(port1);
-            String token2 = scanner.next();
+            scanner.next();
             String port2 = scanner.next();
             mySet.add(port2);
-            String token3 = scanner.next();
+            scanner.next();
             String port3 = scanner.next();
             mySet.add(port3);
-            String token4 = scanner.next();
+            scanner.next();
             String port4 = scanner.next();
             mySet.add(port4);
 

@@ -19,11 +19,6 @@ public class Transaction implements Comparable<Transaction>, Serializable {
     public Transaction() {
     }
 
-    public Transaction(int id, String buyingOrganisation, String sellingOrganisation, String asset, int amount,
-                       int credits, String dateTime) {
-
-    }
-
     /**
      * Gets the ID of the order that is being bought/sold
      * @return integer ID for a translation
@@ -83,7 +78,7 @@ public class Transaction implements Comparable<Transaction>, Serializable {
 
     /**
      * Method is used to set the Asset name.
-     * @param asset
+     * @param asset name of the asset.
      */
     public void setAsset(String asset) {
 

@@ -16,7 +16,6 @@ import java.util.Set;
 public class StandardUserTest {
 
     private static DataSourceMockup dataSource;
-    private static final String AdminName = "Jen";
     private static final String aNewUser = "James";
     private static final String aNewUserOrganisation = "QUT";
     private static final String bNewUser = "Fred";
@@ -92,19 +91,14 @@ public class StandardUserTest {
         standardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
         otherStandardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
         int newBuyerCredits = standardTest.getCredits(); // Storing updated credit amount.
-        System.out.printf("Hell");
         assertEquals(newBuyerCredits, buyerCredits - (assetAmount * creditPricePerAsset));
     }
 
     /**
      * Checking that when a buy and sell order match it will update the selling users credits.
-     * @throws InvalidValueException
-     * @throws NullValueException
-     * @throws DuplicationException
      */
     @Test
-    public void testSellAssetAutoTransaction() throws NullValueException, DuplicationException,
-            InvalidValueException, UnknownDatabaseException {
+    public void testSellAssetAutoTransaction() throws InvalidValueException, UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
         StandardUser otherStandardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         int sellerCredits = otherStandardTest.getCredits(); // Storing current credit amount.
@@ -133,10 +127,6 @@ public class StandardUserTest {
 
     /**
      * Test that entering in the known ID of a Buy order on the system is removed.
-     * @throws DuplicationException
-     * @throws NullValueException
-     * @throws InvalidValueException
-     * @throws UnknownDatabaseException
      */
     @Test
     public void testRemovingBuyOrder() throws  NullValueException, InvalidValueException, UnknownDatabaseException {
@@ -151,9 +141,6 @@ public class StandardUserTest {
 
     /**
      * Checks that the current amount of an asset on startup matches.
-     * @throws InvalidValueException
-     * @throws NullValueException
-     * @throws DuplicationException
      */
     @Test
     public void getAssetAmount() throws NullValueException, UnknownDatabaseException {
@@ -164,13 +151,9 @@ public class StandardUserTest {
 
     /**
      * Checks that the asset amount is changed when the organisations adds a sell request.
-     * @throws InvalidValueException
-     * @throws NullValueException
-     * @throws DuplicationException
      */
     @Test
-    public void getAssetAmountAfterSellorder() throws DuplicationException, NullValueException,
-            InvalidValueException, UnknownDatabaseException {
+    public void getAssetAmountAfterSellorder() throws InvalidValueException, UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, bNewUser, bNewUserOrganisation);
         standardTest.sellAsset(assetName, assetAmount, creditPricePerAsset);
         int newAssetAmount = standardTest.getAssetAmount(assetName);
@@ -179,8 +162,6 @@ public class StandardUserTest {
 
     /**
      * Ensures that the starting number of credits matches what is pulled from the database.
-     * @throws InvalidValueException
-     * @throws NullValueException
      */
     @Test
     public void testgetCredits() throws UnknownDatabaseException {
@@ -191,12 +172,9 @@ public class StandardUserTest {
 
     /**
      * Checks that when a buy order is placed on the database that it updates the organisations credits.
-     * @throws InvalidValueException
-     * @throws NullValueException
      */
     @Test
-    public void testgetCreditsAfterBuyorder() throws NullValueException, DuplicationException,
-            InvalidValueException, UnknownDatabaseException {
+    public void testgetCreditsAfterBuyorder() throws InvalidValueException, UnknownDatabaseException {
         StandardUser standardTest = new StandardUser(dataSource, aNewUser, aNewUserOrganisation);
         standardTest.buyAsset(assetName, assetAmount, creditPricePerAsset);
         int currentCredits = standardTest.getCredits();
@@ -205,7 +183,6 @@ public class StandardUserTest {
 
     /**
      * Destroys the database connection after every test.
-     * @throws SQLException
      */
     @AfterEach
     public void resetDatabaseAftereach(){
@@ -213,7 +190,6 @@ public class StandardUserTest {
     }
     /**
      * Destroys the database connection that was made for testing.
-     * @throws SQLException
      */
     @AfterAll
     static void resetDatabase(){

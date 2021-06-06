@@ -11,9 +11,6 @@ import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
 import test.java.mockups.NewTransactionDataSourceMockup;
-
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NewTransactionTest {
 
-    private static final String propsFile = "src/test/resources/maria.props";
     private static DataSourceMockup dataSource;
     private static NewTransaction newTransaction;
     private static final String buyOrganisation = "Microsoft";
@@ -29,7 +25,6 @@ public class NewTransactionTest {
     private static final int startingAssets = 100;
     private static final int assetAmount = 10;
     private static final int assetPriceLow = 2;
-    private static final int assetPriceHigh = 3;
     private static final String standardAsset = "Computer";
     private static final String sellOrganisation = "Apple";
     private static TPOrder buyOrder;
@@ -38,7 +33,7 @@ public class NewTransactionTest {
      * Initializes the database for testing.
      */
     @BeforeAll
-    static void setupDatabase() throws IOException, SQLException {
+    static void setupDatabase() {
         dataSource = new NewTransactionDataSourceMockup(new DatabaseMockup());
         newTransaction = new NewTransaction(dataSource);
         dataSource.addOrganisation(buyOrganisation, standardOrganisationCredits);

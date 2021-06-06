@@ -20,8 +20,6 @@ public class MarketPane extends JTabbedPane implements ActionListener {
 
     TPUser user;
 
-    private String buyName = "Buy Orders";
-    private String sellName = "Sell Orders";
     private final int tableWidth = 600;
 
     private JTextField buyOrganisationFilter;
@@ -84,6 +82,7 @@ public class MarketPane extends JTabbedPane implements ActionListener {
 
         JPanel pad = new JPanel();
         pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
+        String buyName = "Buy Orders";
         JLabel title = new JLabel(buyName);
         title.setFont(new Font("Arial", Font.BOLD, 20));
 
@@ -129,6 +128,7 @@ public class MarketPane extends JTabbedPane implements ActionListener {
 
         JPanel pad = new JPanel();
         pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
+        String sellName = "Sell Orders";
         JLabel title = new JLabel(sellName);
         title.setFont(new Font("Arial", Font.BOLD, 20));
 

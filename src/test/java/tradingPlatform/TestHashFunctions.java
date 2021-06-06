@@ -1,7 +1,6 @@
 package test.java.tradingPlatform;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import main.java.common.HashPassword;
 import org.junit.jupiter.api.*;
@@ -9,11 +8,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class TestHashFunctions {
 
-    static final String UsernameAndPassword = "ADMIN";
-
     /**
      * Testing Hash is a 64 Char String.
-     * @throws NoSuchAlgorithmException
      */
     @Test
     public void testHash() throws NoSuchAlgorithmException {
@@ -23,7 +19,6 @@ public class TestHashFunctions {
 
     /**
      * Testing Hash is the same after 2 iterations for the same username and password.
-     * @throws NoSuchAlgorithmException
      */
     @Test
     public void testHashIsTheSameTwoItterationsTime() throws NoSuchAlgorithmException {
@@ -34,7 +29,6 @@ public class TestHashFunctions {
 
     /**
      * Testing Hash is the same after 11 iterations for the same username and password.
-     * @throws NoSuchAlgorithmException
      */
     @Test
     public void testHashIsTheSameTenItterationsTime() throws NoSuchAlgorithmException {
@@ -48,13 +42,12 @@ public class TestHashFunctions {
 
     /**
      * Testing Hash is different for two users with almost identical credentials.
-     * @throws NoSuchAlgorithmException
      */
     @Test
     public void testHashUsersWithAlmostIdenticalCredentials() throws NoSuchAlgorithmException {
         String HashedPassword = HashPassword.hashedPassword("UsernameAndPassword", "UsernameAndPassword");
         String HashedPassword2 = HashPassword.hashedPassword("ADMIN2", "UsernameAndPassword");
-        assertTrue(HashedPassword != HashedPassword2);
+        assertNotSame(HashedPassword, HashedPassword2);
     }
 
 }

@@ -21,9 +21,6 @@ public class UserPane extends JTabbedPane implements ActionListener {
 
     ItAdministration user;
 
-    private String displayName = "Users";
-    private final int tableWidth = 600;
-
     private JTextField addUsername;
     private JTextField removeUsername;
     private JTextField updateUsername;
@@ -97,6 +94,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
 
         JPanel pad = new JPanel();
         pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
+        String displayName = "Users";
         JLabel title = new JLabel(displayName);
         title.setFont(new Font("Arial", Font.BOLD, 20));
 
@@ -129,6 +127,7 @@ public class UserPane extends JTabbedPane implements ActionListener {
                 .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroller
                 .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        int tableWidth = 600;
         scroller.setMinimumSize(new Dimension(tableWidth, 150));
         scroller.setPreferredSize(new Dimension(tableWidth, 150));
         scroller.setMaximumSize(new Dimension(tableWidth, 200));

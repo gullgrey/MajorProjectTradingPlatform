@@ -4,7 +4,7 @@ import main.java.common.Asset;
 import main.java.common.PlatformGlobals;
 import main.java.common.TPOrder;
 import main.java.server.database.TradingPlatformDataSource;
-import java.sql.SQLException;
+
 import java.util.Set;
 
 /**
@@ -29,10 +29,9 @@ public class StandardUser extends TPUser {
      * @param asset asset they would like to buy
      * @param amount amount they would like to get of the asset.
      * @param credits number of credits per asset they would like to pay.
-     * @throws SQLException catches any SQL exceptions that are thrown if there are any issues.
-     * @return number of assets immediately bought
+     * @throws InvalidValueException the inputted value is of the wrong type or too small.
      */
-    public int buyAsset(String asset, int amount, int credits) throws InvalidValueException,
+    public void buyAsset(String asset, int amount, int credits) throws InvalidValueException,
             UnknownDatabaseException {
         if(amount <= 0){
             throw new InvalidValueException(amountMessage);
@@ -47,7 +46,6 @@ public class StandardUser extends TPUser {
         } else if (buyRequest == PlatformGlobals.getGeneralSQLFail()) {
             throw new UnknownDatabaseException(PlatformGlobals.getUnknownSQLMessage());
         }
-        return buyRequest;
     }
 
     /**
@@ -55,10 +53,9 @@ public class StandardUser extends TPUser {
      * @param asset asset they would like to sell.
      * @param amount amount of the asset they are selling.
      * @param credits amount per assert.
-     * @throws InvalidValueException catches any SQL exceptions that are thrown if there are any issues.
-     * @return number of assets immediately sold
+     * @throws InvalidValueException the inputted value is of the wrong type or too small.
      */
-    public int sellAsset(String asset, int amount, int credits) throws InvalidValueException,
+    public void sellAsset(String asset, int amount, int credits) throws InvalidValueException,
             UnknownDatabaseException {
         if(amount <= 0){
             throw new InvalidValueException(amountMessage);
@@ -73,13 +70,12 @@ public class StandardUser extends TPUser {
         } else if (sellRequest == PlatformGlobals.getGeneralSQLFail()) {
             throw new UnknownDatabaseException(PlatformGlobals.getUnknownSQLMessage());
         }
-        return sellRequest;
     }
 
     /**
      * Removed a request buy or sell order of the users organisation.
      * @param orderId id of the order that is being removed
-     * @throws InvalidValueException catches any SQL exceptions that are thrown if there are any issues.
+     * @throws InvalidValueException the inputted value is of the wrong type or too small.
      * @throws NullValueException specified field does not exist in the database.
      * @throws UnknownDatabaseException update to the database was unsuccessful.
      */

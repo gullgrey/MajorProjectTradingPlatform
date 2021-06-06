@@ -16,9 +16,6 @@ import java.util.Comparator;
 public class AssetPane extends JTabbedPane{
     StandardUser user;
 
-    private final String displayName = "Assets";
-    private final int tableWidth = 600;
-
     public AssetPane(StandardUser user) {
         this.user = user;
         setUserPane();
@@ -47,6 +44,7 @@ public class AssetPane extends JTabbedPane{
 
         JPanel pad = new JPanel();
         pad.setLayout(new BoxLayout(pad, BoxLayout.X_AXIS));
+        String displayName = "Assets";
         JLabel title = new JLabel(displayName);
         title.setFont(new Font("Arial", Font.BOLD, 20));
 
@@ -70,6 +68,7 @@ public class AssetPane extends JTabbedPane{
                 .setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroller
                 .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        int tableWidth = 600;
         scroller.setMinimumSize(new Dimension(tableWidth, 150));
         scroller.setPreferredSize(new Dimension(tableWidth, 150));
         scroller.setMaximumSize(new Dimension(tableWidth, 200));

@@ -1,7 +1,6 @@
 package test.java.tradingPlatform;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import main.java.common.TPOrder;
 import main.java.client.tradingPlatform.*;
@@ -11,15 +10,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
-
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Set;
 
 public class StandardUserExceptionTest {
 
     private static DataSourceMockup dataSource;
-    private static final String AdminName = "Jen";
     private static final String aNewUser = "James";
     private static final String aNewUserOrganisation = "QUT";
     private static final String bNewUser = "Fred";
@@ -34,7 +29,7 @@ public class StandardUserExceptionTest {
     private static final int validID = 27;
 
     @BeforeAll
-    static void setupDatabase() throws IOException, SQLException {
+    static void setupDatabase() {
         dataSource = new DataSourceMockup(new DatabaseMockup());
         dataSource.addOrganisation(aNewUserOrganisation, startingCredits);
         dataSource.addOrganisation(bNewUserOrganisation, startingCredits);
@@ -154,9 +149,9 @@ public class StandardUserExceptionTest {
     public void resetDatabaseAftereach(){
         dataSource.deleteAll();
     }
+
     /**
      * Destroys the database connection that was made for testing.
-     * @throws SQLException
      */
     @AfterAll
     static void resetDatabase(){

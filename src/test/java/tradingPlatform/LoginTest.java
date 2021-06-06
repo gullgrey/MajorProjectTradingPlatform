@@ -11,11 +11,8 @@ import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
 
-import java.sql.SQLException;
-
 public class LoginTest {
 
-    private static final String propsFile = "src/test/resources/maria.props";
     private static DataSourceMockup dataSource;
     private static final String adminUser = "ADMIN";
     private static final String adminUser1 = "ADMIN1";
@@ -37,8 +34,6 @@ public class LoginTest {
 
     /**
      * Testing a valid admin user logging in.
-     * @throws UnknownDatabaseException
-     * @throws NullValueException
      */
     @Test
     public void TestIsAdminLogginIn() throws UnknownDatabaseException, WrongCredentialException, NetworkException {
@@ -49,8 +44,6 @@ public class LoginTest {
 
     /**
      * Testing a valid admin user logging in.
-     * @throws UnknownDatabaseException
-     * @throws NullValueException
      */
     @Test
     public void testIsUserLoggingIn() throws UnknownDatabaseException, WrongCredentialException, NetworkException {
@@ -62,7 +55,6 @@ public class LoginTest {
 
     /**
      * Destroys the database connection after every test.
-     * @throws SQLException
      */
     @AfterEach
     public void resetDatabaseAftereach(){
@@ -70,7 +62,6 @@ public class LoginTest {
     }
     /**
      * Destroys the database connection that was made for testing.
-     * @throws SQLException
      */
     @AfterAll
     static void resetDatabase(){

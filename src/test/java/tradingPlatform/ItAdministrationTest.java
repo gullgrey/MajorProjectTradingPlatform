@@ -18,7 +18,6 @@ import test.java.mockups.DatabaseMockup;
  */
 public class ItAdministrationTest {
 
-    private static final String propsFile = "src/test/resources/maria.props";
     private static final String adminUserName = "Admin";
     private static final String userNameCorrect = "User1";
     private static final String correctPassword = "12345";
@@ -47,13 +46,6 @@ public class ItAdministrationTest {
       static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         dataSource = new DataSourceMockup(new DatabaseMockup());
         adminAccount = new ItAdministration(dataSource, adminUserName);
-        //dataSource.getUsers();
-        //dataSource.getAssets();
-        //dataSource.getOrganisations();
-        //Set<TPOrder> order1 = dataSource.getOrders(true);
-        //Set<TPOrder> order2 = dataSource.getOrders(false);
-        //dataSource.getOrderHistory();
-        //TODO kill this if needed
         adminAccount.addOrganisation(standardOrganisation, standardOrganisationCredits);
     }
 
@@ -101,8 +93,8 @@ public class ItAdministrationTest {
     @Test
     public void testReadFileClient() throws IOException {
         Set<String> newSet = fileReader.readClientFile();
-        String array[] = new String[5];
-        array = newSet.toArray(array);
+        String[] array = new String[5];
+        newSet.toArray(array);
     }
 
     /**
@@ -113,8 +105,8 @@ public class ItAdministrationTest {
     @Test
     public void testReadFileServer() throws IOException {
         Set<String> newSet = fileReader.readServerFile();
-        String array[] = new String[5];
-        array = newSet.toArray(array);
+        String[] array = new String[5];
+        newSet.toArray(array);
     }
 
 
@@ -271,11 +263,10 @@ public class ItAdministrationTest {
      *
      * @throws DuplicationException specified field does not exist in the database.
      * @throws NullValueException specified field does not exist in the database.
-     * @throws InvalidValueException value entered is incorrect type.
      * @throws UnknownDatabaseException specified field does not exist in the database.
      */
     @Test
-    public void testUpdateAssetDecrease() throws DuplicationException, NullValueException, InvalidValueException,
+    public void testUpdateAssetDecrease() throws DuplicationException, NullValueException,
             UnknownDatabaseException {
         adminAccount.addAsset(standardOrganisation, standardAsset, aNewAssetAmount);
         adminAccount.updateAssetAmount(standardOrganisation, standardAsset, aNewAssetAmountReduce);
