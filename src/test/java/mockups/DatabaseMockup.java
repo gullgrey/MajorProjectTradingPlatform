@@ -1,6 +1,6 @@
 package test.java.mockups;
 
-import main.java.tradingPlatform.*;
+import main.java.common.*;
 
 import java.util.HashSet;
 import java.util.Set;

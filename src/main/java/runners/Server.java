@@ -1,7 +1,7 @@
 package main.java.runners;
 
-import main.java.network.NetworkServer;
-import main.java.network.NetworkServerGUI;
+import main.java.server.network.NetworkServer;
+import main.java.server.network.NetworkServerGUI;
 
 import javax.swing.*;
 import java.io.IOException;

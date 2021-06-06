@@ -3,9 +3,8 @@ package test.java.tradingPlatform;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import main.java.database.TradingPlatformDataSource;
-import main.java.network.NetworkDataSource;
-import main.java.tradingPlatform.*;
+import main.java.common.TPOrder;
+import main.java.client.tradingPlatform.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

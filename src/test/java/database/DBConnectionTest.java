@@ -1,6 +1,6 @@
 package test.java.database;
 
-import main.java.database.DBConnection;
+import main.java.server.database.DBConnection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

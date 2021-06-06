@@ -1,6 +1,6 @@
 package test.java.tradingPlatform;
 
-import main.java.tradingPlatform.*;
+import main.java.client.tradingPlatform.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterAll;

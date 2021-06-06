@@ -1,11 +1,8 @@
 package test.java.tradingPlatform;
 
-import main.java.database.JDBCTradingPlatformDataSource;
-import main.java.database.TradingPlatformDataSource;
-import main.java.network.NetworkDataSource;
-import main.java.tradingPlatform.NewTransaction;
-import main.java.tradingPlatform.PlatformGlobals;
-import main.java.tradingPlatform.TPOrder;
+import main.java.server.network.NewTransaction;
+import main.java.common.PlatformGlobals;
+import main.java.common.TPOrder;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

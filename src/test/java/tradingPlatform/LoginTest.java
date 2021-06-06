@@ -3,9 +3,7 @@ package test.java.tradingPlatform;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import main.java.database.TradingPlatformDataSource;
-import main.java.network.NetworkDataSource;
-import main.java.tradingPlatform.*;
+import main.java.client.tradingPlatform.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
 
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class LoginTest {

@@ -1,7 +1,8 @@
 package test.java.mockups;
 
-import main.java.database.TradingPlatformDataSource;
-import main.java.tradingPlatform.*;
+import main.java.common.*;
+import main.java.server.database.TradingPlatformDataSource;
+import main.java.server.network.NewTransaction;
 
 import java.util.*;
 

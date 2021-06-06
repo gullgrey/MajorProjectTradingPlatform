@@ -1,7 +1,7 @@
 package main.java.runners;
 
-import main.java.GUI.LoginFrame;
-import main.java.network.NetworkDataSource;
+import main.java.client.GUI.LoginFrame;
+import main.java.client.tradingPlatform.NetworkDataSource;
 
 import javax.swing.*;
 

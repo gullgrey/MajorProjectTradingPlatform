@@ -2,10 +2,10 @@ package test.java.tradingPlatform;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import main.java.tradingPlatform.*;
+
+import main.java.common.HashPassword;
 import org.junit.jupiter.api.*;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 
 public class TestHashFunctions {
 

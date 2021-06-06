@@ -1,7 +1,7 @@
 package test.java.mockups;
 
-import main.java.tradingPlatform.PlatformGlobals;
-import main.java.tradingPlatform.TPOrder;
+import main.java.common.PlatformGlobals;
+import main.java.common.TPOrder;
 
 /**
  * This extends the datasource mockup and is used by the New transaction class

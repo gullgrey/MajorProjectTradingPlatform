@@ -1,6 +1,10 @@
 package test.java.tradingPlatform;
 
-import main.java.tradingPlatform.*;
+import main.java.common.Asset;
+import main.java.common.ConfigReader;
+import main.java.common.Organisation;
+import main.java.common.UserOrganisation;
+import main.java.client.tradingPlatform.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.Set;

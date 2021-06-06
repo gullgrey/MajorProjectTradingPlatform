@@ -3,20 +3,15 @@ package test.java.tradingPlatform;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import main.java.database.JDBCTradingPlatformDataSource;
-import main.java.database.TradingPlatformDataSource;
-import main.java.network.NetworkDataSource;
-import main.java.tradingPlatform.*;
+import main.java.common.Asset;
+import main.java.common.TPOrder;
+import main.java.client.tradingPlatform.*;
 import org.junit.jupiter.api.*;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class StandardUserTest {
 

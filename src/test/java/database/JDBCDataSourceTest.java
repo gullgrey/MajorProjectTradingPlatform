@@ -1,17 +1,14 @@
 package test.java.database;
 
-import main.java.database.JDBCTradingPlatformDataSource;
-import main.java.database.TradingPlatformDataSource;
-import main.java.network.NetworkDataSource;
-import main.java.tradingPlatform.*;
-import org.junit.jupiter.api.*;
+import main.java.common.Asset;
+import main.java.common.TPOrder;
+import main.java.client.tradingPlatform.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.DuplicateFormatFlagsException;
 import java.util.Set;
 
 import org.junit.jupiter.api.AfterAll;
