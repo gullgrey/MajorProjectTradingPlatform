@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import test.java.mockups.DataSourceMockup;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ import java.sql.SQLException;
 public class LoginTest {
 
     private static final String propsFile = "src/test/resources/maria.props";
-    private static TradingPlatformDataSource dataSource;
+    private static DataSourceMockup dataSource;
     private static final String adminUser = "ADMIN";
     private static final String adminUser1 = "ADMIN1";
     private static final String adminPassword = "ADMIN";
@@ -29,7 +30,7 @@ public class LoginTest {
 
     @BeforeAll
     public static void setupTestEnvironment() throws DuplicationException, UnknownDatabaseException, NullValueException, InvalidValueException {
-        dataSource = new NetworkDataSource();
+        dataSource = new DataSourceMockup();
         ItAdministration administrator = new ItAdministration(dataSource, adminUser);
         administrator.addItUser(adminUser1, adminPassword);
         administrator.addOrganisation(setTestOrganisation, testOrganisationCredits);

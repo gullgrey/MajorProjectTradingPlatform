@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import test.java.mockups.DataSourceMockup;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class NewTransactionTest {
 
     private static final String propsFile = "src/test/resources/maria.props";
-    private static TradingPlatformDataSource dataSource;
+    private static DataSourceMockup dataSource;
     private static NewTransaction newTransaction;
     private static final String buyOrganisation = "Microsoft";
     private static final int standardOrganisationCredits = 1000;
@@ -39,7 +40,7 @@ public class NewTransactionTest {
      */
     @BeforeAll
     static void setupDatabase() throws IOException, SQLException {
-        dataSource = new JDBCTradingPlatformDataSource(propsFile);
+        dataSource = new DataSourceMockup();
         newTransaction = new NewTransaction(dataSource);
         dataSource.addOrganisation(buyOrganisation, standardOrganisationCredits);
         dataSource.addOrganisation(sellOrganisation, standardOrganisationCredits);

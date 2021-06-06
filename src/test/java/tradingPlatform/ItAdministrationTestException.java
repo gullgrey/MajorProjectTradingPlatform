@@ -14,9 +14,7 @@ import test.java.mockups.DataSourceMockup;
 public class ItAdministrationTestException {
 
     private static final String propsFile = "src/test/resources/maria.props";
-    //private static TradingPlatformDataSource dataSource;
     private static ItAdministration adminAccount;
-    //private static NetworkDataSource dataSource;
     private static final String aNewUser = "User666";
     private static final String aNewUserInitialPassword = "Password";
     private static final String organisation1 = "Apple";
@@ -35,7 +33,6 @@ public class ItAdministrationTestException {
     @BeforeAll
     static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
         dataSource = new DataSourceMockup();
-        //dataSource = new NetworkDataSource();
         adminAccount = new ItAdministration(dataSource, aNewUser);
         adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
     }

@@ -10,13 +10,15 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import test.java.mockups.DataSourceMockup;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Set;
 
 public class StandardUserExceptionTest {
-    private static TradingPlatformDataSource dataSource;
+
+    private static DataSourceMockup dataSource;
     private static final String AdminName = "Jen";
     private static final String aNewUser = "James";
     private static final String aNewUserOrganisation = "QUT";
@@ -33,7 +35,7 @@ public class StandardUserExceptionTest {
 
     @BeforeAll
     static void setupDatabase() throws IOException, SQLException {
-        dataSource = new NetworkDataSource();
+        dataSource = new DataSourceMockup();
         dataSource.addOrganisation(aNewUserOrganisation, startingCredits);
         dataSource.addOrganisation(bNewUserOrganisation, startingCredits);
         dataSource.addAsset(bNewUserOrganisation, assetName, fullAssetAmount);
