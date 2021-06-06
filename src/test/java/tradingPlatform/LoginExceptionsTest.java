@@ -10,7 +10,7 @@ import test.java.mockups.DatabaseMockup;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LoginTestExceptions {
+public class LoginExceptionsTest {
     private static DataSourceMockup dataSource;
     private static final String adminUser = "ADMIN";
     private static final String adminUser1 = "ADMIN1";

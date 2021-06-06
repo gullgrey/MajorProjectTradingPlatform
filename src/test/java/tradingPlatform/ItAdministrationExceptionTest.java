@@ -12,7 +12,7 @@ import test.java.mockups.DatabaseMockup;
 /**
  * This class is responsible for testing the exceptions of the ItAdministration class.
  */
-public class ItAdministrationTestException {
+public class ItAdministrationExceptionTest {
 
     private static ItAdministration adminAccount;
     private static final String aNewUser = "User666";

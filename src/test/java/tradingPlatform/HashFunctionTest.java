@@ -6,7 +6,7 @@ import main.java.common.HashPassword;
 import org.junit.jupiter.api.*;
 import java.security.NoSuchAlgorithmException;
 
-public class TestHashFunctions {
+public class HashFunctionTest {
 
     /**
      * Testing Hash is a 64 Char String.
