@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
+import test.java.mockups.DatabaseMockup;
 
 import java.sql.SQLException;
 
@@ -28,7 +29,7 @@ public class LoginTestExceptions {
 
     @BeforeAll
     public static void setupTestEnvironment() throws DuplicationException, UnknownDatabaseException, NullValueException, InvalidValueException {
-        dataSource = new DataSourceMockup();
+        dataSource = new DataSourceMockup(new DatabaseMockup());
         ItAdministration administrator = new ItAdministration(dataSource, adminUser);
         administrator.addItUser(adminUser1, adminPassword);
         administrator.addOrganisation(setTestOrganisation, testOrganisationCredits);

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Set;
 import org.junit.jupiter.api.*;
 import test.java.mockups.DataSourceMockup;
+import test.java.mockups.DatabaseMockup;
 
 /**
  * This class is responsible for testing the blackbox test cases involved with the
@@ -40,7 +41,7 @@ public class ItAdministrationTest {
      */
     @BeforeAll
       static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
-        dataSource = new DataSourceMockup();
+        dataSource = new DataSourceMockup(new DatabaseMockup());
         adminAccount = new ItAdministration(dataSource, adminUserName);
         //dataSource.getUsers();
         //dataSource.getAssets();

@@ -12,45 +12,43 @@ import java.util.*;
  */
 public class DataSourceMockup implements TradingPlatformDataSource {
 
-
-    private Set<UserMockup> userMock = new HashSet<>();
-    private Set<UserOrganisation> userOrganisationList = new HashSet<>();
-    private Set<Organisation> organisationsList = new HashSet<>();
-    private Set<Asset> assetsList = new HashSet<>();
-    private final Set<UserMockup> orderList = new HashSet<>();
-    private final Set<UserMockup> sellOrderList = new HashSet<>();
-    private final Set<Transaction> transationList = new HashSet<>();
-    private static DataSourceMockup dataSource;
-
-    private static ItAdministration adminAccount;
-    private String organisationMember;
-    private static final String adminUserName = "Admin";
-    private int count = 0;
-    private String admin = PlatformGlobals.getAdminOrganisation();
-    private Organisation org = new Organisation(admin, 0);
-    private UserMockup aUser = new UserMockup(admin, admin, admin, admin);
-    private UserOrganisation initialUser = new UserOrganisation(admin, admin);
-
-
-    public DataSourceMockup() {
-        initiateDatabase(); // Build the initial values for the database
+    private DatabaseMockup database;
+//    private Set<UserMockup> userMock = new HashSet<>();
+//    private Set<UserOrganisation> userOrganisationList = new HashSet<>();
+//    private Set<Organisation> organisationsList = new HashSet<>();
+//    private Set<Asset> assetsList = new HashSet<>();
+//    private final Set<UserMockup> orderList = new HashSet<>();
+//    private final Set<UserMockup> sellOrderList = new HashSet<>();
+//    private final Set<Transaction> transationList = new HashSet<>();
+//
+//    private String organisationMember;
+//    private static final String adminUserName = "Admin";
+//    private int count = 0;
+//    private String admin = PlatformGlobals.getAdminOrganisation();
+//    private Organisation org = new Organisation(admin, 0);
+//    private UserMockup aUser = new UserMockup(admin, admin, admin, admin);
+//    private UserOrganisation initialUser = new UserOrganisation(admin, admin);
+//
+//
+    public DataSourceMockup(DatabaseMockup database) {
+        this.database = database; // Build the initial values for the database
     }
-
-    /**
-     * This method initializes the database and adds the default values into the data sets.
-     */
-    public void initiateDatabase() {
-        userMock.add(aUser);
-        userOrganisationList.add(initialUser);
-        organisationsList.add(org);
-    }
+//
+//    /**
+//     * This method initializes the database and adds the default values into the data sets.
+//     */
+//    public void initiateDatabase() {
+//        userMock.add(aUser);
+//        userOrganisationList.add(initialUser);
+//        organisationsList.add(org);
+//    }
 
     /**
      * @see TradingPlatformDataSource#getCredits(String)
      */
     @Override
     public int getCredits(String organisation) {
-        for (Organisation org : organisationsList) {
+        for (Organisation org : database.organisationsList) {
             if (org.getOrganisation().equals(organisation)) {
                 return org.getCredits();
             }
@@ -66,7 +64,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
         boolean exists = false;
         //Check to see if the organisation exists (Foreign key constraint)
-        for (Organisation org : organisationsList) {
+        for (Organisation org : database.organisationsList) {
             if (org.getOrganisation().equals(organisation)) {
                 exists = true;
                 break;
@@ -76,7 +74,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
             return PlatformGlobals.getForeignKeyFail();
         }
         //If the organisation exists update credits
-        for (Organisation org : organisationsList) {
+        for (Organisation org : database.organisationsList) {
             if (org.getOrganisation().equals(organisation)) {
                 int orgCredits = org.getCredits();
                 orgCredits += credits;
@@ -96,7 +94,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     @Override
     public Set<Asset> getAssets() {
         Set<Asset> newSet = new TreeSet<>();
-        for (Asset user : assetsList) {
+        for (Asset user : database.assetsList) {
             Asset asset = new Asset();
             asset.setAsset(user.getAsset());
             asset.setAmount(user.getAmount());
@@ -115,7 +113,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         Asset aNewAsset = new Asset(organisation, asset, amount);
 
         // Check to see if that organisation already has that asset (Primary key constraint)
-        for (Asset anAsset : assetsList) {
+        for (Asset anAsset : database.assetsList) {
             if (anAsset.getOrganisation().equals(organisation) && anAsset.getAsset().equals(asset)) {
                 exists = true;
             }
@@ -125,7 +123,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         }
 
         // Check to see if that organisation does exist (Foreign key constraint)
-        for (Organisation org : organisationsList) {
+        for (Organisation org : database.organisationsList) {
             if (aNewAsset.getOrganisation().equals(org.getOrganisation())) {
                 exists = true;
             }
@@ -133,7 +131,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         if (!exists) {
             return PlatformGlobals.getForeignKeyFail();
         }
-        assetsList.add(aNewAsset);
+        database.assetsList.add(aNewAsset);
         return 1;
     }
 
@@ -146,7 +144,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         boolean exists = false;
 
         // Check to see if that organisation exists (Foreign key constraint)
-        for (Organisation anOrg : organisationsList) {
+        for (Organisation anOrg : database.organisationsList) {
             if (anOrg.getOrganisation().equals(organisation)) {
                 exists = true;
                 break;
@@ -157,7 +155,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         }
 
         // Check to see if that asset exists (Foreign key constraint)
-        for (Asset anAsset : assetsList) {
+        for (Asset anAsset : database.assetsList) {
             if (anAsset.getAsset().equals(asset)) {
                 exists = true;
                 break;
@@ -168,7 +166,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         }
 
         int amount = PlatformGlobals.getGeneralSQLFail();
-        for (Asset aAsset : assetsList) {
+        for (Asset aAsset : database.assetsList) {
             if (aAsset.getOrganisation().equals(organisation) && aAsset.getAsset().equals(asset)) {
                 amount = aAsset.getAmount();
             }
@@ -185,7 +183,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         boolean exists = false;
 
         // Check to see if that organisation exists (Foreign key constraint)
-        for (Organisation anOrg : organisationsList) {
+        for (Organisation anOrg : database.organisationsList) {
             if (anOrg.getOrganisation().equals(organisation)) {
                 exists = true;
                 break;
@@ -196,7 +194,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         }
 
         // Check to see if that asset exists (Foreign key constraint)
-        for (Asset anAsset : assetsList) {
+        for (Asset anAsset : database.assetsList) {
             if (anAsset.getAsset().equals(asset)) {
                 exists = true;
                 break;
@@ -207,9 +205,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         }
 
         // Remove the asset
-        for (Asset anAsset : assetsList) {
+        for (Asset anAsset : database.assetsList) {
             if (anAsset.getOrganisation().equals(organisation) && anAsset.getAsset().equals(asset)) {
-                assetsList.remove(anAsset);
+                database.assetsList.remove(anAsset);
                 return 1;
             }
         }
@@ -225,7 +223,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         boolean exists = false;
 
         // Check to see if that organisation exists (Foreign key constraint)
-        for (Organisation anOrg : organisationsList) {
+        for (Organisation anOrg : database.organisationsList) {
             if (anOrg.getOrganisation().equals(organisation)) {
                 exists = true;
                 break;
@@ -235,8 +233,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
             return PlatformGlobals.getForeignKeyFail();
         }
 
+        exists = false;
         // Check to see if that asset exists (Foreign key constraint)
-        for (Asset anAsset : assetsList) {
+        for (Asset anAsset : database.assetsList) {
             if (anAsset.getAsset().equals(asset)) {
                 exists = true;
                 break;
@@ -247,7 +246,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         }
 
         int increaseAsset;
-        for (Asset aAsset : assetsList) {
+        for (Asset aAsset : database.assetsList) {
             if (aAsset.getAsset().equals(asset) & aAsset.getOrganisation().equals(organisation)) {
 
                 increaseAsset = aAsset.getAmount();
@@ -267,7 +266,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
      */
     @Override
     public Set<Organisation> getOrganisations() {
-        return organisationsList;
+        return database.organisationsList;
     }
 
     /**
@@ -275,7 +274,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
      */
     @Override
     public String getUserOrganisation(String username) {
-        for (UserOrganisation aUser : userOrganisationList) {
+        for (UserOrganisation aUser : database.userOrganisationList) {
             if (aUser.getUser().equals(username)) {
                 return aUser.getOrganisation();
             }
@@ -293,7 +292,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         Organisation anOrganisation = new Organisation(organisation, credits);
 
         // Check to see if that organisation already exists (Primary key constraint)
-        for (Organisation anOrg : organisationsList) {
+        for (Organisation anOrg : database.organisationsList) {
             if (anOrg.getOrganisation().equals(organisation)) {
                 exists = true;
                 break;
@@ -303,7 +302,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         if (exists) {
             return PlatformGlobals.getPrimaryKeyFail();
         }
-        organisationsList.add(anOrganisation);
+        database.organisationsList.add(anOrganisation);
         return 1;
     }
 
@@ -315,7 +314,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
         boolean exists = false;
 
-        for (Organisation anOrg : organisationsList) {
+        for (Organisation anOrg : database.organisationsList) {
             if (anOrg.getOrganisation().equals(organisation)) {
                 exists = true;
                 break;
@@ -324,9 +323,9 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         if (!exists) {
             return PlatformGlobals.getForeignKeyFail();
         }
-        organisationsList.removeIf(aOrg -> aOrg.getOrganisation().equals(organisation));
-        userOrganisationList.removeIf(aUserOrg -> aUserOrg.getOrganisation().equals(organisation));
-        assetsList.removeIf(orgAsset -> orgAsset.getOrganisation().equals(organisation));
+        database.organisationsList.removeIf(aOrg -> aOrg.getOrganisation().equals(organisation));
+        database.userOrganisationList.removeIf(aUserOrg -> aUserOrg.getOrganisation().equals(organisation));
+        database.assetsList.removeIf(orgAsset -> orgAsset.getOrganisation().equals(organisation));
         return 1;
     }
 
@@ -335,7 +334,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
      */
     @Override
     public Set<UserOrganisation> getUsers() {
-        return userOrganisationList;
+        return database.userOrganisationList;
     }
 
     /**
@@ -344,7 +343,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     @Override
     public String getUserPassword(String username) {
 
-        for (UserMockup user : userMock) {
+        for (UserMockup user : database.userMock) {
             if (user.getUsername().equals(username)) {
                 String password = user.getPassword();
                 return password;
@@ -365,7 +364,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         //TODO Sort the Type
 
         // Check to see if the organisation exists (Foreign key constraint)
-        for (Organisation orgs : organisationsList) {
+        for (Organisation orgs : database.organisationsList) {
             if (orgs.getOrganisation().equals(organisation)) {
                 exists = true;
                 break;
@@ -376,14 +375,14 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         }
 
         // Primary key failure, user already exists.
-        for (UserMockup user : userMock) {
+        for (UserMockup user : database.userMock) {
 
             if (user.getUsername().equals(username)) {
                 return PlatformGlobals.getPrimaryKeyFail();
 
             } else {
-                userMock.add(aNewUser);
-                userOrganisationList.add(sameUser);
+                database.userMock.add(aNewUser);
+                database.userOrganisationList.add(sameUser);
                 return 1;
             }
         }
@@ -397,16 +396,16 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     @Override
     public int deleteUser(String username) {
 
-        for (UserMockup aUser : userMock) {
+        for (UserMockup aUser : database.userMock) {
             if (aUser.getUsername().equals(username)) {
-                userMock.remove(aUser);
+                database.userMock.remove(aUser);
                 break;
             }
         }
 
-        for (UserOrganisation sameUser : userOrganisationList) {
+        for (UserOrganisation sameUser : database.userOrganisationList) {
             if (sameUser.getUser().equals(username)) {
-                userOrganisationList.remove(sameUser);
+                database.userOrganisationList.remove(sameUser);
                 return 1;
             }
         }
@@ -422,7 +421,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         boolean exists = false;
 
         // Checks to see if the user exists (Foreign Key constraint)
-        for (UserMockup aUser : userMock) {
+        for (UserMockup aUser : database.userMock) {
             if (aUser.getUsername().equals(username)) {
                 exists = true;
                 break;
@@ -432,7 +431,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
             return PlatformGlobals.getForeignKeyFail(); // Organisation doesn't exist.
         }
 
-        for (UserMockup aUser : userMock) {
+        for (UserMockup aUser : database.userMock) {
             if (aUser.getUsername().equals(username)) {
                 aUser.setPassword(password);
                 return 1;
@@ -470,7 +469,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
             isType = "SELL";
         }
         UserMockup aOrder = new UserMockup(organisation, asset, amount, credits, isType);
-        orderList.add(aOrder);
+        database.orderList.add(aOrder);
         return 1;
     }
 
@@ -505,11 +504,11 @@ public class DataSourceMockup implements TradingPlatformDataSource {
      */
     @Override
     public int deleteAll() {
-        userMock = new HashSet<>();
-        organisationsList = new HashSet<>();
-        assetsList = new HashSet<>();
-        userOrganisationList = new HashSet<>();
-        initiateDatabase();
+        database.userMock = new HashSet<>();
+        database.organisationsList = new HashSet<>();
+        database.assetsList = new HashSet<>();
+        database.userOrganisationList = new HashSet<>();
+        database = new DatabaseMockup();
         return 1;
     }
 }

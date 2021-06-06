@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
+import test.java.mockups.DatabaseMockup;
 
 /**
  * This class is responsible for testing the exceptions of the ItAdministration class.
@@ -32,7 +33,7 @@ public class ItAdministrationTestException {
      */
     @BeforeAll
     static void setupDatabase() throws DuplicationException, InvalidValueException, UnknownDatabaseException {
-        dataSource = new DataSourceMockup();
+        dataSource = new DataSourceMockup(new DatabaseMockup());
         adminAccount = new ItAdministration(dataSource, aNewUser);
         adminAccount.addOrganisation(organisation1, addOrderCreditAmount);
     }

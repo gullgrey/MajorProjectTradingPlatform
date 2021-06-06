@@ -9,6 +9,7 @@ import main.java.network.NetworkDataSource;
 import main.java.tradingPlatform.*;
 import org.junit.jupiter.api.*;
 import test.java.mockups.DataSourceMockup;
+import test.java.mockups.DatabaseMockup;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +39,7 @@ public class StandardUserTest {
      */
     @BeforeEach
     public void setupDatabase() {
-        dataSource = new DataSourceMockup();
+        dataSource = new DataSourceMockup(new DatabaseMockup());
         dataSource.addOrganisation(aNewUserOrganisation, startingCredits);
         dataSource.addOrganisation(bNewUserOrganisation, startingCredits);
         dataSource.addAsset(bNewUserOrganisation, assetName, fullAssetAmount);

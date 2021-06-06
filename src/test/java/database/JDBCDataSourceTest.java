@@ -18,6 +18,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import test.java.mockups.DataSourceMockup;
+import test.java.mockups.DatabaseMockup;
 
 public class JDBCDataSourceTest {
 
@@ -46,7 +47,7 @@ public class JDBCDataSourceTest {
      */
     @BeforeAll
     static void setupDatabase() throws IOException, SQLException, DuplicationException, InvalidValueException, UnknownDatabaseException {
-        dataSource = new DataSourceMockup();
+        dataSource = new DataSourceMockup(new DatabaseMockup());
         //dataSource = new NetworkDataSource();
         dataSource.addOrganisation(organisationApple, organisationAppleCredits);
     }
