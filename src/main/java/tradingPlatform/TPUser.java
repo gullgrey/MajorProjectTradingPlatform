@@ -88,7 +88,7 @@ public abstract class TPUser {
     }
 
     /**
-     * This method creates creates the GUI marketplace buy and sell order displays.
+     * This method creates the GUI marketplace buy and sell order displays.
      */
     private void createTableModels() {
 
@@ -182,35 +182,8 @@ public abstract class TPUser {
             userList.setRowCount(0);
 
             Set<UserOrganisation> actualUsers = dataSource.getUsers();
-//            ArrayList<String> actualNames = new ArrayList<>();
-//            for (UserOrganisation user : actualUsers) {
-//                actualNames.add(user.getUser());
-//            }
-//
-//            ArrayList<Integer> deleteValues = new ArrayList<>();
-//            ArrayList<String> checkUsernames = new ArrayList<>();
-//            for (int row = 0; row < userList.getRowCount(); row++) {
-//                String username = userList.getValueAt(row, 0).toString();
-//                checkUsernames.add(username);
-//                if (!actualNames.contains(username)) {
-//                    deleteValues.add(row);
-//
-//                }
-//            }
-//
-//            int indexShift = 0;
-//            for (int deleteIndex : deleteValues) {
-//
-//                userList.removeRow(deleteIndex - indexShift);
-//                indexShift--;
-//            }
-
             for (UserOrganisation user : actualUsers) {
-//                if (!checkUsernames.contains(user.getUser())){
-//                SwingUtilities.invokeLater(() -> userList.addRow(new String[]{user.getUser(), user.getOrganisation()}));
-                    userList.addRow(new String[]{user.getUser(), user.getOrganisation()});
-//                }
-
+                userList.addRow(new String[]{user.getUser(), user.getOrganisation()});
             }
         } catch (ArrayIndexOutOfBoundsException ignore) {
 
@@ -234,8 +207,6 @@ public abstract class TPUser {
     public void refreshBuyOrders() {
 
         buyOrderList.setRowCount(0);
-//        Set<TPOrder> orders = dataSource.getOrders(true);
-//        if (orders != null) {
         for (TPOrder order : dataSource.getOrders(true)) {
             String id = Integer.toString(order.getId());
             String amount = Integer.toString(order.getAmount());
@@ -243,8 +214,6 @@ public abstract class TPUser {
             buyOrderList.addRow(new String[]{id, order.getOrganisation(), order.getAsset(),
                     amount, credits, order.getDateTime()});
         }
-//        }
-//        dataSource = new NetworkDataSource();
     }
 
     /**
@@ -260,8 +229,6 @@ public abstract class TPUser {
             sellOrderList.addRow(new String[]{id, order.getOrganisation(), order.getAsset(),
                     amount, credits, order.getDateTime()});
         }
-//        dataSource = new NetworkDataSource();
-
     }
 
     /**
@@ -280,8 +247,7 @@ public abstract class TPUser {
     }
 
     /**
-     * This method is a command used to refresh all the corresponding methods at
-     * once.
+     * This method refresh all the corresponding methods at once.
      */
     public void refreshAll() {
 

@@ -48,7 +48,7 @@ public class StandardUser extends TPUser {
     }
 
     /**
-     * Method is used to take a sell request from a used.
+     * Method is used to take a sell request from a user.
      * @param asset asset they would like to sell.
      * @param amount amount of the asset they are selling.
      * @param credits amount per assert.

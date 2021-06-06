@@ -69,8 +69,8 @@ public class StandardUserTest {
     }
 
     /**
-     * Checks that when an asset is removed
-     * @throws UnknownDatabaseException specified field does not exist in the database.
+     * Checks that when an asset is removed the number of assets is
+     * @throws UnknownDatabaseException issue with the database.
      */
     @Test
     public void testGetAssetsAfterRemovingAsset() throws UnknownDatabaseException {
@@ -83,9 +83,9 @@ public class StandardUserTest {
     }
 
     /**
-     * Checking that when an buy and sell order match it will update the buying users credits.
+     * Checking that when a buy and sell order match it will update the buying users credits.
      * @throws InvalidValueException value entered is incorrect type.
-     * @throws UnknownDatabaseException specified field does not exist in the database.
+     * @throws UnknownDatabaseException issue with the database.
      */
     @Test
     public void testBuyAssetAutoTransaction() throws InvalidValueException, UnknownDatabaseException {
@@ -117,7 +117,7 @@ public class StandardUserTest {
     }
 
     /**
-     * Test that entering in the known ID of a Sell order on the system is removed.
+     * Test removing a known ID of a Sell order is removed from the system.
      * @throws NullValueException specified field does not exist in the database.
      * @throws InvalidValueException value entered is incorrect type.
      * @throws UnknownDatabaseException value entered is incorrect type.

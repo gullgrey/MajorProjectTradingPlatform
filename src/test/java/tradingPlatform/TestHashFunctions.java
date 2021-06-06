@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import main.java.tradingPlatform.*;
 import org.junit.jupiter.api.*;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 public class TestHashFunctions {
 
@@ -21,7 +22,7 @@ public class TestHashFunctions {
     }
 
     /**
-     * Testing Hash is the same after 2 iterations.
+     * Testing Hash is the same after 2 iterations for the same username and password.
      * @throws NoSuchAlgorithmException
      */
     @Test
@@ -32,7 +33,7 @@ public class TestHashFunctions {
     }
 
     /**
-     * Testing Hash is the same after 11 iterations.
+     * Testing Hash is the same after 11 iterations for the same username and password.
      * @throws NoSuchAlgorithmException
      */
     @Test
@@ -55,4 +56,5 @@ public class TestHashFunctions {
         String HashedPassword2 = HashPassword.hashedPassword("ADMIN2", "UsernameAndPassword");
         assertTrue(HashedPassword != HashedPassword2);
     }
+
 }

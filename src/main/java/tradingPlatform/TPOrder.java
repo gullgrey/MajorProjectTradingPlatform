@@ -130,17 +130,16 @@ public class TPOrder implements Comparable<TPOrder>, Serializable {
         this.dateTime = dateTime;
     }
 
-    //TODO Check that this is okay to be set as a boolean     ########
     /**
      * Is used to advise whether or not this the order is a buy or sell.
-     * @return boolean indicating True = Sell | False = Buy.
+     * @return String indicating SELL or BUY.
      */
     public String getType() {
         return type;
     }
 
     /**
-     * Sets whether or not this the order is a buy or sell.
+     * Sets whether or not the order is a buy or sell.
      * @param type String of either "BUY" or "SELL"
      */
     public void setType(String type) {
@@ -152,7 +151,7 @@ public class TPOrder implements Comparable<TPOrder>, Serializable {
      * @param order 0 if they do, -1 the ID is before it and 1 the ID supplied is after it.
      * @return int value indicating if ID was found.
      */
-    //TODO Does this need a java docs
+
     @Override
     public int compareTo(TPOrder order) {
         return this.getId().compareTo(order.getId());
