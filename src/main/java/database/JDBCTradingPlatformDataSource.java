@@ -10,7 +10,8 @@ import java.util.TreeSet;
 
 
 /**
- * TODO
+ * This class is responsible for handling all the queries associated with the database as well
+ * as dealing with the connection to the database.
  */
 public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
@@ -100,7 +101,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     private static final String CLEAR_TRADE_HISTORY = "delete from trade_history;";
     private static final String CLEAR_ORGANISATION_UNITS = "delete from organisation_units;";
 
-    private Connection connection;
+    private final Connection connection;
 
     private PreparedStatement getCredits;
     private PreparedStatement updateCredits;
@@ -134,7 +135,9 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * TODO
+     * This method is responsible for preparing the database connection.
+     *
+     * @throws SQLException an error occurred with the database.
      */
     private void prepareDatabase() throws SQLException {
 
@@ -153,8 +156,9 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
     }
 
     /**
-     * todo
-     * @throws SQLException
+     * This method is responsible for handling all the query connections associated with
+     * the database.
+     * @throws SQLException an error occurred with the database.
      */
     private void prepareQueries() throws SQLException {
         getCredits = connection.prepareStatement(GET_CREDITS);
@@ -181,6 +185,9 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
         getOrderHistory  = connection.prepareStatement(GET_ORDER_HISTORY);
     }
 
+    /**
+     * This method initializes a default admin account into the database upon initialization.
+     */
     private void addAdmin() {
         try {
             String admin = PlatformGlobals.getAdminOrganisation();
@@ -190,10 +197,15 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
             addUser(admin, password, admin, admin);
         } catch (NoSuchAlgorithmException ignored) {
-
         }
     }
 
+    /**
+     * This method is responsible for assigning the exception case values for
+     * the database.
+     * @param e the exception being thrown
+     * @return an integer representing the error code from the database.
+     */
     private int encodeSQLException (SQLException e) {
         int primaryKeyError = 1062;
         int foreignKeyError = 1452;
@@ -571,7 +583,7 @@ public class JDBCTradingPlatformDataSource implements TradingPlatformDataSource{
 
     /**
      * @see TradingPlatformDataSource#deleteOrder(int)
-     * @return
+     * @return an integer representing the error code from the database.
      */
     @Override
     public int deleteOrder(int idx) {

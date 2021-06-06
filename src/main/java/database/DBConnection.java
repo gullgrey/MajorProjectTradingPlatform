@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * TODO
+ * This class is responsible for handling the connection to the database.
  */
 public class DBConnection {
 
@@ -38,11 +38,11 @@ public class DBConnection {
     }
 
     /**
-     * TODO
-     * @param propsFile
-     * @return
-     * @throws SQLException
-     * @throws IOException
+     * Initializes the singleton connection to the database.
+     * @param propsFile the credentials for the connection to the database.
+     * @return connection object.
+     * @throws SQLException when the supplied props file contains props that are not able to access the database.
+     * @throws IOException when the propsFile string is not a path to a propsFile.
      */
     public static Connection getInstance(String propsFile) throws SQLException, IOException{
         if (connection == null) {
