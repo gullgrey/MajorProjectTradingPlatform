@@ -5,6 +5,9 @@ import main.java.client.tradingPlatform.NetworkDataSource;
 
 import javax.swing.*;
 
+/**
+ * Runs the client application. Can run multiple instances.
+ */
 public class Client {
 
     public static void main(String[] args) {

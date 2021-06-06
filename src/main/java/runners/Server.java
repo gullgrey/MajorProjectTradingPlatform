@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Runs the server. Connects to a mariaDB database by default.
+ */
 public class Server {
 
     public static void main(String[] args) {

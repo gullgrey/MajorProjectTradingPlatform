@@ -10,7 +10,9 @@ import java.net.Socket;
 import java.util.Set;
 
 /**
- * Todo
+ * Connects to the server and adds commands and values to the input stream. It then
+ * reads the output stream to get results of database queries on the server side.
+ * Datasource used by the client.
  */
 public class NetworkDataSource implements TradingPlatformDataSource {
 
