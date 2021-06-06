@@ -43,7 +43,7 @@ public class LoginTestExceptions {
      */
     @Test
     public void testInvalidUser() throws UnknownDatabaseException, NullValueException {
-        assertThrows(NullValueException.class, () -> {
+        assertThrows(WrongCredentialException.class, () -> {
             Login lg = new Login(wrongTestName, wrongTestPassword, dataSource);
             lg.checkSuppliedCredentials();
         });
@@ -56,7 +56,7 @@ public class LoginTestExceptions {
      */
     @Test
     public void testblankUsernameOnLoggingIn() throws UnknownDatabaseException, NullValueException {
-        assertThrows(NullValueException.class, () -> {
+        assertThrows(WrongCredentialException.class, () -> {
             Login lg = new Login(blankString, setTestPassword, dataSource);
             lg.checkSuppliedCredentials();
         });
@@ -69,7 +69,7 @@ public class LoginTestExceptions {
      */
     @Test
     public void testblankPasswordOnLoggingIn() throws UnknownDatabaseException, NullValueException {
-        assertThrows(NullValueException.class, () -> {
+        assertThrows(WrongCredentialException.class, () -> {
             Login lg = new Login(setTestName, blankString, dataSource);
             lg.checkSuppliedCredentials();
         });
@@ -82,7 +82,7 @@ public class LoginTestExceptions {
      */
     @Test
     public void testblankUsernameAndPasswordOnLoggingIn() throws UnknownDatabaseException, NullValueException {
-        assertThrows(NullValueException.class, () -> {
+        assertThrows(WrongCredentialException.class, () -> {
             Login lg = new Login(blankString, blankString, dataSource);
             lg.checkSuppliedCredentials();
         });

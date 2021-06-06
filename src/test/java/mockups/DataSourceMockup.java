@@ -13,35 +13,10 @@ import java.util.*;
 public class DataSourceMockup implements TradingPlatformDataSource {
 
     DatabaseMockup database;
-//    private Set<UserMockup> userMock = new HashSet<>();
-//    private Set<UserOrganisation> userOrganisationList = new HashSet<>();
-//    private Set<Organisation> organisationsList = new HashSet<>();
-//    private Set<Asset> assetsList = new HashSet<>();
-//    private final Set<UserMockup> orderList = new HashSet<>();
-//    private final Set<UserMockup> sellOrderList = new HashSet<>();
-//    private final Set<Transaction> transationList = new HashSet<>();
-//
-//    private String organisationMember;
-//    private static final String adminUserName = "Admin";
-//    private int count = 0;
-//    private String admin = PlatformGlobals.getAdminOrganisation();
-//    private Organisation org = new Organisation(admin, 0);
-//    private UserMockup aUser = new UserMockup(admin, admin, admin, admin);
-//    private UserOrganisation initialUser = new UserOrganisation(admin, admin);
-//
-//
+
     public DataSourceMockup(DatabaseMockup database) {
         this.database = database; // Build the initial values for the database
     }
-//
-//    /**
-//     * This method initializes the database and adds the default values into the data sets.
-//     */
-//    public void initiateDatabase() {
-//        userMock.add(aUser);
-//        userOrganisationList.add(initialUser);
-//        organisationsList.add(org);
-//    }
 
     /**
      * @see TradingPlatformDataSource#getCredits(String)
@@ -116,6 +91,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         for (Asset anAsset : database.assetsList) {
             if (anAsset.getOrganisation().equals(organisation) && anAsset.getAsset().equals(asset)) {
                 exists = true;
+                break;
             }
         }
         if (exists) {
@@ -126,6 +102,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         for (Organisation org : database.organisationsList) {
             if (aNewAsset.getOrganisation().equals(org.getOrganisation())) {
                 exists = true;
+                break;
             }
         }
         if (!exists) {
@@ -154,6 +131,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
             return PlatformGlobals.getForeignKeyFail();
         }
 
+        exists = false;
         // Check to see if that asset exists (Foreign key constraint)
         for (Asset anAsset : database.assetsList) {
             if (anAsset.getAsset().equals(asset)) {
@@ -192,6 +170,8 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         if (!exists) {
             return PlatformGlobals.getForeignKeyFail();
         }
+
+        exists = false;
 
         // Check to see if that asset exists (Foreign key constraint)
         for (Asset anAsset : database.assetsList) {
@@ -344,10 +324,7 @@ public class DataSourceMockup implements TradingPlatformDataSource {
     public String getUserPassword(String username) {
 
         for (UserMockup user : database.userMock) {
-            if (user.getUsername().equals(username)) {
-                String password = user.getPassword();
-                return password;
-            }
+            if (user.getUsername().equals(username)) return user.getPassword();
         }
         return null;
     }
@@ -361,7 +338,6 @@ public class DataSourceMockup implements TradingPlatformDataSource {
         UserMockup aNewUser = new UserMockup(username, password, type, organisation);
         UserOrganisation sameUser = new UserOrganisation(username, organisation);
         boolean exists = false;
-        //TODO Sort the Type
 
         // Check to see if the organisation exists (Foreign key constraint)
         for (Organisation orgs : database.organisationsList) {
@@ -506,7 +482,6 @@ public class DataSourceMockup implements TradingPlatformDataSource {
 
     /**
      * @see TradingPlatformDataSource#deleteOrder(int)
-     * @return
      */
     @Override
     public int deleteOrder(int idx) {

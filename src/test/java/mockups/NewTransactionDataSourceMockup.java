@@ -3,6 +3,10 @@ package test.java.mockups;
 import main.java.tradingPlatform.PlatformGlobals;
 import main.java.tradingPlatform.TPOrder;
 
+/**
+ * This extends the datasource mockup and is used by the New transaction class
+ * when adding and removing orders from the mock database.
+ */
 public class NewTransactionDataSourceMockup extends DataSourceMockup{
 
 
