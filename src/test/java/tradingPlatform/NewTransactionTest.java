@@ -16,6 +16,9 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * This class is responsible for testing the logic in the NewTransaction class.
+ */
 public class NewTransactionTest {
 
     private static DataSourceMockup dataSource;

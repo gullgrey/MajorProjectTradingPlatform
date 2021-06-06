@@ -10,6 +10,9 @@ import test.java.mockups.DatabaseMockup;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * This class is responsible for testing the logic in the Login class regarding exception calls.
+ */
 public class LoginExceptionsTest {
     private static DataSourceMockup dataSource;
     private static final String adminUser = "ADMIN";

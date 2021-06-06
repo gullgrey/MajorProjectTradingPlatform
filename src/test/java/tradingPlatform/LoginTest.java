@@ -7,7 +7,9 @@ import main.java.client.tradingPlatform.*;
 import org.junit.jupiter.api.*;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
-
+/**
+ * This class is responsible for testing the logic in the Login class.
+ */
 public class LoginTest {
 
     private static DataSourceMockup dataSource;

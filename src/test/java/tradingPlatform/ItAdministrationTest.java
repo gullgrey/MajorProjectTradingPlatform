@@ -13,8 +13,7 @@ import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
 
 /**
- * This class is responsible for testing the blackbox test cases involved with the
- * ItAdministrationTest class.
+ * This class is responsible for testing the the logic in the ItAdministration class.
  */
 public class ItAdministrationTest {
 

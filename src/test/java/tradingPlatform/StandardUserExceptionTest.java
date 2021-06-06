@@ -12,6 +12,10 @@ import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
 import java.util.Set;
 
+/**
+ * This class is responsible for testing the logic in the StandardUser class regarding
+ * exception cases.
+ */
 public class StandardUserExceptionTest {
 
     private static DataSourceMockup dataSource;

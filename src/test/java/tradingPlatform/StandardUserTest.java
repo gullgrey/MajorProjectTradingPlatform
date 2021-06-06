@@ -1,7 +1,6 @@
 package test.java.tradingPlatform;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import main.java.common.Asset;
 import main.java.common.TPOrder;
@@ -10,9 +9,11 @@ import org.junit.jupiter.api.*;
 import test.java.mockups.DataSourceMockup;
 import test.java.mockups.DatabaseMockup;
 
-import java.sql.SQLException;
 import java.util.Set;
 
+/**
+ * This class is responsible for testing the logic in the StandardUser class.
+ */
 public class StandardUserTest {
 
     private static DataSourceMockup dataSource;
