@@ -5,6 +5,10 @@ import main.java.common.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class assists DataSourceMockup by acting as the database to store all the values
+ * associated with the mockup.
+ */
 public class DatabaseMockup {
 
     Set<UserMockup> userMock = new HashSet<>();
