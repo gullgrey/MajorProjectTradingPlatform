@@ -11,9 +11,9 @@ import java.util.Set;
  */
 public class Login {
 
-    private TradingPlatformDataSource dataSource;
-    private String username;
-    private String password;
+    private final TradingPlatformDataSource dataSource;
+    private final String username;
+    private final String password;
     private String organisationalUnit;
     private Boolean isAdmin;
 
@@ -54,8 +54,8 @@ public class Login {
      * Function is used to check if the user exists in the DB.
      * @return boolean of whether or not the user is an IT Administrator.
      * @throws UnknownDatabaseException update to the database was unsuccessful.
-     * @throws WrongCredentialException
-     * @throws NetworkException
+     * @throws WrongCredentialException when a user provides the wrong inputs.
+     * @throws NetworkException when client cannot connect to the network.
      */
     public boolean checkSuppliedCredentials() throws UnknownDatabaseException, WrongCredentialException, NetworkException {
         try {
