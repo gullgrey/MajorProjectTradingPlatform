@@ -22,6 +22,10 @@ public class NetworkDataSource implements TradingPlatformDataSource {
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
 
+    /**
+     * Commands to be sent to a server, followed by a series of predetermined
+     * objects.
+     */
     public enum Command {
         //Asset commands
         GET_ASSETS,

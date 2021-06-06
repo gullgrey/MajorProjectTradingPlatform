@@ -291,7 +291,8 @@ public class NetworkServer {
                 int newCredits = Integer.parseInt((String) inputStream.readObject());
                 order.setCredits(newCredits);
                 String isBuy = (String) inputStream.readObject();
-                final boolean isBuyOrder = isBuy.equals("true");
+                String trueString = "true";
+                final boolean isBuyOrder = isBuy.equals(trueString);
                 synchronized (database) {
                     int rowsAffected;
                     if (isBuyOrder) {
